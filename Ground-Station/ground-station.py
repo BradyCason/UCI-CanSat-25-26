@@ -92,6 +92,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
         uic.loadUi(ui_path, self)
 
+        self.showFullScreen()
+
         self.setup_UI()
         self.connect_buttons()
 
@@ -314,6 +316,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
             self.release_payload_button.setText("Release Payload")
             self.make_button_blue(self.release_payload_button)
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape:
+            self.close()
 
 class CalibrateCompassPlotter:
     def __init__(self):
