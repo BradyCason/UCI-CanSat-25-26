@@ -43,6 +43,7 @@ BAUDRATE = 115200
 COM_PORT = [6,3]
 NUM_XBEES = 1
 
+MAKE_CSV_FILE = False
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 ser = [None, None]
@@ -486,10 +487,11 @@ def parse_xbee(data):
     #     sim = False
 
     # Add data to csv file
-    file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
-    with open(file, 'a', newline='') as f_object:
-        writer_object = writer(f_object)
-        writer_object.writerow(list(telemetry.values()) + [data[-1]])
+    if MAKE_CSV_FILE:
+        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
+        with open(file, 'a', newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(list(telemetry.values()) + [data[-1]])
 
 def read_xbee():
     '''
@@ -637,10 +639,11 @@ def main():
         connect_Serial(xbee_num)
 
     # Create new csv file with header
-    file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
-    with open(file, 'w', newline='') as f_object:
-        writer_object = writer(f_object)
-        writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
+    if MAKE_CSV_FILE:
+        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
+        with open(file, 'w', newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
 
     # Run the app
     app = QtWidgets.QApplication(sys.argv)
