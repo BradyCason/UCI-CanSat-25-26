@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1013</width>
-    <height>1052</height>
+    <width>1004</width>
+    <height>856</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">* {background-color: white;}
-#control_container, #simulation_container, #telemetry_container_1, #telemetry_container_2 {border:4px solid #343a40;}
+#graph_container, #telemetry_container_1, #telemetry_container_2, #telemetry_container_3, #telemetry_container_4, #telemetry_container_5 {border:4px solid #343a40;}
 QPushButton {
     background-color: rgba(33,125,182,1);
     color: white;
@@ -157,54 +157,352 @@ QPushButton:hover {
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="container" stretch="1,1,1,1">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
-       <widget class="QWidget" name="simulation_container" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="simulation_panel" stretch="1,0,1,0,1,0,1">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetMinimumSize</enum>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+       <layout class="QHBoxLayout" name="container" stretch="1,1,1,1,1">
+        <item>
+         <widget class="QWidget" name="telemetry_container_1" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_10">
+           <item row="0" column="0">
+            <layout class="QVBoxLayout" name="simulation_panel_2" stretch="1">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
+              <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,0">
                <item>
-                <widget class="QLabel" name="mission_time">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Mission Time:</string>
-                 </property>
-                </widget>
+                <layout class="QVBoxLayout" name="verticalLayout_19">
+                 <item>
+                  <widget class="QLabel" name="mission_time_2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="text">
+                    <string>Mission Time:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="state">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>State:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="mode">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Mode:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="packet_count_2">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Packet Count:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="cmd_echo_2">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>CMD Echo:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="volt_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Voltage (V):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="current_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Current (A):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="target_lat_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Target Latitude (°):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="target_long_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Target Longitude (°):</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="packet_count">
+                <layout class="QVBoxLayout" name="state_fields_2">
+                 <item>
+                  <widget class="QLabel" name="MISSION_TIME_2">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="STATE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="MODE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="PACKET_COUNT_2">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="CMD_ECHO_2">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="CURRENT">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="VOLTAGE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="TARGET_LATITUDE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="TARGET_LONGITUDE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="telemetry_container_2" native="true">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
+             <item>
+              <layout class="QVBoxLayout" name="telemetry_panel">
+               <item>
+                <widget class="QLabel" name="alt_label">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -217,63 +515,12 @@ QPushButton:hover {
                   <string notr="true">border: none;</string>
                  </property>
                  <property name="text">
-                  <string>Packet Count:</string>
+                  <string>Altitude (m):</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="mode">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                 <property name="text">
-                  <string>Mode:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="state">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                 <property name="text">
-                  <string>State:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="payload_released">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Payload Released:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="max_altitude">
+                <widget class="QLabel" name="max_altitude_2">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -288,7 +535,26 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="cmd_echo">
+                <widget class="QLabel" name="temp_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                   <kerning>true</kerning>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>Temperature (°C):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="pressure_label">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -301,16 +567,103 @@ QPushButton:hover {
                   <string notr="true">border: none;</string>
                  </property>
                  <property name="text">
-                  <string>CMD Echo:</string>
+                  <string>Pressure (kPa):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="gps_sats_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>GPS SATS:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="gps_time_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>GPS Time:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="gps_alt_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>GPS Altitude (m):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="gps_lat_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>GPS Latitude (°):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="gps_long_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>GPS Longitude (°):</string>
                  </property>
                 </widget>
                </item>
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="state_fields">
+              <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
-                <widget class="QLabel" name="MISSION_TIME">
+                <widget class="QLabel" name="ALTITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -325,7 +678,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="PACKET_COUNT">
+                <widget class="QLabel" name="MAX_ALTITUDE_2">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -340,7 +693,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="MODE">
+                <widget class="QLabel" name="TEMPERATURE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -355,7 +708,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="STATE">
+                <widget class="QLabel" name="PRESSURE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -370,7 +723,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="PAYLOAD_RELEASED">
+                <widget class="QLabel" name="GPS_LATITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -385,7 +738,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="MAX_ALTITUDE">
+                <widget class="QLabel" name="GPS_ALTITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -400,7 +753,37 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="CMD_ECHO">
+                <widget class="QLabel" name="GPS_TIME">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="GPS_SATS">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="GPS_LONGITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -418,860 +801,309 @@ QPushButton:hover {
              </item>
             </layout>
            </item>
-           <item>
-            <spacer name="verticalSpacer_10">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sim_enable_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgba(40, 167, 69, 1);} QPushButton:hover{background-color: rgba(36, 149, 62, 1);}</string>
-             </property>
-             <property name="text">
-              <string>Simulation Enable</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_11">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>5</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sim_activate_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border: 2px solid grey;</string>
-             </property>
-             <property name="text">
-              <string>Simulation Activate</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>5</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sim_disable_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Simulation Disable</string>
-             </property>
-            </widget>
-           </item>
           </layout>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="telemetry_container_1" native="true">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="1" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
-           <item>
-            <layout class="QVBoxLayout" name="telemetry_panel">
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="telemetry_container_3" native="true">
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="1">
+            <layout class="QVBoxLayout" name="control_panel" stretch="0">
              <item>
-              <widget class="QLabel" name="alt_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>Altitude (m):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="temp_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <kerning>true</kerning>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>Temperature (°C):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="pressure_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>Pressure (kPa):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gyro_r_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>Gyro R (°/s):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gyro_p_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Gyro P (°/s):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gyro_y_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Gyro Y (°/s):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="auto_gyro_rot_rate_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Auto Gyro Rot Rate (°/s):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="accel_r_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Acceleration R (°/s^2):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="accel_p_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Acceleration P (°/s^2):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="accel_y_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <kerning>true</kerning>
-                </font>
-               </property>
-               <property name="text">
-                <string>Acceleration Y (°/s^2):</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QLabel" name="ALTITUDE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="TEMPERATURE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="PRESSURE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GYRO_R">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GYRO_P">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GYRO_Y">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="AUTO_GYRO_ROTATION_RATE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="ACCEL_R">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="ACCEL_P">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="ACCEL_Y">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="accel_r_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Acceleration R (°/s^2):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="accel_p_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Acceleration P (°/s^2):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="accel_y_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                     <kerning>true</kerning>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Acceleration Y (°/s^2):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="gyro_r_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Gyro R (°/s):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="gyro_p_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Gyro P (°/s):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="gyro_y_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Gyro Y (°/s):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="tilt_r_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Tilt R (°):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="tilt_p_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Tilt P (°):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="tilt_y_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Tilt Y (°):</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <widget class="QLabel" name="ACCEL_R">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="ACCEL_P">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="ACCEL_Y">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="GYRO_R">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="GYRO_P">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="GYRO_Y">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="TILT_R">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="TILT_P">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="TILT_Y">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
           </layout>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="telemetry_container_2" native="true">
-        <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,0">
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <item>
-              <widget class="QLabel" name="volt_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>Voltage (V):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="heading_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Heading (°):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="mag_r_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Mag R (G):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="mag_p_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Mag P (G):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="mag_y_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Mag Y (G):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gps_time_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>GPS Time:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gps_alt_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>GPS Altitude (m):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gps_lat_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>GPS Latitude (°):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gps_long_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>GPS Longitude (°):</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="gps_sats_label">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;</string>
-               </property>
-               <property name="text">
-                <string>GPS SATS:</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <item>
-              <widget class="QLabel" name="VOLTAGE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="HEADING">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="MAG_R">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="MAG_P">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="MAG_Y">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GPS_TIME">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GPS_ALTITUDE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GPS_LATITUDE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GPS_LONGITUDE">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="GPS_SATS">
-               <property name="font">
-                <font>
-                 <family>Sans Serif Collection</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>N/A</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="control_container" native="true">
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="control_panel" stretch="0,1,1,1,1,1,1,1,1,1">
-           <item>
-            <widget class="QPushButton" name="reset_state_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset State</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="set_time_gps_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Set Time: GPS</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="set_time_utc_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Set Time: UTC</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="telemetry_container_4" native="true">
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="1">
             <widget class="QPushButton" name="calibrate_alt_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1295,67 +1127,8 @@ QPushButton:hover {
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="calibrate_comp_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Calibrate Compass</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="activate_north_cam_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Activate North Camera</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="set_camera_north_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Set Camera North</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="release_payload_button">
+           <item row="15" column="1">
+            <widget class="QPushButton" name="set_coordinates_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -1374,11 +1147,79 @@ QPushButton:hover {
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>Release Payload</string>
+              <string>Set Coordinates</string>
              </property>
             </widget>
            </item>
-           <item>
+           <item row="18" column="1">
+            <widget class="QPushButton" name="sim_enable_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgba(40, 167, 69, 1);} QPushButton:hover{background-color: rgba(36, 149, 62, 1);}</string>
+             </property>
+             <property name="text">
+              <string>Simulation Enable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="20" column="1">
+            <widget class="QPushButton" name="sim_disable_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Simulation Disable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="1">
+            <widget class="QPushButton" name="sim_activate_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 2px solid grey;</string>
+             </property>
+             <property name="text">
+              <string>Simulation Activate</string>
+             </property>
+            </widget>
+           </item>
+           <item row="21" column="1">
             <widget class="QPushButton" name="telemetry_toggle_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1402,8 +1243,52 @@ QPushButton:hover {
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="show_graphs_button">
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="telemetry_container_5" native="true">
+          <layout class="QGridLayout" name="gridLayout_13">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="reset_state_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reset State</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="set_time_utc_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Set Time: UTC</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="release_egg_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -1417,14 +1302,114 @@ QPushButton:hover {
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">border: 2px solid grey;</string>
+              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
              </property>
              <property name="text">
-              <string>Show Graphs</string>
+              <string>Release Egg</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="activate_paraglider_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
+             </property>
+             <property name="text">
+              <string>Activate Paraglider</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="release_payload_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
+             </property>
+             <property name="text">
+              <string>Release Payload</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QPushButton" name="set_time_gps_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Set Time: GPS</string>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QWidget" name="graph_container" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_12">
+         <item row="0" column="3">
+          <layout class="QVBoxLayout" name="current_graph"/>
+         </item>
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="altitude_graph"/>
+         </item>
+         <item row="0" column="4">
+          <layout class="QVBoxLayout" name="voltage_graph"/>
+         </item>
+         <item row="0" column="1">
+          <layout class="QVBoxLayout" name="acceleration_graph"/>
+         </item>
+         <item row="0" column="2">
+          <layout class="QVBoxLayout" name="rotation_graph"/>
          </item>
         </layout>
        </widget>
@@ -1438,7 +1423,7 @@ QPushButton:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1013</width>
+     <width>1004</width>
      <height>26</height>
     </rect>
    </property>

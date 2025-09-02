@@ -8,79 +8,74 @@ import pyqtgraph as pg
 from csv import writer, reader
 from datetime import datetime
 import pytz
-import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import random
 
 TEAM_ID = "3141"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "MAG_R", "MAG_P", "MAG_Y", "AUTO_GYRO_ROTATION_RATE",
-                    "GPS_TIME", "GPS_ALTITUDE", "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS",
-                    "CMD_ECHO", "HEADING", "MAX_ALTITUDE", "PAYLOAD_RELEASED"]
-GRAPHED_FIELDS = ["PACKET_COUNT", "ALTITUDE", "TEMPERATURE", "PRESSURE", "VOLTAGE", "GYRO_R", 
-                  "GYRO_P", "GYRO_Y", "ACCEL_R", "ACCEL_P", "ACCEL_Y", "MAG_R", "MAG_P", "MAG_Y",
-                  "AUTO_GYRO_ROTATION_RATE", "GPS_ALTITUDE", "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS", "HEADING"]
+                    "ACCEL_P", "ACCEL_Y", "Tilt_R", "Tilt_P", "Tilt_Y", "GPS_TIME", "GPS_ALTITUDE",
+                    "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
+                    "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "EGG_RELEASED", "TARGET_LATITUDE",
+                    "TARGET_LONGITUDE"]
 
 current_time = time.time()
 local_time = time.localtime(current_time)
 readable_time = time.strftime("telemetry_%Y-%m-%d_%H-%M-%S", local_time)
 
 sim = False
-running = True
 sim_enable = False
 telemetry_on = True
-calibrate_comp_on = False
-north_cam_on = False
 csv_indexer = 0
 
 packet_count = 0
-# last_recieved_packet = -1
-# last_recieved_compass_packet = -1
 packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = [6,3]
-NUM_XBEES = 1
+COM_PORT = 3
 
 MAKE_CSV_FILE = False
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
-ser = [None, None]
-serialConnected = [False, False]
-def connect_Serial(xbee_num):
+START_DELIMITER = "~"
+
+ser = None
+serialConnected = False
+
+def connect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
             # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-            ser[xbee_num] = serial.Serial("COM" + str(COM_PORT[xbee_num]), BAUDRATE, timeout=0.05)
-            serialConnected[xbee_num] = True
-            print("Connected to Xbee: " + str(xbee_num))
+            ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+            serialConnected = True
+            print("Connected to Xbee")
         except serial.serialutil.SerialException as e:
-            if (serialConnected[xbee_num]):
-                print("Could not connect to Xbee " + str(xbee_num) + f": {e}")
-            serialConnected[xbee_num] = False
+            if (serialConnected):
+                print(f"Could not connect to Xbee: {e}")
+            serialConnected = False
 
-def disconnect_Serial(xbee_num):
+def disconnect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
-            if serialConnected[xbee_num] and ser[xbee_num].is_open:
-                ser[xbee_num].close()
-                print("Disconnected from Xbee: " + str(xbee_num))
-            serialConnected[xbee_num] = False
+            if serialConnected and ser.is_open:
+                ser.close()
+                print("Disconnected from Xbee")
+            serialConnected = False
         except Exception as e:
-            print(f"Error while disconnecting Xbee {xbee_num}: {e}")
-            serialConnected[xbee_num] = False
+            print(f"Error while disconnecting Xbee: {e}")
+            serialConnected = False
 
 # telemetry
 # strings as keys and values as values, only last stored
 # need to write all commands to csv files by last filled values
 telemetry = {}
-
-START_DELIMITER = "~"
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -93,19 +88,16 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
         uic.loadUi(ui_path, self)
 
-        self.showFullScreen()
+        # self.showFullScreen()
 
         self.setup_UI()
         self.connect_buttons()
 
-        self.update_timer = QtCore.QTimer()
-        self.update_timer.setInterval(100)  # Update every 100ms
-        self.update_timer.timeout.connect(self.update)
-        self.update_timer.start()
-
         self.payload_released = False
+        self.paraglider_active = False
+        self.egg_released = False
 
-        self.compass_plotter = None
+        self.init_graphs()
 
     def setup_UI(self):
         '''
@@ -116,9 +108,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.setWindowIcon(QtGui.QIcon(os.path.join(os.path.dirname(__file__), "gui", "logo.png")))
         self.title.setText("CanSat Ground Station - TEAM " + TEAM_ID)
 
-        # graph window, linked to button on rightmost panel
-        self.graph_window = GraphWindow()
-
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS:
@@ -126,7 +115,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             if (not label):
                 label = self.telemetry_container_2.findChild(QtWidgets.QLabel, field)
                 if (not label):
-                    label = self.simulation_container.findChild(QtWidgets.QLabel, field)
+                    label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
 
         # Set First Color of Telemetry Toggle button
@@ -148,21 +137,22 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.set_time_gps_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST,GPS"))
         self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
         self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
-        self.set_camera_north_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",SCN"))
-        self.activate_north_cam_button.clicked.connect(self.camera_north_toggle)
         self.release_payload_button.clicked.connect(self.release_payload_clicked)
-        self.calibrate_comp_button.clicked.connect(self.calibrate_comp_toggle)
+        self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
+        self.release_egg_button.clicked.connect(self.release_egg_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
-        self.show_graphs_button.clicked.connect(self.graph_window.show)
+        self.set_coordinates_button.clicked.connect(self.set_coordinates)
 
         # Connect non-sim buttons to update sim button colors
         self.reset_state_button.clicked.connect(self.non_sim_button_clicked)
         self.set_time_gps_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_camera_north_button.clicked.connect(self.non_sim_button_clicked)
         self.set_time_utc_button.clicked.connect(self.non_sim_button_clicked)
         self.calibrate_alt_button.clicked.connect(self.non_sim_button_clicked)
         self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
+        self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
+        self.release_egg_button.clicked.connect(self.non_sim_button_clicked)
         self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
+        self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
 
     def update(self):
         '''
@@ -171,12 +161,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry
         global telemetry_on
 
-        if len(telemetry.keys()) > 0 and telemetry_on:
-            for field in TELEMETRY_FIELDS:
-                if field != "TEAM_ID":
-                    self.telemetry_labels[field].setText(telemetry[field])
+        for field in TELEMETRY_FIELDS:
+            if field != "TEAM_ID":
+                self.telemetry_labels[field].setText(telemetry[field])
 
-            self.graph_window.update()
+        self.update_graphs()
+        self.update_color_buttons()
 
     def make_button_green(self, button):
         '''
@@ -255,47 +245,11 @@ class GroundStationWindow(QtWidgets.QMainWindow):
     def reset_state(self):
         global packet_count
         packet_count = 0
+        self.reset_graphs()
         write_xbee("CMD," + TEAM_ID + ",RST")
-
-    def camera_north_toggle(self):
-        '''
-        Handle "activate north camera" button press
-        '''
-        global north_cam_on
-        north_cam_on = not north_cam_on
-        
-        if north_cam_on:
-            write_xbee("CMD," + TEAM_ID + ",MEC,CAM,ON")
-            self.activate_north_cam_button.setText("Deactivate North Camera")
-            self.make_button_green(self.activate_north_cam_button)
-        else:
-            write_xbee("CMD," + TEAM_ID + ",MEC,CAM,OFF")
-            self.activate_north_cam_button.setText("Activate North Camera")
-            self.make_button_blue(self.activate_north_cam_button)
-
-    def calibrate_comp_toggle(self):
-        '''
-        Handle "calibrate compass" button press
-        '''
-        global calibrate_comp_on
-        calibrate_comp_on = not calibrate_comp_on
-
-        if calibrate_comp_on:
-            write_xbee("CMD,"+ TEAM_ID + ",CC,ON")
-            self.calibrate_comp_button.setText("Stop Calibrating Compass")
-            self.make_button_green(self.calibrate_comp_button)
-
-            self.compass_plotter = CalibrateCompassPlotter()
-        else:
-            write_xbee("CMD,"+ TEAM_ID + ",CC,OFF")
-            self.calibrate_comp_button.setText("Calibrate Compass")
-            self.make_button_blue(self.calibrate_comp_button)
-
-            self.compass_plotter.close_plot()
 
     def toggle_telemetry(self):
         global telemetry_on
-        telemetry_on = not telemetry_on
 
         if telemetry_on:
             write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
@@ -307,148 +261,225 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             self.make_button_red(self.telemetry_toggle_button)
 
     def release_payload_clicked(self):
-        self.payload_released = not self.payload_released
-
         if self.payload_released:
-            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
-            self.release_payload_button.setText("Reset Payload Release")
-            self.make_button_red(self.release_payload_button)
-        else:
             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
-            self.release_payload_button.setText("Release Payload")
-            self.make_button_blue(self.release_payload_button)
+        else:
+            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
+    
+    def activate_paraglider_clicked(self):
+        if self.paraglider_active:
+            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
+        else:
+            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
+    
+    def release_egg_clicked(self):
+        if self.egg_released:
+            write_xbee("CMD," + TEAM_ID + ",MEC,EGG,OFF")
+        else:
+            write_xbee("CMD," + TEAM_ID + ",MEC,EGG,ON")
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
             self.close()
 
-class CalibrateCompassPlotter:
+    def update_color_buttons(self):
+        if self.payload_released:
+            self.release_payload_button.setText("Reset Payload Release")
+            self.make_button_green(self.release_payload_button)
+        else:
+            self.release_payload_button.setText("Release Payload")
+            self.make_button_red(self.release_payload_button)
+
+        if self.paraglider_active:
+            self.activate_paraglider_button.setText("Deactivate Paraglider")
+            self.make_button_green(self.activate_paraglider_button)
+        else:
+            self.activate_paraglider_button.setText("Activate Paraglider")
+            self.make_button_red(self.activate_paraglider_button)
+
+        if self.egg_released:
+            self.release_egg_button.setText("Reset Egg Release")
+            self.make_button_green(self.release_egg_button)
+        else:
+            self.release_egg_button.setText("Release Egg")
+            self.make_button_red(self.release_egg_button)
+
+    def init_graphs(self):
+        self.x_data = []
+        self.counter = 0
+
+        self.altitude_figure = Figure()
+        self.altitude_canvas = FigureCanvas(self.altitude_figure)
+        self.altitude_graph.layout().addWidget(self.altitude_canvas)
+        self.alt_subplot = self.altitude_figure.add_subplot(111)
+        self.altitude_y_data = []
+
+        self.accel_figure = Figure()
+        self.accel_canvas = FigureCanvas(self.accel_figure)
+        self.acceleration_graph.layout().addWidget(self.accel_canvas)
+        self.accel_subplot = self.accel_figure.add_subplot(111)
+        self.accel_r_y_data = []
+        self.accel_p_y_data = []
+        self.accel_y_y_data = []
+        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
+        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
+        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
+        self.accel_figure.legend()
+
+        self.rotation_figure = Figure()
+        self.rotation_canvas = FigureCanvas(self.rotation_figure)
+        self.rotation_graph.layout().addWidget(self.rotation_canvas)
+        self.rotation_subplot = self.rotation_figure.add_subplot(111)
+        self.rotation_r_y_data = []
+        self.rotation_p_y_data = []
+        self.rotation_y_y_data = []
+        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
+        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
+        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
+        self.rotation_figure.legend()
+
+        self.current_figure = Figure()
+        self.current_canvas = FigureCanvas(self.current_figure)
+        self.current_graph.layout().addWidget(self.current_canvas)
+        self.current_subplot = self.current_figure.add_subplot(111)
+        self.current_y_data = []
+
+        self.voltage_figure = Figure()
+        self.voltage_canvas = FigureCanvas(self.voltage_figure)
+        self.voltage_graph.layout().addWidget(self.voltage_canvas)
+        self.voltage_subplot = self.voltage_figure.add_subplot(111)
+        self.voltage_y_data = []
+
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(100)  # 100 ms update
+        self.timer.timeout.connect(self.update_graphs)
+        self.timer.start()
+
+    def update_graphs(self):
+
+        # Update data
+        # self.x_data.append(telemetry["PACKET_COUNT"])
+        # self.altitude_y_data.append(telemetry["ALTITUDE"][-1])
+        # self.accel_r_y_data.append(telemetry["ACCEL_R"][-1])
+        # self.accel_p_y_data.append(telemetry["ACCEL_P"][-1])
+        # self.accel_y_y_data.append(telemetry["ACCEL_Y"][-1])
+        # self.rotation_r_y_data.append(telemetry["GYRO_R"][-1])
+        # self.rotation_p_y_data.append(telemetry["GYRO_P"][-1])
+        # self.rotation_y_y_data.append(telemetry["GYRO_Y"][-1])
+        # self.current_y_data.append(telemetry["CURRENT"][-1])
+        # self.voltage_y_data.append(telemetry["VOLTAGE"][-1])
+
+        self.x_data.append(self.counter)
+        self.altitude_y_data.append(random.randint(0,10))
+        self.accel_r_y_data.append(random.randint(0,10))
+        self.accel_p_y_data.append(random.randint(0,10))
+        self.accel_y_y_data.append(random.randint(0,10))
+        self.rotation_r_y_data.append(random.randint(0,10))
+        self.rotation_p_y_data.append(random.randint(0,10))
+        self.rotation_y_y_data.append(random.randint(0,10))
+        self.current_y_data.append(random.randint(0,10))
+        self.voltage_y_data.append(random.randint(0,10))
+        self.counter += 1
+
+        # Only plot last 50 points
+        if len(self.x_data) > 50:
+            self.x_data.pop(0)
+            self.altitude_y_data.pop(0)
+            self.accel_r_y_data.pop(0)
+            self.accel_p_y_data.pop(0)
+            self.accel_y_y_data.pop(0)
+            self.rotation_r_y_data.pop(0)
+            self.rotation_p_y_data.pop(0)
+            self.rotation_y_y_data.pop(0)
+            self.current_y_data.pop(0)
+            self.voltage_y_data.pop(0)
+
+        # Plot
+        self.alt_subplot.clear()
+        self.alt_subplot.plot(self.x_data, self.accel_r_y_data, color='blue')
+        self.alt_subplot.set_title("Altitude (m)")
+        self.altitude_canvas.draw()
+
+        self.accel_subplot.clear()
+        self.accel_subplot.plot(self.x_data, self.accel_r_y_data, color='blue')
+        self.accel_subplot.plot(self.x_data, self.accel_p_y_data, color='orange')
+        self.accel_subplot.plot(self.x_data, self.accel_y_y_data, color='green')
+        self.accel_subplot.set_title("Acceleration (°/s^2)")
+        self.accel_canvas.draw()
+
+        self.rotation_subplot.clear()
+        self.rotation_subplot.plot(self.x_data, self.rotation_r_y_data, color='blue')
+        self.rotation_subplot.plot(self.x_data, self.rotation_p_y_data, color='orange')
+        self.rotation_subplot.plot(self.x_data, self.rotation_y_y_data, color='green')
+        self.rotation_subplot.set_title("Rotation Rate (°/s)")
+        self.rotation_canvas.draw()
+
+        self.current_subplot.clear()
+        self.current_subplot.plot(self.x_data, self.current_y_data, color='blue')
+        self.current_subplot.set_title("Current (A)")
+        self.current_canvas.draw()
+
+        self.voltage_subplot.clear()
+        self.voltage_subplot.plot(self.x_data, self.voltage_y_data, color='blue')
+        self.voltage_subplot.set_title("Voltage (V)")
+        self.voltage_canvas.draw()
+
+    def reset_graphs(self):
+        self.x_data = []
+        self.altitude_y_data = []
+        self.accel_r_y_data = []
+        self.accel_p_y_data = []
+        self.accel_y_y_data = []
+        self.rotation_r_y_data = []
+        self.rotation_p_y_data = []
+        self.rotation_y_y_data = []
+        self.current_y_data = []
+        self.voltage_y_data = []
+
+    def set_coordinates(self):
+        dialog = CoordinatesDiaglog()
+        result = dialog.exec_()
+
+        if result == QtWidgets.QDialog.Accepted:
+            num1, num2 = dialog.get_values()
+            write_xbee("CMD," + TEAM_ID + ",COORD,{:.6f},{:.6f}".format(num1, num2))
+        else:
+            QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
+
+
+class CoordinatesDiaglog(QtWidgets.QDialog):
     def __init__(self):
-        # Data storage
-        self.x_vals, self.y_vals = [], []
-        self.x_offsets, self.y_offsets = [], []
-
-        # Setup plot
-        plt.ion()
-        self.fig, self.ax = plt.subplots()
-        self.fig.canvas.mpl_connect('close_event', self.on_close)
-        self.val_scatter = self.ax.scatter(self.x_vals, self.y_vals, color='blue', label='Compass Reading')
-        self.offset_scatter = self.ax.scatter(self.x_offsets, self.y_offsets, color='red', label='Offset')
-        plt.gcf().canvas.manager.set_window_title('Compass Calibration Data')
-
-        self.ax.set_xlim(-0.75, 0.75)
-        self.ax.set_ylim(-0.75, 0.75)
-        self.ax.set_aspect('equal', adjustable='box')
-        self.ax.grid(True)
-        self.ax.legend()
-
-        self.x_min_line = None
-        self.x_max_line = None
-        self.y_min_line = None
-        self.y_max_line = None
-        self.heading_text = None
-
-        self.manual_closing = False
-    
-    def add_points(self, points):
-        # Append new data points
-        self.x_vals.append(points[0])
-        self.y_vals.append(points[1])
-        self.x_offsets.append(points[2])
-        self.y_offsets.append(points[3])
-
-        # Update plot data
-        self.val_scatter.set_offsets(list(zip(self.x_vals, self.y_vals)))
-        self.offset_scatter.set_offsets([(points[2], points[3])])
-
-        if self.x_min_line:
-            self.x_min_line.remove()
-        if self.x_max_line:
-            self.x_max_line.remove()
-        if self.y_min_line:
-            self.y_min_line.remove()
-        if self.y_max_line:
-            self.y_max_line.remove()
-        if self.heading_text:
-            self.heading_text.remove()
-        self.x_min_line = self.ax.axvline(x=points[4], color='green', linestyle='--', label='X Min')
-        self.x_max_line = self.ax.axvline(x=points[5], color='green', linestyle='--', label='X Max')
-        self.y_min_line = self.ax.axhline(y=points[6], color='purple', linestyle='--', label='Y Min')
-        self.y_max_line = self.ax.axhline(y=points[7], color='purple', linestyle='--', label='Y Max')
-        self.heading_text = self.ax.text(0, 1, f'Heading:{str(int(points[8]))}°', fontsize=12, color='black',
-                                         horizontalalignment='left', verticalalignment='bottom', transform=self.ax.transAxes)
-
-
-        # Refresh plot
-        self.ax.relim()
-        self.ax.autoscale_view()
-        global calibrate_comp_on
-        if calibrate_comp_on:
-            plt.draw()
-
-    def close_plot(self):
-        # Close the plot window
-        self.manual_closing = True
-        plt.close(self.fig)
-
-    def on_close(self, args):
-        global w
-        global calibrate_comp_on
-        if (not self.manual_closing):
-            w.calibrate_comp_toggle()
-
-class GraphWindow(pg.GraphicsLayoutWidget):
-    def __init__(self):
-        '''
-        Initialize Graphing Window UI
-        '''
         super().__init__()
+        self.setWindowTitle("Enter Two Numbers")
 
-        self.layout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.layout)
-        self.setStyleSheet("background-color: white; border:4px solid rgb(0, 0, 0);")
-        self.setWindowTitle("UCI CanSat Live Telemetry")
-        self.setWindowIcon(QtGui.QIcon(os.path.join(os.path.dirname(__file__), "gui", "logo.png")))
+        layout = QtWidgets.QFormLayout()
 
-        # set up arrays for data that will be graphed
-        self.graph_data = {}
-        for field in GRAPHED_FIELDS:
-            self.graph_data[field] = []
+        # First number
+        self.num1 = QtWidgets.QDoubleSpinBox()
+        self.num1.setDecimals(6)       # allow up to 6 decimal places
+        self.num1.setRange(-1e6, 1e6)  # set a large range
+        self.num1.setSingleStep(0.0001) # step size
+        self.num1.clear()
+        layout.addRow("Target Latitude:", self.num1)
 
-        # initialize graphs
-        self.graphs = {}
-        for field in GRAPHED_FIELDS:
-            self.graphs[field] = self.addPlot(title=field)
-            self.graphs[field].curve = self.graphs[field].plot(pen={'width': 3}, symbol='o')
+        # Second number
+        self.num2 = QtWidgets.QDoubleSpinBox()
+        self.num2.setDecimals(6)
+        self.num2.setRange(-1e6, 1e6)
+        self.num2.setSingleStep(0.0001)
+        self.num2.clear()
+        layout.addRow("Target Longitude:", self.num2)
 
-            # go to next row every 4 graphs
-            if (self.itemIndex(self.graphs[field]) + 1) % 4 == 0:
-                self.nextRow()
+        # OK / Cancel buttons
+        buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
 
-        self.previous_time = ""
+        self.setLayout(layout)
 
-    def update(self):
-        '''
-        Add new data points to graphs if necessary
-        '''
-        global telemetry
-
-        if self.previous_time != telemetry["MISSION_TIME"]:
-
-            for field in GRAPHED_FIELDS:
-                if telemetry[field] != "N/A":
-                    try:
-                        self.graph_data[field].append(float(telemetry[field]))
-                        if len(self.graph_data[field]) > 50:
-                            self.graph_data[field].pop(0)
-                    except:
-                        print("Error")
-                    self.graphs[field].curve.setData(self.graph_data[field])
-
-                    # if len(self.graph_data[field]) > 50:
-                    #     self.graph_data[field] = self.graph_data[field][-50:]
-
-            self.previous_time = telemetry["MISSION_TIME"]
+    def get_values(self):
+        return self.num1.value(), self.num2.value()
 
 def calc_checksum(data):
     '''
@@ -466,7 +497,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global sim, telemetry, packet_count #, last_recieved_packet
+    global sim, telemetry, packet_count, w #, last_recieved_packet
 
     # Ensure only recieving each packet once
     # sent_packet_count = int(data[TELEMETRY_FIELDS.index("PACKET_COUNT")])
@@ -481,6 +512,21 @@ def parse_xbee(data):
         if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
+    if TELEMETRY_FIELDS["PAYLOAD_RELEASED"] == "True":
+        w.payload_released = True
+    else:
+        w.payload_released = False
+
+    if TELEMETRY_FIELDS["PARAGLIDER_ACTIVE"] == "True":
+        w.paraglider_active = True
+    else:
+        w.paraglider_active = False
+
+    if TELEMETRY_FIELDS["EGG_RELEASED"] == "True":
+        w.egg_released = True
+    else:
+        w.egg_released = False
+
     # if data[3] == "S":
     #     sim = True
     # else:
@@ -493,84 +539,79 @@ def parse_xbee(data):
             writer_object = writer(f_object)
             writer_object.writerow(list(telemetry.values()) + [data[-1]])
 
+    w.update()
+
 def read_xbee():
     '''
     Read packets from the Xbee module
     '''
-    buffer = ["", ""]
+    buffer = ""
     global serialConnected
     while True:     # Keep running as long as the serial connection is open
-        for xbee_num in range(NUM_XBEES):
-            if not serialConnected[xbee_num]:
-                connect_Serial(xbee_num)
-                continue
+        if not serialConnected:
+            connect_Serial()
+            time.sleep(0.1)
+            continue
 
-            try:
-                if ser[xbee_num].inWaiting() > 0:
-                    buffer[xbee_num] += ser[xbee_num].read(ser[xbee_num].inWaiting()).decode(errors='replace')
+        try:
+            if ser.inWaiting() > 0:
+                buffer += ser.read(ser.inWaiting()).decode(errors='replace')
 
-                    start_idx = buffer[xbee_num].find(START_DELIMITER)
-                    end_idx = buffer[xbee_num].find("\n", start_idx)
-                    next_start = buffer[xbee_num].find(START_DELIMITER, start_idx + 1)
+                start_idx = buffer.find(START_DELIMITER)
+                end_idx = buffer.find("\n", start_idx)
+                next_start = buffer.find(START_DELIMITER, start_idx + 1)
 
-                    if next_start != -1 and (end_idx == -1 or next_start < end_idx):
-                        frame_end = next_start
-                    elif end_idx != -1:
-                        frame_end = end_idx
-                    else:
-                        # Wait for a full packet
-                        continue
+                if next_start != -1 and (end_idx == -1 or next_start < end_idx):
+                    frame_end = next_start
+                elif end_idx != -1:
+                    frame_end = end_idx
+                else:
+                    # Wait for a full packet
+                    continue
 
-                    frame = buffer[xbee_num][start_idx + 1:frame_end].strip()
-                    buffer[xbee_num] = buffer[xbee_num][frame_end + 1:]
+                frame = buffer[start_idx + 1:frame_end].strip()
+                buffer = buffer[frame_end + 1:]
 
-                    try:
-                        data, checksum = frame.rsplit(",", 1)
-                        if verify_checksum(data, float(checksum)):
+                try:
+                    data, checksum = frame.rsplit(",", 1)
+                    if verify_checksum(data, float(checksum)):
 
-                            split_data = data.split(",")
-                            if len(split_data) == 29:
-                                parse_xbee(split_data)
-                            elif len(split_data) == 10 and calibrate_comp_on:
-                                # global last_recieved_compass_packet
-                                if int(split_data[0]): # != last_recieved_compass_packet:
-                                    # last_recieved_compass_packet = int(split_data[0])
-                                    global w
-                                    if (w.compass_plotter):
-                                        w.compass_plotter.add_points([float(x) for x in split_data[1:]])
-                            else:
-                                print("Incorrect number of fields in frame: ", frame)
+                        split_data = data.split(",")
+                        if len(split_data) == 29:
+                            parse_xbee(split_data)
                         else:
-                            print("Failed to read frame:", frame)
-                    except Exception as e:
-                        print(e)
-                        print("Error reading frame: ", frame)
+                            print("Incorrect number of fields in frame: ", frame)
+                    else:
+                        print("Failed to read frame:", frame)
+                except Exception as e:
+                    print(e)
+                    print("Error reading frame: ", frame)
 
-                    # start_byte = ser.read(1)
-                    # if start_byte != START_DELIMITER:
-                    #     print(start_byte.decode())
+                # start_byte = ser.read(1)
+                # if start_byte != START_DELIMITER:
+                #     print(start_byte.decode())
 
-                    # if start_byte == START_DELIMITER:
-                    #     time.sleep(0.1)
-                    #     frame = ser.read_until(b"\n").decode().strip()
-                    #     try:
-                    #         data, checksum = frame.rsplit(",", 1)
-                    #         if verify_checksum(data, float(checksum)):
-                    #             parse_xbee(data.split(","))
-                    #         else:
-                    #             print("Failed to read frame:", frame)
-                    #     except:
-                    #         print("Failed to read frame:", frame)
+                # if start_byte == START_DELIMITER:
+                #     time.sleep(0.1)
+                #     frame = ser.read_until(b"\n").decode().strip()
+                #     try:
+                #         data, checksum = frame.rsplit(",", 1)
+                #         if verify_checksum(data, float(checksum)):
+                #             parse_xbee(data.split(","))
+                #         else:
+                #             print("Failed to read frame:", frame)
+                #     except:
+                #         print("Failed to read frame:", frame)
 
-                serialConnected[xbee_num] = True
-            except serial.serialutil.SerialException as e:
-                if (serialConnected[xbee_num]):
-                    print("Serial " + str(xbee_num) + f" Connection Lost: {e}")
-                serialConnected[xbee_num] = False
-            except OSError as e:
-                if (serialConnected[xbee_num]):
-                    print("Serial " + str(xbee_num) + f" Connection Lost: {e}")
-                serialConnected[xbee_num] = False
+            serialConnected = True
+        except serial.serialutil.SerialException as e:
+            if serialConnected:
+                print(f"Connection Lost: {e}")
+            serialConnected = False
+        except OSError as e:
+            if (serialConnected):
+                print(f"Connection Lost: {e}")
+            serialConnected = False
 
         time.sleep(0.1)
             
@@ -581,49 +622,31 @@ def write_xbee(cmd):
     '''
     # Frame Format: ~<data>,<checksum>
 
-    '''
-        Commands:
-        CMD,<TEAM_ID>,CX,<ON_OFF>               Payload Telemetry On/Off Command
-        CMD,<TEAM_ID>,ST,<UTC_TIME>|GPS         Set Time
-        CMD,<TEAM_ID>,SIM,<MODE>                Simulation Mode Control Command
-        CMD,<TEAM ID>,SIMP,<PRESSURE>           Simulated Pressure Data (to be used in Simulation Mode only)
-        CMD,<TEAM ID>,CAL                       Calibrate Altitude to Zero
-        CMD,<TEAM ID>,MEC,<DEVICE>,<ON_OFF>     Mechanism actuation command
-
-        Additional Commands:
-        CMD,<TEAM_ID>,BCN,<ON_OFF>              Turns the beacon on or off
-    '''
-
     # Create Packet
     global packets_sent
     packets_sent += 1
-    checksum = calc_checksum(f"{packets_sent},{cmd}")
-    frame = f"{START_DELIMITER}{packets_sent},{cmd},{checksum:02X}"
+    checksum = calc_checksum(f"{cmd}")
+    frame = f"{START_DELIMITER}{cmd},{checksum:02X}"
 
     # Send to XBee
     if (not SER_DEBUG):
-        sent = []
-        for xbee_num in range(2):
-            try:
-                if (ser[xbee_num]):
-                    ser[xbee_num].write(frame.encode())
-                    sent.append(xbee_num)
-                    time.sleep(0.1)
-            except serial.serialutil.SerialException as e:
-                print(f"Packet Not Sent on Xbee {xbee_num}: {e}")
-        
-        print(f"Packet Sent on Xbees {sent}: {cmd}")
+        try:
+            if (ser):
+                ser.write(frame.encode())
+                print(f"Packet Sent: {cmd}")
+        except serial.serialutil.SerialException as e:
+            print(f"Packet Not Sent: {e}")
 
 def send_simp_data():
     '''
     Send simulated pressure data from the csv file at 1 Hz
     '''
-    global sim, running
+    global sim
     global csv_indexer
     csv_file = open(os.path.join(os.path.dirname(__file__), "pres.csv"), 'r')
     csv_lines = csv_file.readlines()
     csv_indexer = 0
-    while running:
+    while True:
         if sim and csv_indexer < len(csv_lines):
             csv_num = str(csv_lines[csv_indexer].strip())
             write_xbee('CMD,' + TEAM_ID + ',SIMP,' + str(csv_num))
@@ -635,8 +658,7 @@ def send_simp_data():
 
 
 def main():
-    for xbee_num in range(NUM_XBEES):
-        connect_Serial(xbee_num)
+    connect_Serial()
 
     # Create new csv file with header
     if MAKE_CSV_FILE:
