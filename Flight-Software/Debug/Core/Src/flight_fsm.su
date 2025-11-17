@@ -1,0 +1,5 @@
+../Core/Src/flight_fsm.c:13:14:clampf	24	static
+../Core/Src/flight_fsm.c:19:6:fsm_init	56	static
+../Core/Src/flight_fsm.c:39:13:call_enter_action	16	static
+../Core/Src/flight_fsm.c:50:13:fsm_update	48	static
+../Core/Src/flight_fsm.c:135:21:fsm_status	4	static

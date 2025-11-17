@@ -1,0 +1,4 @@
+../Core/Src/ina219.c:10:26:wr16	40	static
+../Core/Src/ina219.c:14:26:rd16	48	static
+../Core/Src/ina219.c:21:6:ina219_init	16	static
+../Core/Src/ina219.c:26:6:ina219_read_bus_voltage	24	static
