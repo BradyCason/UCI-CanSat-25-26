@@ -1,0 +1,4 @@
+../Core/Src/gps.c:15:15:nmea_to_degrees	32	static
+../Core/Src/gps.c:21:13:parse_gga	416	static
+../Core/Src/gps.c:65:6:gps_init	8	static
+../Core/Src/gps.c:70:6:gps_get_latest	24	static

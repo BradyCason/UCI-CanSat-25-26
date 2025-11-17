@@ -1,0 +1,6 @@
+../Core/Src/sensor_if.c:23:16:set_gps	32	static
+../Core/Src/sensor_if.c:65:13:parse_nmea_gga	64	static
+../Core/Src/sensor_if.c:95:13:gps_read_line_over_i2c	32	static
+../Core/Src/sensor_if.c:120:6:sensor_if_init	16	static
+../Core/Src/sensor_if.c:130:6:sensor_if_poll	8	static
+../Core/Src/sensor_if.c:141:6:sensor_if_get_gps	24	static

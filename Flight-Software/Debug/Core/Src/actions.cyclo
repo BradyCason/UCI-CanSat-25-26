@@ -1,0 +1,11 @@
+../Core/Src/actions.c:11:13:servo_payload_open	1
+../Core/Src/actions.c:12:13:servo_payload_close	1
+../Core/Src/actions.c:13:13:paraglider_arm	1
+../Core/Src/actions.c:14:13:paraglider_deploy	1
+../Core/Src/actions.c:15:13:egg_release	1
+../Core/Src/actions.c:17:6:act_on_enter_launch_pad	1
+../Core/Src/actions.c:22:6:act_on_enter_ascent	1
+../Core/Src/actions.c:26:6:act_on_enter_apogee	1
+../Core/Src/actions.c:30:6:act_on_enter_descent	1
+../Core/Src/actions.c:35:6:act_on_enter_probe_release	1
+../Core/Src/actions.c:42:6:act_on_enter_landed	1

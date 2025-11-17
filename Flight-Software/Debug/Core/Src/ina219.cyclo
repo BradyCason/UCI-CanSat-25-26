@@ -1,0 +1,4 @@
+../Core/Src/ina219.c:10:26:wr16	1
+../Core/Src/ina219.c:14:26:rd16	2
+../Core/Src/ina219.c:21:6:ina219_init	2
+../Core/Src/ina219.c:26:6:ina219_read_bus_voltage	2

@@ -1,0 +1,2 @@
+../Core/Src/telemetry.c:6:6:tel_init	4	static
+../Core/Src/telemetry.c:8:6:tel_printf	272	static
