@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import subprocess
 
 
 pin_18 = 18 # show graphs
@@ -66,7 +67,7 @@ try:
             print("For example: calibrate altitude")
             # call some other functions  that do the work
             flash_led(pin_12)
-            print("Pin 12 flashes status LED to show this")
+            print("Pin 12 flashes status LED to show sending xbee packet")
 
         if state_7 == GPIO.LOW and telemetry_func_called == False:
             print("Telemetry enabled")
@@ -91,7 +92,8 @@ try:
 
         if state_18 == GPIO.LOW :
             print("Pin 18 button pressed, show graphs")
-        
+            subprocess.Popen(['python3','/home/brcason/UCI-CanSat-25-26/Ground-Station/mini_map_test.py'])
+            time.sleep(0.1)
 
         time.sleep(0.1) # global delay and debouncing adjustment
     
