@@ -12,13 +12,13 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import random
 
-TEAM_ID = "3141"
+TEAM_ID = "1083"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
-                    "TEMPERATURE", "PRESSURE", "VOLTAGE", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "Tilt_R", "Tilt_P", "Tilt_Y", "GPS_TIME", "GPS_ALTITUDE",
+                    "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
+                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-                    "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "EGG_RELEASED", "TARGET_LATITUDE",
+                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
 
 current_time = time.time()
@@ -35,7 +35,7 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = 3
+COM_PORT = 7
 
 MAKE_CSV_FILE = False
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
@@ -95,7 +95,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         self.payload_released = False
         self.paraglider_active = False
-        self.egg_released = False
+        self.container_released = False
 
         self.init_graphs()
 
@@ -139,7 +139,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
         self.release_payload_button.clicked.connect(self.release_payload_clicked)
         self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
-        self.release_egg_button.clicked.connect(self.release_egg_clicked)
+        self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
         self.set_coordinates_button.clicked.connect(self.set_coordinates)
 
@@ -150,7 +150,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.calibrate_alt_button.clicked.connect(self.non_sim_button_clicked)
         self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
         self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
-        self.release_egg_button.clicked.connect(self.non_sim_button_clicked)
+        self.release_container_button.clicked.connect(self.non_sim_button_clicked)
         self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
         self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
 
@@ -250,6 +250,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
     def toggle_telemetry(self):
         global telemetry_on
+        telemetry_on = not telemetry_on
 
         if telemetry_on:
             write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
@@ -272,11 +273,11 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         else:
             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
     
-    def release_egg_clicked(self):
-        if self.egg_released:
-            write_xbee("CMD," + TEAM_ID + ",MEC,EGG,OFF")
+    def release_container_clicked(self):
+        if self.container_released:
+            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
         else:
-            write_xbee("CMD," + TEAM_ID + ",MEC,EGG,ON")
+            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
@@ -297,12 +298,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             self.activate_paraglider_button.setText("Activate Paraglider")
             self.make_button_red(self.activate_paraglider_button)
 
-        if self.egg_released:
-            self.release_egg_button.setText("Reset Egg Release")
-            self.make_button_green(self.release_egg_button)
+        if self.container_released:
+            self.release_container_button.setText("Reset Container Release")
+            self.make_button_green(self.release_container_button)
         else:
-            self.release_egg_button.setText("Release Egg")
-            self.make_button_red(self.release_egg_button)
+            self.release_container_button.setText("Release Container")
+            self.make_button_red(self.release_container_button)
 
     def init_graphs(self):
         self.x_data = []
@@ -350,36 +351,36 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_subplot = self.voltage_figure.add_subplot(111)
         self.voltage_y_data = []
 
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(100)  # 100 ms update
-        self.timer.timeout.connect(self.update_graphs)
-        self.timer.start()
+        # self.timer = QtCore.QTimer()
+        # self.timer.setInterval(100)  # 100 ms update
+        # self.timer.timeout.connect(self.update_graphs)
+        # self.timer.start()
 
     def update_graphs(self):
 
         # Update data
-        # self.x_data.append(telemetry["PACKET_COUNT"])
-        # self.altitude_y_data.append(telemetry["ALTITUDE"][-1])
-        # self.accel_r_y_data.append(telemetry["ACCEL_R"][-1])
-        # self.accel_p_y_data.append(telemetry["ACCEL_P"][-1])
-        # self.accel_y_y_data.append(telemetry["ACCEL_Y"][-1])
-        # self.rotation_r_y_data.append(telemetry["GYRO_R"][-1])
-        # self.rotation_p_y_data.append(telemetry["GYRO_P"][-1])
-        # self.rotation_y_y_data.append(telemetry["GYRO_Y"][-1])
-        # self.current_y_data.append(telemetry["CURRENT"][-1])
-        # self.voltage_y_data.append(telemetry["VOLTAGE"][-1])
+        self.x_data.append(telemetry["PACKET_COUNT"])
+        self.altitude_y_data.append(float(telemetry["ALTITUDE"]))
+        self.accel_r_y_data.append(float(telemetry["ACCEL_R"]))
+        self.accel_p_y_data.append(float(telemetry["ACCEL_P"]))
+        self.accel_y_y_data.append(float(telemetry["ACCEL_Y"]))
+        self.rotation_r_y_data.append(float(telemetry["GYRO_R"]))
+        self.rotation_p_y_data.append(float(telemetry["GYRO_P"]))
+        self.rotation_y_y_data.append(float(telemetry["GYRO_Y"]))
+        self.current_y_data.append(float(telemetry["CURRENT"]))
+        self.voltage_y_data.append(float(telemetry["VOLTAGE"]))
 
-        self.x_data.append(self.counter)
-        self.altitude_y_data.append(random.randint(0,10))
-        self.accel_r_y_data.append(random.randint(0,10))
-        self.accel_p_y_data.append(random.randint(0,10))
-        self.accel_y_y_data.append(random.randint(0,10))
-        self.rotation_r_y_data.append(random.randint(0,10))
-        self.rotation_p_y_data.append(random.randint(0,10))
-        self.rotation_y_y_data.append(random.randint(0,10))
-        self.current_y_data.append(random.randint(0,10))
-        self.voltage_y_data.append(random.randint(0,10))
-        self.counter += 1
+        # self.x_data.append(self.counter)
+        # self.altitude_y_data.append(random.randint(0,10))
+        # self.accel_r_y_data.append(random.randint(0,10))
+        # self.accel_p_y_data.append(random.randint(0,10))
+        # self.accel_y_y_data.append(random.randint(0,10))
+        # self.rotation_r_y_data.append(random.randint(0,10))
+        # self.rotation_p_y_data.append(random.randint(0,10))
+        # self.rotation_y_y_data.append(random.randint(0,10))
+        # self.current_y_data.append(random.randint(0,10))
+        # self.voltage_y_data.append(random.randint(0,10))
+        # self.counter += 1
 
         # Only plot last 50 points
         if len(self.x_data) > 50:
@@ -396,7 +397,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         # Plot
         self.alt_subplot.clear()
-        self.alt_subplot.plot(self.x_data, self.accel_r_y_data, color='blue')
+        self.alt_subplot.plot(self.x_data, self.altitude_y_data, color='blue')
         self.alt_subplot.set_title("Altitude (m)")
         self.altitude_canvas.draw()
 
@@ -442,7 +443,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         if result == QtWidgets.QDialog.Accepted:
             num1, num2 = dialog.get_values()
-            write_xbee("CMD," + TEAM_ID + ",COORD,{:.6f},{:.6f}".format(num1, num2))
+            write_xbee("CMD," + TEAM_ID + ",SC,{:.6f},{:.6f}".format(num1, num2))
         else:
             QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
 
@@ -508,24 +509,24 @@ def parse_xbee(data):
     packet_count += 1
     telemetry["PACKET_COUNT"] = str(packet_count)
 
-    for i in range(len(data) - 1):
+    for i in range(len(data)):
         if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
-    if TELEMETRY_FIELDS["PAYLOAD_RELEASED"] == "True":
+    if telemetry["PAYLOAD_RELEASED"] == "TRUE":
         w.payload_released = True
     else:
         w.payload_released = False
 
-    if TELEMETRY_FIELDS["PARAGLIDER_ACTIVE"] == "True":
+    if telemetry["PARAGLIDER_ACTIVE"] == "TRUE":
         w.paraglider_active = True
     else:
         w.paraglider_active = False
 
-    if TELEMETRY_FIELDS["EGG_RELEASED"] == "True":
-        w.egg_released = True
+    if telemetry["CONTAINER_RELEASED"] == "TRUE":
+        w.container_released = True
     else:
-        w.egg_released = False
+        w.container_released = False
 
     # if data[3] == "S":
     #     sim = True
@@ -577,7 +578,7 @@ def read_xbee():
                     if verify_checksum(data, float(checksum)):
 
                         split_data = data.split(",")
-                        if len(split_data) == 29:
+                        if len(split_data) == len(TELEMETRY_FIELDS):
                             parse_xbee(split_data)
                         else:
                             print("Incorrect number of fields in frame: ", frame)
