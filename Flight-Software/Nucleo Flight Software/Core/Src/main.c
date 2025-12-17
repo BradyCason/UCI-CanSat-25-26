@@ -35,6 +35,7 @@
 #include "telemetry.h"
 #include "xbee.h"
 #include "commands.h"
+#include "paraglider.h"
 
 /* USER CODE END Includes */
 
@@ -85,8 +86,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
-static void flight_init(void);
 
 /* USER CODE END PFP */
 

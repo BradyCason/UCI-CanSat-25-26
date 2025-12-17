@@ -1,4 +1,3 @@
-"./Core/Src/actions.o"
 "./Core/Src/baro.o"
 "./Core/Src/commands.o"
 "./Core/Src/current.o"
@@ -7,7 +6,6 @@
 "./Core/Src/imu.o"
 "./Core/Src/main.o"
 "./Core/Src/paraglider.o"
-"./Core/Src/sensor_if.o"
 "./Core/Src/servos.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"
