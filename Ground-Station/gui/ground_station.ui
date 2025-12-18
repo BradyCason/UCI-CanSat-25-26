@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1004</width>
-    <height>856</height>
+    <width>1242</width>
+    <height>885</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -278,6 +278,66 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
+                  <widget class="QLabel" name="container_released">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>Container Released:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="payload_released">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>Payload Released:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="paraglider_active">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>Paraglider Active:</string>
+                   </property>
+                   <property name="textFormat">
+                    <enum>Qt::AutoText</enum>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QLabel" name="volt_label">
                    <property name="font">
                     <font>
@@ -310,48 +370,12 @@ QPushButton:hover {
                    </property>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="QLabel" name="target_lat_label">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">border: none;</string>
-                   </property>
-                   <property name="text">
-                    <string>Target Latitude (°):</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="target_long_label">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">border: none;</string>
-                   </property>
-                   <property name="text">
-                    <string>Target Longitude (°):</string>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item>
                 <layout class="QVBoxLayout" name="state_fields_2">
                  <item>
-                  <widget class="QLabel" name="MISSION_TIME_2">
+                  <widget class="QLabel" name="MISSION_TIME">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -396,7 +420,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="PACKET_COUNT_2">
+                  <widget class="QLabel" name="PACKET_COUNT">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -411,7 +435,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="CMD_ECHO_2">
+                  <widget class="QLabel" name="CMD_ECHO">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -419,6 +443,60 @@ QPushButton:hover {
                      <weight>75</weight>
                      <bold>true</bold>
                     </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="CONTAINER_RELEASED">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="PAYLOAD_RELEASED">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="PARAGLIDER_ACTIVE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
                    </property>
                    <property name="text">
                     <string>N/A</string>
@@ -455,36 +533,6 @@ QPushButton:hover {
                    </property>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="QLabel" name="TARGET_LATITUDE">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="TARGET_LONGITUDE">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
               </layout>
@@ -501,6 +549,42 @@ QPushButton:hover {
             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
              <item>
               <layout class="QVBoxLayout" name="telemetry_panel">
+               <item>
+                <widget class="QLabel" name="target_lat_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>Target Latitude (°):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="target_long_label">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                 <property name="text">
+                  <string>Target Longitude (°):</string>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QLabel" name="alt_label">
                  <property name="font">
@@ -530,26 +614,7 @@ QPushButton:hover {
                   </font>
                  </property>
                  <property name="text">
-                  <string>Max Altitude:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="temp_label">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                   <kerning>true</kerning>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                 <property name="text">
-                  <string>Temperature (°C):</string>
+                  <string>Max Altitude (m):</string>
                  </property>
                 </widget>
                </item>
@@ -663,6 +728,36 @@ QPushButton:hover {
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
+                <widget class="QLabel" name="TARGET_LATITUDE">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="TARGET_LONGITUDE">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QLabel" name="ALTITUDE">
                  <property name="font">
                   <font>
@@ -678,22 +773,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="MAX_ALTITUDE_2">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>N/A</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="TEMPERATURE">
+                <widget class="QLabel" name="MAX_ALTITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -723,22 +803,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="GPS_LATITUDE">
-                 <property name="font">
-                  <font>
-                   <family>Sans Serif Collection</family>
-                   <pointsize>10</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>N/A</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="GPS_ALTITUDE">
+                <widget class="QLabel" name="GPS_SATS">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -768,7 +833,22 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="GPS_SATS">
+                <widget class="QLabel" name="GPS_ALTITUDE">
+                 <property name="font">
+                  <font>
+                   <family>Sans Serif Collection</family>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="GPS_LATITUDE">
                  <property name="font">
                   <font>
                    <family>Sans Serif Collection</family>
@@ -813,6 +893,25 @@ QPushButton:hover {
               <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="temp_label">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                     <kerning>true</kerning>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
+                   <property name="text">
+                    <string>Temperature (°C):</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QLabel" name="accel_r_label">
                    <property name="font">
@@ -956,6 +1055,21 @@ QPushButton:hover {
                </item>
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <widget class="QLabel" name="TEMPERATURE">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QLabel" name="ACCEL_R">
                    <property name="font">
@@ -1249,26 +1363,7 @@ QPushButton:hover {
         <item>
          <widget class="QWidget" name="telemetry_container_5" native="true">
           <layout class="QGridLayout" name="gridLayout_13">
-           <item row="0" column="0">
-            <widget class="QPushButton" name="reset_state_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset State</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QPushButton" name="set_time_utc_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1287,51 +1382,7 @@ QPushButton:hover {
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="release_egg_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
-             </property>
-             <property name="text">
-              <string>Release Egg</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
-            <widget class="QPushButton" name="activate_paraglider_button">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
-             </property>
-             <property name="text">
-              <string>Activate Paraglider</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
             <widget class="QPushButton" name="release_payload_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1355,7 +1406,26 @@ QPushButton:hover {
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="reset_state_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reset State</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
             <widget class="QPushButton" name="set_time_gps_button">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1376,6 +1446,50 @@ QPushButton:hover {
              </property>
              <property name="text">
               <string>Set Time: GPS</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="activate_paraglider_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
+             </property>
+             <property name="text">
+              <string>Activate Paraglider</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="release_container_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Sans Serif Collection</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}</string>
+             </property>
+             <property name="text">
+              <string>Release Container</string>
              </property>
             </widget>
            </item>
@@ -1423,7 +1537,7 @@ QPushButton:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1004</width>
+     <width>1242</width>
      <height>26</height>
     </rect>
    </property>

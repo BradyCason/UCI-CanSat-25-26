@@ -1,0 +1,5 @@
+../Core/Src/baro.c:6:7:calculate_altitude	1
+../Core/Src/baro.c:10:19:BMP280_WriteReg	1
+../Core/Src/baro.c:15:19:BMP280_ReadRegs	1
+../Core/Src/baro.c:20:19:init_baro	4
+../Core/Src/baro.c:42:19:read_baro	3

@@ -1,0 +1,4 @@
+../Core/Src/flight_fsm.c:19:6:reset_alt_dif_buf	24	static
+../Core/Src/flight_fsm.c:27:7:get_avg_alt_dif	32	static
+../Core/Src/flight_fsm.c:39:6:update_alt_dif_buf	24	static
+../Core/Src/flight_fsm.c:50:6:update_fsm	24	static
