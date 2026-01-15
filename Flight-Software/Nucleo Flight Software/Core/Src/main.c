@@ -159,7 +159,7 @@ int main(void)
 
   init_xbee(&huart2, USART2_IRQn);
   Init_Servos();
-  init_baro(&hi2c1, &telemetry);
+  init_baro(&hi2c1);
   init_gps(&hi2c1, &telemetry);
   init_imu(&hi2c1);
   init_current(&hi2c1);
