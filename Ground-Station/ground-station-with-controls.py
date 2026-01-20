@@ -12,6 +12,90 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import random
 
+import RPi.GPIO as GPIO
+import time
+import subprocess
+import signal, sys
+
+# --- GPIO pins (copied/kept from controls.py) ---
+XbeeLED = 19
+pin_9 = 9     # enable simulation
+pin_14 = 14   # activate sim
+pin_15 = 15   # deactivate sim
+pin_11 = 11   # set coords
+pin_13 = 13   # set time UTC
+pin_26 = 26   # set time GPS
+pin_16 = 16   # calibrate altitude
+pin_4 = 4     # release payload
+pin_27 = 27   # release paraglider
+pin_21 = 21   # reset state
+pin_7 = 7     # telemetry on toggle
+pin_8 = 8     # telemetry off toggle
+
+GPIO.setmode(GPIO.BCM)
+INPUT_PINS = [pin_9, pin_14, pin_15, pin_11, pin_13, pin_26, pin_16, pin_4, pin_27, pin_21, pin_7, pin_8]
+for p in INPUT_PINS:
+    GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(XbeeLED, GPIO.OUT)
+GPIO.output(XbeeLED, GPIO.LOW)
+# --------------------------------------------------
+
+# Worker thread: poll GPIO and emit Qt signals on falling edge
+class ControlsThread(QtCore.QThread):
+    telemetry_toggle = QtCore.pyqtSignal()
+    sim_enable = QtCore.pyqtSignal()
+    sim_activate = QtCore.pyqtSignal()
+    sim_disable = QtCore.pyqtSignal()
+    set_coords = QtCore.pyqtSignal()
+    set_time_utc = QtCore.pyqtSignal()
+    set_time_gps = QtCore.pyqtSignal()
+    calibrate_alt = QtCore.pyqtSignal()
+    release_payload = QtCore.pyqtSignal()
+    release_paraglider = QtCore.pyqtSignal()
+    reset_state = QtCore.pyqtSignal()
+
+    def __init__(self, poll_interval=0.05, parent=None):
+        super().__init__(parent)
+        self._running = True
+        self.poll_interval = poll_interval
+        # track previous states to detect edges (buttons are pull-up; pressed -> LOW)
+        self.prev = {p: GPIO.input(p) for p in INPUT_PINS}
+
+    def stop(self):
+        self._running = False
+
+    def run(self):
+        while self._running:
+            for p in INPUT_PINS:
+                cur = GPIO.input(p)
+                if self.prev[p] == GPIO.HIGH and cur == GPIO.LOW:
+                    # falling edge detected -> map pin to signal
+                    if p == pin_7 or p == pin_8:
+                        self.telemetry_toggle.emit()
+                    elif p == pin_9:
+                        self.sim_enable.emit()
+                    elif p == pin_14:
+                        self.sim_activate.emit()
+                    elif p == pin_15:
+                        self.sim_disable.emit()
+                    elif p == pin_11:
+                        self.set_coords.emit()
+                    elif p == pin_13:
+                        self.set_time_utc.emit()
+                    elif p == pin_26:
+                        self.set_time_gps.emit()
+                    elif p == pin_16:
+                        self.calibrate_alt.emit()
+                    elif p == pin_4:
+                        self.release_payload.emit()
+                    elif p == pin_27:
+                        self.release_paraglider.emit()
+                    elif p == pin_21:
+                        self.reset_state.emit()
+                self.prev[p] = cur
+            time.sleep(self.poll_interval)
+
+
 TEAM_ID = "1083"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
@@ -672,16 +756,78 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     global w
     w = GroundStationWindow()
-
-    # simulate GUI clicks
-    # QtCore.QTimer.singleShot(1000, lambda: w.telemetry_toggle_button.click())  # calls telemetry toggle button click   # run after 100 ms 
     
     if (not SER_DEBUG):
         threading.Thread(target=read_xbee, daemon=True).start()
     threading.Thread(target=send_simp_data, daemon=True).start()
 
+    # Start GPIO controls thread and connect signals to safe GUI actions
+    controls = ControlsThread()
+    controls.telemetry_toggle.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.telemetry_toggle_button.click()))
+    controls.sim_enable.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.sim_enable_button.click()))
+    controls.sim_activate.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.sim_activate_button.click()))
+    controls.sim_disable.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.sim_disable_button.click()))
+    controls.set_coords.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.set_coordinates_button.click()))
+    controls.set_time_utc.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.set_time_utc_button.click()))
+    controls.set_time_gps.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.set_time_gps_button.click()))
+    controls.calibrate_alt.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.calibrate_alt_button.click()))
+    controls.release_payload.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.release_payload_button.click()))
+    controls.release_paraglider.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.activate_paraglider_button.click()))
+    controls.reset_state.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.reset_state_button.click()))
+    controls.start()
+
+    # ensure clean shutdown: stop thread and cleanup GPIO
+    def on_quit():
+        controls.stop()
+        controls.wait()
+        GPIO.cleanup()
+    app.aboutToQuit.connect(on_quit)
+
+
     w.show()
     sys.exit(app.exec_())
+
+
+# # Button Click Functions to Call when Physical Control is pressed
+# ###############################################################################################################################################
+
+# def click_calibrate_alt_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.calibrate_alt_button.click())  # calls calibrate alt button click   # run immediately
+
+# def click_set_coordinates_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.set_coordinates_button.click())  # calls set coordinates button click   # run immediately
+
+# def click_sim_enable_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.sim_enable_button.click())  # calls sim enable button click   # run immediately
+
+# def click_sim_activate_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.sim_activate_button.click())  # calls sim activate button click   # run immediately
+
+# def click_sim_disable_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.sim_disable_button.click())  # calls sim disable button click   # run immediately
+
+# def click_telemetry_toggle(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.telemetry_toggle_button.click())  # calls telemetry toggle button click   # run immediately
+
+# def click_reset_state_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.reset_state_button.click())  # calls reset state button click   # run immediately
+
+# def click_release_container_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.release_container_button.click())  # calls release container button click   # run immediately
+
+# def click_release_payload_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.release_payload_button.click())  # calls release payload button click   # run immediately
+
+# def click_activate_paraglider_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.activate_paraglider_button.click())  # calls activate paraglider button click   # run immediately
+
+# def click_set_time_utc_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.set_time_utc_button.click())  # calls set time utc button click   # run immediately
+
+# def click_set_time_gps_button(delay=0):
+#     QtCore.QTimer.singleShot(delay, lambda: w.set_time_gps_button.click())  # calls set time gps button click   # run immediately
+
+# ################################################################################################################################################
 
 if __name__ == "__main__":
     main()

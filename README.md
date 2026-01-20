@@ -16,4 +16,4 @@ In the boot/firmware/config.txt file, add the following lines:
 ```
 dtoverlay=gpio.shutdown ... insert
 ```
- 
+

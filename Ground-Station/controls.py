@@ -4,7 +4,7 @@ import subprocess
 import signal, sys
 
 # One LED to flash for Xbee transmission indication 
-XbeeLED = 22 # could be any GPIO 
+XbeeLED = 19 # could be any GPIO 
 
 pin_9 = 9     # Press to enable simulation button
 pin_14 = 14   # Press to activate simulation input toggle (to CanSat)
