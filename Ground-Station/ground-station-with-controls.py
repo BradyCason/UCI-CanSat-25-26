@@ -72,28 +72,57 @@ class ControlsThread(QtCore.QThread):
                     # falling edge detected -> map pin to signal
                     if p == pin_7 or p == pin_8:
                         self.telemetry_toggle.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_9:
                         self.sim_enable.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_14:
                         self.sim_activate.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_15:
                         self.sim_disable.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_11:
                         self.set_coords.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_13:
                         self.set_time_utc.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_26:
                         self.set_time_gps.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_16:
                         self.calibrate_alt.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_4:
                         self.release_payload.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_27:
                         self.release_paraglider.emit()
+                        flash_led(XbeeLED)
                     elif p == pin_21:
                         self.reset_state.emit()
+                        flash_led(XbeeLED)
                 self.prev[p] = cur
             time.sleep(self.poll_interval)
+
+
+# Helper function to flash the XBee LED without blocking the polling thread
+def flash_led(LED_pin, flashes=3, on_time=0.2, off_time=0.2):
+    """
+    Flash the given LED pin `flashes` times on a daemon thread so the
+    ControlsThread isn't blocked by sleep calls.
+    """
+    def _worker():
+        try:
+            for _ in range(flashes):
+                GPIO.output(LED_pin, GPIO.HIGH)
+                time.sleep(on_time)
+                GPIO.output(LED_pin, GPIO.LOW)
+                time.sleep(off_time)
+        except Exception:
+            pass
+    threading.Thread(target=_worker, daemon=True).start()
 
 
 TEAM_ID = "1083"
