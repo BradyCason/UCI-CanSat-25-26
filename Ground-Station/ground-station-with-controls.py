@@ -38,21 +38,6 @@ for p in INPUT_PINS:
     GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(XbeeLED, GPIO.OUT)
 GPIO.output(XbeeLED, GPIO.LOW)
-# Additional LEDs used for visual feedback (non-blocking flash)
-LEDTelemetryOn = 25
-LEDTelemetryOff = 24
-LEDSimEnable = 10
-LEDSimActivate = 23
-LEDSimDeactivate = 18
-
-LED_OUTPUTS = [XbeeLED, LEDTelemetryOn, LEDTelemetryOff, LEDSimEnable, LEDSimActivate, LEDSimDeactivate]
-for led in LED_OUTPUTS:
-    try:
-        GPIO.setup(led, GPIO.OUT)
-        GPIO.output(led, GPIO.LOW)
-    except Exception:
-        # if running on non-RPi env or pins unavailable, ignore setup errors
-        pass
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
@@ -76,25 +61,6 @@ class ControlsThread(QtCore.QThread):
         # track previous states to detect edges (buttons are pull-up; pressed -> LOW)
         self.prev = {p: GPIO.input(p) for p in INPUT_PINS}
 
-
-# Helper function to flash an LED without blocking the caller.
-def flash_led(LED, flashes=3, on_time=0.3, off_time=0.3):
-    """
-    Flash the given LED pin `flashes` times. Runs in a daemon thread
-    so it does not block the ControlsThread or the GUI.
-    """
-    def _worker():
-        try:
-            for _ in range(flashes):
-                GPIO.output(LED, GPIO.HIGH)
-                time.sleep(on_time)
-                GPIO.output(LED, GPIO.LOW)
-                time.sleep(off_time)
-        except Exception:
-            # ignore GPIO errors (cleanup/shutdown)
-            pass
-    threading.Thread(target=_worker, daemon=True).start()
-
     def stop(self):
         self._running = False
 
@@ -103,40 +69,29 @@ def flash_led(LED, flashes=3, on_time=0.3, off_time=0.3):
             for p in INPUT_PINS:
                 cur = GPIO.input(p)
                 if self.prev[p] == GPIO.HIGH and cur == GPIO.LOW:
-                    # falling edge detected -> map pin to signal and flash appropriate LED
+                    # falling edge detected -> map pin to signal
                     if p == pin_7 or p == pin_8:
                         self.telemetry_toggle.emit()
-                        flash_led(LEDTelemetryOn)
                     elif p == pin_9:
                         self.sim_enable.emit()
-                        flash_led(LEDSimEnable)
                     elif p == pin_14:
                         self.sim_activate.emit()
-                        flash_led(LEDSimActivate)
                     elif p == pin_15:
                         self.sim_disable.emit()
-                        flash_led(LEDSimDeactivate)
                     elif p == pin_11:
                         self.set_coords.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_13:
                         self.set_time_utc.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_26:
                         self.set_time_gps.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_16:
                         self.calibrate_alt.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_4:
                         self.release_payload.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_27:
                         self.release_paraglider.emit()
-                        flash_led(XbeeLED)
                     elif p == pin_21:
                         self.reset_state.emit()
-                        flash_led(XbeeLED)
                 self.prev[p] = cur
             time.sleep(self.poll_interval)
 
