@@ -1007,7 +1007,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="mag_r_label">
+                  <widget class="QLabel" name="heading_label">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -1017,37 +1017,7 @@ QPushButton:hover {
                     </font>
                    </property>
                    <property name="text">
-                    <string>Mag R (µT):</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="tilt_p_label">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Mag P (µT):</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="tilt_y_label">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Mag Y (µT):</string>
+                    <string>Heading (°):</string>
                    </property>
                   </widget>
                  </item>
@@ -1161,37 +1131,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="MAG_R">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="MAG_P">
-                   <property name="font">
-                    <font>
-                     <family>Sans Serif Collection</family>
-                     <pointsize>10</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>N/A</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="MAG_Y">
+                  <widget class="QLabel" name="HEADING">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
