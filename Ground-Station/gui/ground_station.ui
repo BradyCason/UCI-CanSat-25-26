@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1242</width>
-    <height>885</height>
+    <height>889</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1007,7 +1007,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="tilt_r_label">
+                  <widget class="QLabel" name="mag_r_label">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -1017,7 +1017,7 @@ QPushButton:hover {
                     </font>
                    </property>
                    <property name="text">
-                    <string>Tilt R (°):</string>
+                    <string>Mag R (µT):</string>
                    </property>
                   </widget>
                  </item>
@@ -1032,7 +1032,7 @@ QPushButton:hover {
                     </font>
                    </property>
                    <property name="text">
-                    <string>Tilt P (°):</string>
+                    <string>Mag P (µT):</string>
                    </property>
                   </widget>
                  </item>
@@ -1047,7 +1047,7 @@ QPushButton:hover {
                     </font>
                    </property>
                    <property name="text">
-                    <string>Tilt Y (°):</string>
+                    <string>Mag Y (µT):</string>
                    </property>
                   </widget>
                  </item>
@@ -1161,7 +1161,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="TILT_R">
+                  <widget class="QLabel" name="MAG_R">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -1176,7 +1176,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="TILT_P">
+                  <widget class="QLabel" name="MAG_P">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -1191,7 +1191,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="TILT_Y">
+                  <widget class="QLabel" name="MAG_Y">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>

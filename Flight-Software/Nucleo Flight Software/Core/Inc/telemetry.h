@@ -25,6 +25,9 @@ typedef struct {
 	float gps_altitude;
 	float gps_latitude;
 	float gps_longitude;
+	float mag_r;
+	float mag_p;
+	float mag_y;
 	uint8_t gps_sats;
 	char cmd_echo[64];
 	uint8_t container_released;

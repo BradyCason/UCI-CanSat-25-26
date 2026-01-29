@@ -17,6 +17,7 @@
 #define BNO055_ACC_DATA_X_LSB     0x08
 #define BNO055_GYR_DATA_X_LSB     0x14
 #define BNO055_LIA_DATA_X_LSB     0x28
+#define BNO055_MAG_DATA_X_LSB     0x0E
 
 // Operation modes
 #define BNO055_OPR_MODE_CONFIG    0x00
