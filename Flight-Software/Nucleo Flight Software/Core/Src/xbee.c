@@ -37,7 +37,7 @@ void send_packet(UART_HandleTypeDef *huart, Telemetry_t *telemetry){
 	telemetry->packet_count += 1;
 
 	snprintf(data, sizeof(data),
-		"%s,%02d:%02d:%02d,%d,%c,%s,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%02d:%02d:%02d,%.1f,%.1f,%.1f,%u,%s,%.1f,%s,%s,%s,%.1f,%.1f",
+		"%s,%02d:%02d:%02d,%d,%c,%s,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%02d:%02d:%02d,%.6f,%.6f,%.6f,%u,%s,%.1f,%s,%s,%s,%.1f,%.1f",
 		 TEAM_ID, telemetry->mission_time_hr, telemetry->mission_time_min, telemetry->mission_time_sec, telemetry->packet_count,
 		 telemetry->mode, telemetry->state, telemetry->altitude, telemetry->temperature, telemetry->pressure, telemetry->voltage,
 		 telemetry->current, -telemetry->gyro_z, telemetry->gyro_x, -telemetry->gyro_y, -telemetry->accel_z, telemetry->accel_x, -telemetry->accel_y,
