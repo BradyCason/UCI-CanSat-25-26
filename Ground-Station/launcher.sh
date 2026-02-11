@@ -10,7 +10,8 @@ export XAUTHORITY=$HOME/.Xauthority
 USER=$(whoami)
 
 cd /home/$USER/UCI-CanSat-25-26/Ground-Station/
-sudo python3 controls.py
+# sudo python3 controls.py
+sudo python3 ground-station-with-controls.py
 cd /home/$USER
 
 # cd $HOME/UCI-CanSat-25-26/Ground-Station/

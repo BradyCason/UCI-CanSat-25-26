@@ -31,9 +31,11 @@ pin_27 = 27   # release paraglider
 pin_21 = 21   # reset state
 pin_7 = 7     # telemetry on toggle
 pin_8 = 8     # telemetry off toggle
+pin_5 = 5     # release egg pin
+pin_18 = 18   # show graphs
 
 GPIO.setmode(GPIO.BCM)
-INPUT_PINS = [pin_9, pin_14, pin_15, pin_11, pin_13, pin_26, pin_16, pin_4, pin_27, pin_21, pin_7, pin_8]
+INPUT_PINS = [pin_18, pin_9, pin_14, pin_15, pin_11, pin_13, pin_26, pin_16, pin_4, pin_27, pin_21, pin_7, pin_8, pin_5]
 for p in INPUT_PINS:
     GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(XbeeLED, GPIO.OUT)
@@ -53,6 +55,8 @@ class ControlsThread(QtCore.QThread):
     release_payload = QtCore.pyqtSignal()
     release_paraglider = QtCore.pyqtSignal()
     reset_state = QtCore.pyqtSignal()
+    release_egg = QtCore.pyqtSignal()
+    show_graphs = QtCore.pyqtSignal()
 
     def __init__(self, poll_interval=0.05, parent=None):
         super().__init__(parent)
@@ -60,6 +64,7 @@ class ControlsThread(QtCore.QThread):
         self.poll_interval = poll_interval
         # track previous states to detect edges (buttons are pull-up; pressed -> LOW)
         self.prev = {p: GPIO.input(p) for p in INPUT_PINS}
+        self.graph_proc = None  # Track graph process for toggle functionality
 
     def stop(self):
         self._running = False
@@ -103,6 +108,17 @@ class ControlsThread(QtCore.QThread):
                     elif p == pin_21:
                         self.reset_state.emit()
                         flash_led(XbeeLED)
+                    elif p == pin_5:
+                        self.release_egg.emit()
+                        flash_led(XbeeLED)
+                    elif p == pin_18:
+                        # Toggle graph process: close if running, open if not
+                        if self.graph_proc and self.graph_proc.poll() is None:
+                            self.graph_proc.terminate()
+                            self.graph_proc = None
+                        else:
+                            self.graph_proc = subprocess.Popen(['python3','/home/jonathan/UCI-CanSat-25-26/Ground-Station/mini_map_test.py'])
+                                                
                 self.prev[p] = cur
             time.sleep(self.poll_interval)
 
