@@ -1,0 +1,8 @@
+../Core/Src/servos.c:3:6:Set_Servo_Angle	5
+../Core/Src/servos.c:23:6:Init_Servos	1
+../Core/Src/servos.c:33:6:Release_Payload	2
+../Core/Src/servos.c:42:6:Reset_Payload	2
+../Core/Src/servos.c:51:6:Release_Container	2
+../Core/Src/servos.c:60:6:Reset_Container	2
+../Core/Src/servos.c:69:6:Set_Left_Servo_Angle	1
+../Core/Src/servos.c:73:6:Set_Right_Servo_Angle	1

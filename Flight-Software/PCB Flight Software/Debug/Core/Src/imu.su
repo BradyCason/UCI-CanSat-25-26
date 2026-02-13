@@ -1,0 +1,4 @@
+../Core/Src/imu.c:3:19:BNO055_WriteReg	32	static
+../Core/Src/imu.c:8:19:BNO055_ReadRegs	40	static
+../Core/Src/imu.c:13:19:init_imu	24	static
+../Core/Src/imu.c:37:19:read_imu	24	static
