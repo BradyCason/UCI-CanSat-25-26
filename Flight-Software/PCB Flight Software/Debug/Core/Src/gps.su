@@ -1,0 +1,5 @@
+../Core/Src/gps.c:26:9:set_gps	32	static
+../Core/Src/gps.c:78:6:parse_nmea	24	static
+../Core/Src/gps.c:102:6:init_gps	40	static
+../Core/Src/gps.c:132:6:read_gps	32	static
+../Core/Src/gps.c:155:6:flush_gps	16	static

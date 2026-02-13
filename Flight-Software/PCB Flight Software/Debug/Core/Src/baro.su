@@ -1,0 +1,6 @@
+../Core/Src/baro.c:5:7:calculate_altitude	24	static
+../Core/Src/baro.c:9:13:bmp280_read	40	static
+../Core/Src/baro.c:14:13:bmp280_write	32	static
+../Core/Src/baro.c:19:13:bmp280_read_calibration	40	static
+../Core/Src/baro.c:39:19:init_baro	24	static
+../Core/Src/baro.c:61:6:read_baro	352	static
