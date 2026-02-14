@@ -35,7 +35,9 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = 7    # USB0 on raspberry pi
+# COM_PORT = 7    # USB0 on raspberry pi
+COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
+
 
 MAKE_CSV_FILE = False
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
@@ -45,13 +47,26 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
+# def connect_Serial():
+#     global ser
+#     global serialConnected
+#     if (not SER_DEBUG):
+#         try:
+#             # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
+#             ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+#             serialConnected = True
+#             print("Connected to Xbee")
+#         except serial.serialutil.SerialException as e:
+#             if (serialConnected):
+#                 print(f"Could not connect to Xbee: {e}")
+#             serialConnected = False
+
 def connect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
-            # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-            ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+            ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
             serialConnected = True
             print("Connected to Xbee")
         except serial.serialutil.SerialException as e:
