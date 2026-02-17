@@ -199,7 +199,8 @@ int main(void)
 	  if (telemetry.mode == 'F'){
 		  read_baro(&hi2c1, &telemetry);
 		  update_alt_dif_buf(&telemetry);
-		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
+//		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
+		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.alt_fused);
 	  }
 
 	  // Filter altitude

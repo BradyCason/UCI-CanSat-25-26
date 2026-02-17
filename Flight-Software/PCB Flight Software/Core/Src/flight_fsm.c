@@ -96,6 +96,7 @@ void update_fsm(Telemetry_t *telemetry){
 		}
 	}
 	else if (strcmp(telemetry->state, "DESCENT") == 0){
+//		if (telemetry->altitude <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
 		if (telemetry->altitude <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
 			strcpy(telemetry->state, "PROBE_RELEASE");
 			Release_Container();
