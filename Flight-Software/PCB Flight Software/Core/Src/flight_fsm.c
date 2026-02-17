@@ -97,7 +97,7 @@ void update_fsm(Telemetry_t *telemetry){
 	}
 	else if (strcmp(telemetry->state, "DESCENT") == 0){
 //		if (telemetry->altitude <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
-		if (telemetry->altitude <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
+		if (telemetry->alt_fused <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
 			strcpy(telemetry->state, "PROBE_RELEASE");
 			Release_Container();
 			telemetry->container_released = 1;
@@ -106,7 +106,8 @@ void update_fsm(Telemetry_t *telemetry){
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
 		// If below release alt or detects landed (In case '0' altitude shifted during flight)
-		if (telemetry->altitude <= PAYLOAD_RELEASE_ALT || get_avg_alt_dif() > LANDED_THRESHOLD){
+//		if (telemetry->altitude <= PAYLOAD_RELEASE_ALT || get_avg_alt_dif() > LANDED_THRESHOLD){
+		if (telemetry->alt_fused <= PAYLOAD_RELEASE_ALT || get_avg_alt_dif() > LANDED_THRESHOLD){
 			strcpy(telemetry->state, "PAYLOAD_RELEASE");
 			Release_Payload();
 			telemetry->payload_released = 1;
