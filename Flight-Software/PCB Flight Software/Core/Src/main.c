@@ -109,6 +109,7 @@ void USART1_IRQHandler(void) {
 	HAL_UART_IRQHandler(&huart1);
 }
 
+// Function called every second
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM3)
@@ -130,6 +131,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         	telemetry.mission_time_hr -= 24;
         }
     }
+
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 }
 /* USER CODE END 0 */
 
