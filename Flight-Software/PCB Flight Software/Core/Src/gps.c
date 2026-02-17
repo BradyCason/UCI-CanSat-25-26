@@ -121,7 +121,7 @@ void init_gps(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
 			pa_buf[i] = pa1010d_bytebuf;
 		}
 		if (j>5){
-			parse_nmea(pa_buf, telemetry);
+			parse_nmea((char *)pa_buf, telemetry);
 		}
 		HAL_Delay(500);
 	}
@@ -147,7 +147,7 @@ bool read_gps(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
 			}
 			pa_buf[pa_buf_index] = pa_bytebuf;
 		}
-		parse_nmea(pa_buf, telemetry);
+		parse_nmea((char *)pa_buf, telemetry);
 	}
 	return ret;
 }

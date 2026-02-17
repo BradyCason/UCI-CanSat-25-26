@@ -1,5 +1,7 @@
 #include "servos.h"
 
+extern TIM_HandleTypeDef htim2;
+
 void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle) {
     // Limit the angle between 0° and 180°
     if (angle > 180) {

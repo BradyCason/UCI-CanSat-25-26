@@ -122,7 +122,7 @@ void handle_command(const char *cmd) {
 			temp[1] = cmd[19];
 			telemetry.mission_time_sec = atoi(temp);
 			memset(telemetry.cmd_echo, '\0', sizeof(telemetry.cmd_echo));
-			snprintf(telemetry.cmd_echo, 11, "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
+			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
 		}
 
 	}

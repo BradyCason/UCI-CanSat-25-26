@@ -53,4 +53,5 @@ typedef struct {
 } Telemetry_t;
 
 void init_telemetry(Telemetry_t *telemetry);
+void reset_state(Telemetry_t *telemetry);
 void set_cmd_echo(const char *cmd, Telemetry_t *telemetry);

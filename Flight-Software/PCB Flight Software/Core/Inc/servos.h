@@ -9,16 +9,16 @@
 #define SERVO_FREQUENCY 50          // Servo frequency in Hz
 
 // Timer and channel definitions - CHANGED TO TIM3
-#define PAYLOAD_TIM htim3
-#define PAYLOAD_CHANNEL TIM_CHANNEL_1
+#define PAYLOAD_TIM htim2
+#define PAYLOAD_CHANNEL TIM_CHANNEL_3
 
-#define CONTAINER_TIM htim3
-#define CONTAINER_CHANNEL TIM_CHANNEL_2
+#define CONTAINER_TIM htim2
+#define CONTAINER_CHANNEL TIM_CHANNEL_4
 
-#define LEFT_SERVO_TIM htim3
+#define LEFT_SERVO_TIM htim2
 #define LEFT_SERVO_CHANNEL TIM_CHANNEL_1
 
-#define RIGHT_SERVO_TIM htim3
+#define RIGHT_SERVO_TIM htim2
 #define RIGHT_SERVO_CHANNEL TIM_CHANNEL_2
 
 // Servo angle definitions

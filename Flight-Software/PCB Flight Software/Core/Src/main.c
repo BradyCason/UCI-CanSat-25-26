@@ -224,7 +224,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     /* small delay so we aren't hammering I2C too hard */
-	HAL_Delay(5);
+	HAL_Delay(1);
   }
   /* USER CODE END 3 */
 }
