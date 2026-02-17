@@ -19,9 +19,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
@@ -35,7 +32,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/flight_fsm.h ../Core/Inc/telemetry.h ../Core/Inc/servos.h \
  ../Core/Inc/gps.h ../Core/Inc/imu.h ../Core/Inc/baro.h \
  ../Core/Inc/current.h ../Core/Inc/xbee.h ../Core/Inc/commands.h \
- ../Core/Inc/paraglider.h
+ ../Core/Inc/paraglider.h ../Core/Inc/complementary_filter.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -57,9 +54,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h:
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h:
@@ -80,3 +74,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/xbee.h:
 ../Core/Inc/commands.h:
 ../Core/Inc/paraglider.h:
+../Core/Inc/complementary_filter.h:

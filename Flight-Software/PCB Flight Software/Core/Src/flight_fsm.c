@@ -21,7 +21,8 @@ void reset_alt_dif_buf(Telemetry_t *telemetry){
 	for (int i = 0; i < ALT_DIF_BUF_SIZE; ++i){
 		alt_dif_buffer[i] = 0;
 	}
-	prev_alt = telemetry->altitude;
+//	prev_alt = telemetry->altitude;
+	prev_alt = telemetry->alt_fused;
 }
 
 float get_avg_alt_dif() {
@@ -41,10 +42,12 @@ void update_alt_dif_buf(Telemetry_t *telemetry) {
     if (cur_time == prev_alt_time){
     	return;
     }
-    alt_dif_buffer[alt_dif_buffer_idx] = (telemetry->altitude - prev_alt) / (cur_time - prev_alt_time) * 1000;
+//    alt_dif_buffer[alt_dif_buffer_idx] = (telemetry->altitude - prev_alt) / (cur_time - prev_alt_time) * 1000;
+    alt_dif_buffer[alt_dif_buffer_idx] = (telemetry->alt_fused - prev_alt) / (cur_time - prev_alt_time) * 1000;
 	alt_dif_buffer_idx = (alt_dif_buffer_idx + 1) % ALT_DIF_BUF_SIZE;
 	prev_alt_time = cur_time;
-	prev_alt = telemetry->altitude;
+//	prev_alt = telemetry->altitude;
+	prev_alt = telemetry->alt_fused;
 }
 
 void update_fsm(Telemetry_t *telemetry){

@@ -57,9 +57,21 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
+uint32_t micros(void);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Left_Glider_Servo_Pin GPIO_PIN_0
+#define Left_Glider_Servo_GPIO_Port GPIOA
+#define Right_Glider_Servo_Pin GPIO_PIN_1
+#define Right_Glider_Servo_GPIO_Port GPIOA
+#define Payload_Release_Servo_Pin GPIO_PIN_2
+#define Payload_Release_Servo_GPIO_Port GPIOA
+#define Container_Release_Servo_Pin GPIO_PIN_3
+#define Container_Release_Servo_GPIO_Port GPIOA
+#define LED_Pin GPIO_PIN_4
+#define LED_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 #define TEAM_ID "1083"

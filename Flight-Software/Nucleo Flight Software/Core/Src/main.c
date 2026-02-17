@@ -64,12 +64,6 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-/* For FSM debugging */
-volatile float             g_fsm_altitude_m     = 0.0f;
-volatile int32_t           g_fsm_state          = 0;
-volatile float             g_fsm_apogee_m       = 0.0f;
-volatile float             g_fsm_vz_mps         = 0.0f;
-
 Telemetry_t telemetry;
 
 uint8_t packet_ready = 0;

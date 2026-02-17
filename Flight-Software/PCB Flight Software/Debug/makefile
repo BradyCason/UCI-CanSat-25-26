@@ -60,8 +60,8 @@ all: main-build
 main-build: PCB\ Flight\ Software.elf secondary-outputs
 
 # Tool invocations
-PCB\ Flight\ Software.elf PCB\ Flight\ Software.map: $(OBJS) $(USER_OBJS) C:\Users\mukun\STM32CubeIDE_WS\PCB\ Flight\ Software\STM32F412RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "PCB Flight Software.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mukun\STM32CubeIDE_WS\PCB Flight Software\STM32F412RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PCB Flight Software.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+PCB\ Flight\ Software.elf PCB\ Flight\ Software.map: $(OBJS) $(USER_OBJS) C:\Users\brady\repos\UCI-CanSat-25-26\Flight-Software\PCB\ Flight\ Software\STM32F412RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "PCB Flight Software.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\brady\repos\UCI-CanSat-25-26\Flight-Software\PCB Flight Software\STM32F412RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PCB Flight Software.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

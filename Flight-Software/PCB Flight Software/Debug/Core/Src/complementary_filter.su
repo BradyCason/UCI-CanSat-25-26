@@ -1,0 +1,2 @@
+../Core/Src/complementary_filter.c:8:6:transform_accel_to_world	80	static
+../Core/Src/complementary_filter.c:39:6:complementary_filter	32	static

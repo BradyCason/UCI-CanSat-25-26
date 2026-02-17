@@ -18,6 +18,7 @@ void reset_state(Telemetry_t *telemetry){
 	telemetry->payload_released = 0;
 	telemetry->paraglider_active = 0;
 	telemetry->packet_count = 0;
+	telemetry->alt_fused = 0;
 }
 
 void set_cmd_echo(const char *cmd, Telemetry_t *telemetry)

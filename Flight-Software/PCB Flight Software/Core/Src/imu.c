@@ -50,6 +50,23 @@ HAL_StatusTypeDef read_imu(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
     telemetry->gyro_y = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
     telemetry->gyro_z = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
 
+//    // Quaternion (unitless)
+//    if (BNO055_ReadRegs(hi2c, BNO055_QUA_DATA_W_LSB, buf, 8) != HAL_OK)
+//        return HAL_ERROR;
+//
+//    int16_t qw = (int16_t)(buf[1] << 8 | buf[0]);
+//    int16_t qx = (int16_t)(buf[3] << 8 | buf[2]);
+//    int16_t qy = (int16_t)(buf[5] << 8 | buf[4]);
+//    int16_t qz = (int16_t)(buf[7] << 8 | buf[6]);
+//
+//    // Scale factor from datasheet
+//    const float scale = 1.0f / 16384.0f;
+//
+//    telemetry->qw = qw * scale;
+//    telemetry->qx = qx * scale;
+//    telemetry->qy = qy * scale;
+//    telemetry->qz = qz * scale;
+
     // Linear acceleration
 //    if (BNO055_ReadRegs(hi2c, BNO055_LIA_DATA_X_LSB, buf, 6) != HAL_OK) return HAL_ERROR;
 //    data->linear_accel.x = (int16_t)(buf[1] << 8 | buf[0]) / 100.0f; // m/s²

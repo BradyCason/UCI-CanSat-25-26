@@ -1,11 +1,13 @@
 #include "xbee.h"
 #include "main.h"
+#include "commands.h"
 #include <string.h>
+#include <stdlib.h>
 
 typedef uint8_t bool;
 
 uint8_t rx_packet[RX_BFR_SIZE];
-char rx_data[RX_BFR_SIZE];
+uint8_t rx_data[RX_BFR_SIZE];
 uint8_t tx_data[TX_BFR_SIZE-18];
 uint8_t tx_packet[TX_BFR_SIZE];
 uint8_t tx_count;
@@ -22,11 +24,11 @@ void init_xbee(UART_HandleTypeDef *huart, IRQn_Type IRQn){
 }
 
 uint8_t calculate_checksum(const char *data) {
-	uint8_t checksum = 0;
-	while (*data) {
-		checksum += *data++;
-	}
-	return checksum % 256;
+    uint8_t checksum = 0;
+    while (*data) {
+        checksum += *data++;
+    }
+    return checksum;
 }
 
 void send_packet(UART_HandleTypeDef *huart, Telemetry_t *telemetry){
@@ -82,21 +84,21 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size){
 
 	if (rx_packet[0] == '~') {
 		// Calculate where the comma and checksum should be
-		char *last_comma = &rx_packet[Size - 3];  // Comma is 3 characters from the end (2 for checksum, 1 for comma)
+		uint8_t *last_comma = &rx_packet[Size - 3];  // Comma is 3 characters from the end (2 for checksum, 1 for comma)
 
 		// Ensure the expected comma is at the right position
 		if (*last_comma == ',') {
 			*last_comma = '\0'; // Null-terminate before checksum
 
 			// Extract and convert the received checksum (2 characters after the comma)
-			uint8_t received_checksum = (uint8_t)strtol(&rx_packet[Size - 2], NULL, 16);  // Convert checksum to integer
+			uint8_t received_checksum = (uint8_t)strtol((const char*)&rx_packet[Size - 2], NULL, 16);  // Convert checksum to integer
 			// Calculate checksum of the data part (after '~' and before comma)
-			uint8_t calculated_checksum = calculate_checksum(&rx_packet[1]);
+			uint8_t calculated_checksum = calculate_checksum((const char*)&rx_packet[1]);
 
 			// Compare calculated checksum with the received one
 			if (calculated_checksum == received_checksum && command_ready == 0) {
 				// Checksum is valid, and this is new command. Process the command
-				strcpy(command_buffer, &rx_packet[1]);
+				strcpy(command_buffer, (const char*)&rx_packet[1]);
 				command_ready = 1;
 			}
 		}

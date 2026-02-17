@@ -9,6 +9,7 @@ typedef struct {
 	char mode;
 	char state[14];
 	float altitude;
+	float alt_fused;
 	float temperature;
 	float pressure;
 	float voltage;
@@ -39,6 +40,16 @@ typedef struct {
 	float max_altitude;
 	uint8_t sent_apogee; // Helps determine when to switch out of apogee state
 	uint8_t sent_payload_release; // Ensure that payload release state is sent because it happens close to landed state
+	float qw;
+	float qx;
+	float qy;
+	float qz;
+	float accel_world_x;
+	float accel_world_y;
+	float accel_world_z;
+	float velocity_world_x;
+	float velocity_world_y;
+	float velocity_world_z;
 } Telemetry_t;
 
 void init_telemetry(Telemetry_t *telemetry);
