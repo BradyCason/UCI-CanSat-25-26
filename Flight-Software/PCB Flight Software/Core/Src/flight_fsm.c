@@ -1,6 +1,7 @@
 #include "flight_fsm.h"
 #include <string.h>
 #include "servos.h"
+#include "main.h"
 #include <math.h>
 
 #define LAUNCH_THRESHOLD 5
@@ -15,6 +16,10 @@ float alt_dif_buffer[ALT_DIF_BUF_SIZE];
 int alt_dif_buffer_idx = 0;
 int prev_alt_time = 0;
 float prev_alt;
+
+// Liftoff detection variables
+uint32_t launch_accel_detected_time = -1;
+unsigned int negative_accel_counter = 0;
 
 void reset_alt_dif_buf(Telemetry_t *telemetry){
 	prev_alt_time = HAL_GetTick();
@@ -52,8 +57,32 @@ void update_alt_dif_buf(Telemetry_t *telemetry) {
 
 void update_fsm(Telemetry_t *telemetry){
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
-		if (get_avg_alt_dif() > LAUNCH_THRESHOLD){
-			strcpy(telemetry->state, "ASCENT");
+//		if (get_avg_alt_dif() > LAUNCH_THRESHOLD){
+//			strcpy(telemetry->state, "ASCENT");
+//		}
+
+		if (launch_accel_detected_time == -1){
+			// Acceleration not detected yet
+			//changed to < for vacuum testing
+			if (telemetry->accel_world_z > LAUNCH_ACCEL_THRESHOLD){
+				// Positive acceleration detected. Begin period of waiting to get off rail.
+				launch_accel_detected_time = HAL_GetTick();
+				negative_accel_counter = 0;
+			}
+		}
+		else if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME){
+			// In evaluation period. Monitor for any negative acceleration value.
+			// If detected, reset the system and begin again.
+			if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME + LAUNCH_EVAL_PERIOD_TIME){
+				// Enough time passed without negative acceleration. Launch detected
+				strcpy(telemetry->state, "ASCENT");
+			}
+			else if (telemetry->accel_world_z < 0){
+				// Negative acceleration detected. Reset system.
+				if (++negative_accel_counter >= 5){
+					launch_accel_detected_time = -1;
+				}
+			}
 		}
 	}
 	else if (strcmp(telemetry->state, "ASCENT") == 0){
