@@ -19,6 +19,9 @@ import signal, sys
 
 # --- GPIO pins (copied/kept from controls.py) ---
 XbeeLED = 19
+pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
+sim_enable_led = pin_10
+
 pin_9 = 9     # enable simulation
 pin_14 = 14   # activate sim
 pin_15 = 15   # deactivate sim
@@ -40,6 +43,8 @@ for p in INPUT_PINS:
     GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(XbeeLED, GPIO.OUT)
 GPIO.output(XbeeLED, GPIO.LOW)
+GPIO.setup(sim_enable_led, GPIO.OUT)
+GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM enabled by default
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
