@@ -25,6 +25,10 @@ pin_23 = 23
 pin_1 = 1
 sim_activate_led = pin_23 
 sim_disable_led = pin_1
+pin_24 = 24
+telemetry_disable_led = pin_24
+pin_25 = 25
+telemetry_enable_led = pin_25
 
 pin_9 = 9     # enable simulation
 pin_14 = 14   # activate sim
@@ -53,6 +57,10 @@ GPIO.setup(sim_activate_led, GPIO.OUT)
 GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated by default
 GPIO.setup(sim_disable_led, GPIO.OUT)
 GPIO.output(sim_disable_led, GPIO.LOW)  # SIM not disabled by default
+GPIO.setup(telemetry_enable_led, GPIO.OUT)
+GPIO.output(telemetry_enable_led, GPIO.LOW)  # Telemetry not enabled by default
+GPIO.setup(telemetry_disable_led, GPIO.OUT)
+GPIO.output(telemetry_disable_led, GPIO.HIGH)  # Telemetry disabled by default
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
