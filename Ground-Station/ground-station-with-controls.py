@@ -21,6 +21,10 @@ import signal, sys
 XbeeLED = 19
 pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
 sim_enable_led = pin_10
+pin_14 = 14
+pin_15 = 15
+sim_activate_led = pin_14 
+sim_disable_led = pin_15
 
 pin_9 = 9     # enable simulation
 pin_14 = 14   # activate sim
@@ -87,9 +91,11 @@ class ControlsThread(QtCore.QThread):
                         self.sim_enable.emit()
                         flash_led(XbeeLED)
                         GPIO.output(sim_enable_led, GPIO.LOW)  # SIM enabled: turn off sim enable LED
+                        GPIO.output(sim_activate_led, GPIO.HIGH) 
                     elif p == pin_14:
                         self.sim_activate.emit()
                         flash_led(XbeeLED)
+                        GPIO.output(sim_disable_led, GPIO.HIGH)
                     elif p == pin_15:
                         self.sim_disable.emit()
                         flash_led(XbeeLED)
