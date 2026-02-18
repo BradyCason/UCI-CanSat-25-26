@@ -21,10 +21,10 @@ import signal, sys
 XbeeLED = 19
 pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
 sim_enable_led = pin_10
-pin_14 = 14
-pin_15 = 15
-sim_activate_led = pin_14 
-sim_disable_led = pin_15
+pin_23 = 23
+pin_1 = 1
+sim_activate_led = pin_23 
+sim_disable_led = pin_1
 
 pin_9 = 9     # enable simulation
 pin_14 = 14   # activate sim
