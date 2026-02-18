@@ -58,9 +58,9 @@ GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated by default
 GPIO.setup(sim_disable_led, GPIO.OUT)
 GPIO.output(sim_disable_led, GPIO.LOW)  # SIM not disabled by default
 GPIO.setup(telemetry_enable_led, GPIO.OUT)
-GPIO.output(telemetry_enable_led, GPIO.LOW)  # Telemetry not enabled by default
+GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry not enabled by default but telemetry led on to indicate ready to enable telemetry
 GPIO.setup(telemetry_disable_led, GPIO.OUT)
-GPIO.output(telemetry_disable_led, GPIO.HIGH)  # Telemetry disabled by default
+GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry disabled by default and telemetry red led off to indicate telemetry disabled
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
@@ -96,9 +96,16 @@ class ControlsThread(QtCore.QThread):
                 cur = GPIO.input(p)
                 if self.prev[p] == GPIO.HIGH and cur == GPIO.LOW:
                     # falling edge detected -> map pin to signal
-                    if p == pin_7 or p == pin_8:
+                    if p == pin_7:
                         self.telemetry_toggle.emit()
                         flash_led(XbeeLED)
+                        GPIO.output(telemetry_enable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry enable LED
+                        GPIO.output(telemetry_disable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry disable LED
+                    elif p == pin_8:
+                        self.telemetry_toggle.emit()
+                        flash_led(XbeeLED)
+                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry disabled: turn on telemetry enable LED
+                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry disabled: turn off telemetry disable LED
                     elif p == pin_9:
                         self.sim_enable.emit()
                         flash_led(XbeeLED)
@@ -108,11 +115,14 @@ class ControlsThread(QtCore.QThread):
                         self.sim_activate.emit()
                         flash_led(XbeeLED)
                         GPIO.output(sim_disable_led, GPIO.HIGH)
+                        GPIO.output(sim_enable_led, GPIO.LOW)  # SIM activated: turn off sim enable LED
+                        GPIO.output(sim_activate_led, GPIO.LOW)  # SIM activated: turn off sim activate LED
                     elif p == pin_15:
                         self.sim_disable.emit()
                         flash_led(XbeeLED)
                         GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated: turn off sim activate LED
                         GPIO.output(sim_disable_led, GPIO.LOW)  # SIM disabled: turn off sim disable LED
+                        GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM disabled: turn on sim enable LED
                     elif p == pin_11:
                         self.set_coords.emit()
                         flash_led(XbeeLED)
