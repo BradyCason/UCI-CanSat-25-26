@@ -100,11 +100,14 @@ class ControlsThread(QtCore.QThread):
                         self.sim_activate.emit()
                         flash_led(XbeeLED)
                         GPIO.output(sim_disable_led, GPIO.HIGH)
+                        GPIO.output(sim_enable_led, GPIO.LOW)  # SIM activated: turn off sim enable LED
+                        GPIO.output(sim_activate_led, GPIO.LOW)  # SIM activated: turn off sim activate LED
                     elif p == pin_15:
                         self.sim_disable.emit()
                         flash_led(XbeeLED)
                         GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated: turn off sim activate LED
                         GPIO.output(sim_disable_led, GPIO.LOW)  # SIM disabled: turn off sim disable LED
+                        GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM disabled: turn on sim enable LED
                     elif p == pin_11:
                         self.set_coords.emit()
                         flash_led(XbeeLED)
