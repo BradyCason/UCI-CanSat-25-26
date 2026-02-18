@@ -50,9 +50,9 @@ GPIO.output(XbeeLED, GPIO.LOW)
 GPIO.setup(sim_enable_led, GPIO.OUT)
 GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM enabled by default
 GPIO.setup(sim_activate_led, GPIO.OUT)
-GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated by default
+GPIO.output(sim_activate_led, GPIO.HIGH)  # SIM not activated by default
 GPIO.setup(sim_disable_led, GPIO.OUT)
-GPIO.output(sim_disable_led, GPIO.LOW)  # SIM not disabled by default
+GPIO.output(sim_disable_led, GPIO.HIGH)  # SIM not disabled by default
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
