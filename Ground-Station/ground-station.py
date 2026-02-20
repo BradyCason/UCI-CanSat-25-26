@@ -35,7 +35,8 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = 7    # USB0 on raspberry pi
+# COM_PORT = 7    # USB0 on raspberry pi
+COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
 MAKE_CSV_FILE = False
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
@@ -45,13 +46,26 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
+# def connect_Serial():
+#     global ser
+#     global serialConnected
+#     if (not SER_DEBUG):
+#         try:
+#             # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
+#             ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+#             serialConnected = True
+#             print("Connected to Xbee")
+#         except serial.serialutil.SerialException as e:
+#             if (serialConnected):
+#                 print(f"Could not connect to Xbee: {e}")
+#             serialConnected = False
+
 def connect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
-            # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-            ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+            ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
             serialConnected = True
             print("Connected to Xbee")
         except serial.serialutil.SerialException as e:
@@ -88,7 +102,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
         uic.loadUi(ui_path, self)
 
-        self.showFullScreen()
+        # self.showFullScreen()
 
         self.setup_UI()
         self.connect_buttons()
@@ -165,7 +179,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             if field != "TEAM_ID":
                 self.telemetry_labels[field].setText(telemetry[field])
 
-        self.update_graphs()
+        # self.update_graphs()
         self.update_color_buttons()
 
     def make_button_green(self, button):
@@ -383,7 +397,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.counter += 1
 
         # Only plot last 50 points
-        if len(self.x_data) > 50:
+        if len(self.x_data) > 10:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)
             self.accel_r_y_data.pop(0)
@@ -592,7 +606,7 @@ def read_xbee():
                 # if start_byte != START_DELIMITER:
                 #     print(start_byte.decode())
 
-                # if start_byte == START_DELIMITER:
+                # if start_byte == START_DELIMITER:f
                 #     time.sleep(0.1)
                 #     frame = ser.read_until(b"\n").decode().strip()
                 #     try:
