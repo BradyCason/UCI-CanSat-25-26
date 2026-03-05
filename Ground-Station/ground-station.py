@@ -46,6 +46,7 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
+# """ The following serial function is used when windows laptop is used for GS and COM_PORT is set to the correct port number for the Xbee """ 
 # def connect_Serial():
 #     global ser
 #     global serialConnected
@@ -60,6 +61,8 @@ serialConnected = False
 #                 print(f"Could not connect to Xbee: {e}")
 #             serialConnected = False
 
+
+""" The following serial function is used when raspberry pi or linux machine is used for GS and is set to COM_PORT = "/dev/ttyUSB0" """ 
 def connect_Serial():
     global ser
     global serialConnected

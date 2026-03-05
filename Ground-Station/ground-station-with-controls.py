@@ -173,7 +173,7 @@ def flash_led(LED_pin, flashes=3, on_time=0.2, off_time=0.2):
                 GPIO.output(LED_pin, GPIO.LOW)
                 time.sleep(off_time)
         except Exception:
-            pass
+            pass    
     threading.Thread(target=_worker, daemon=True).start()
 
 
@@ -200,7 +200,6 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-# COM_PORT = 7    # USB0 on raspberry pi
 COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
 MAKE_CSV_FILE = False
@@ -211,20 +210,7 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
-# def connect_Serial():
-#     global ser
-#     global serialConnected
-#     if (not SER_DEBUG):
-#         try:
-#             # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-#             ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
-#             serialConnected = True
-#             print("Connected to Xbee")
-#         except serial.serialutil.SerialException as e:
-#             if (serialConnected):
-#                 print(f"Could not connect to Xbee: {e}")
-#             serialConnected = False
-
+""" The following serial function is used when raspberry pi or linux machine is used for GS and is set to COM_PORT = "/dev/ttyUSB0" """ 
 def connect_Serial():
     global ser
     global serialConnected
@@ -561,8 +547,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.voltage_y_data.append(random.randint(0,10))
         # self.counter += 1
 
-        # Only plot last 50 points
-        if len(self.x_data) > 50:
+        # Only plot last 10 points
+        if len(self.x_data) > 10:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)
             self.accel_r_y_data.pop(0)
@@ -833,8 +819,6 @@ def send_simp_data():
             csv_indexer += 1
             
         time.sleep(1)
-
-
 
 
 def main():
