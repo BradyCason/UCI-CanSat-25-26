@@ -17,3 +17,11 @@ In the boot/firmware/config.txt file, add the following lines:
 dtoverlay=gpio.shutdown ... insert
 ```
 
+### To fnd the port that the XBee is connected on  
+Run the following command  
+```
+ls /dev/tty*
+```
+Disconnect device  
+Run the command  
+Reconnect the device  

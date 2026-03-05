@@ -99,13 +99,13 @@ class ControlsThread(QtCore.QThread):
                     if p == pin_7:
                         self.telemetry_toggle.emit()
                         flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry enable LED
-                        GPIO.output(telemetry_disable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry disable LED
+                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry enabled LED
+                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry disabled LED
                     elif p == pin_8:
                         self.telemetry_toggle.emit()
                         flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry disabled: turn on telemetry enable LED
-                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry disabled: turn off telemetry disable LED
+                        GPIO.output(telemetry_enable_led, GPIO.LOW)     # Telemetry disabled: turn off telemetry enable LED
+                        GPIO.output(telemetry_disable_led, GPIO.HIGH)   # Telemetry disabled: turn on telemetry disable LED
                     elif p == pin_9:
                         self.sim_enable.emit()
                         flash_led(XbeeLED)
