@@ -76,7 +76,7 @@ class ControlsThread(QtCore.QThread):
     release_payload = QtCore.pyqtSignal()
     release_paraglider = QtCore.pyqtSignal()
     reset_state = QtCore.pyqtSignal()
-    release_egg = QtCore.pyqtSignal()
+    release_container = QtCore.pyqtSignal()
     show_graphs = QtCore.pyqtSignal()
 
     def __init__(self, poll_interval=0.05, parent=None):
@@ -145,7 +145,7 @@ class ControlsThread(QtCore.QThread):
                         self.reset_state.emit()
                         flash_led(XbeeLED)
                     elif p == pin_5:
-                        self.release_egg.emit()
+                        self.release_container.emit()
                         flash_led(XbeeLED)
                     elif p == pin_18:
                         # Toggle graph process: close if running, open if not
@@ -868,6 +868,7 @@ def main():
     controls.calibrate_alt.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.calibrate_alt_button.click()))
     controls.release_payload.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.release_payload_button.click()))
     controls.release_paraglider.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.activate_paraglider_button.click()))
+    controls.release_container.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.release_container_button.click()))
     controls.reset_state.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.reset_state_button.click()))
     controls.start()
 
