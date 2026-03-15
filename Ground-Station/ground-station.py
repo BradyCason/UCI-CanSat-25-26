@@ -365,10 +365,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_subplot = self.voltage_figure.add_subplot(111)
         self.voltage_y_data = []
 
-        # self.timer = QtCore.QTimer()
-        # self.timer.setInterval(100)  # 100 ms update
-        # self.timer.timeout.connect(self.update_graphs)
-        # self.timer.start()
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(100)  # 100 ms update
+        self.timer.timeout.connect(self.update_graphs)
+        self.timer.start()
 
     def update_graphs(self):
 
