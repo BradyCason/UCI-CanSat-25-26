@@ -368,10 +368,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_subplot = self.voltage_figure.add_subplot(111)
         self.voltage_y_data = []
 
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(100)  # 100 ms update
-        self.timer.timeout.connect(self.update_graphs)
-        self.timer.start()
+        # self.timer = QtCore.QTimer()
+        # self.timer.setInterval(100)  # 100 ms update
+        # self.timer.timeout.connect(self.update_graphs)
+        # self.timer.start()
 
     def update_graphs(self):
 
@@ -399,7 +399,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.voltage_y_data.append(random.randint(0,10))
         # self.counter += 1
 
-        # Only plot last 50 points
+        # Only plot last 10 points
         if len(self.x_data) > 10:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)

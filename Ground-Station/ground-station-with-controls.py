@@ -487,10 +487,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.accel_r_y_data = []
         self.accel_p_y_data = []
         self.accel_y_y_data = []
-        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
-        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
-        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
-        self.accel_figure.legend()
 
         self.rotation_figure = Figure()
         self.rotation_canvas = FigureCanvas(self.rotation_figure)
@@ -499,10 +495,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.rotation_r_y_data = []
         self.rotation_p_y_data = []
         self.rotation_y_y_data = []
-        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
-        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
-        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
-        self.rotation_figure.legend()
 
         self.current_figure = Figure()
         self.current_canvas = FigureCanvas(self.current_figure)
@@ -516,12 +508,38 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_subplot = self.voltage_figure.add_subplot(111)
         self.voltage_y_data = []
 
-        # self.timer = QtCore.QTimer()
-        # self.timer.setInterval(100)  # 100 ms update
-        # self.timer.timeout.connect(self.update_graphs)
-        # self.timer.start()
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(300)  # 300 ms update    # Could increase interval for less Pi resource usage, but would make graphs less smooth
+        self.timer.timeout.connect(self.update_graphs)
+        self.timer.start()
+
+        self.alt_line, = self.alt_subplot.plot([], [], color="blue")
+        self.alt_subplot.set_title("Altitude (m)")
+
+        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
+        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
+        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
+        self.accel_subplot.set_title("Acceleration (°/s^2)")
+        self.accel_subplot.legend()
+
+        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
+        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
+        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
+        self.rotation_subplot.set_title("Rotation Rate (°/s)")
+        self.rotation_subplot.legend()
+
+        self.current_line, = self.current_subplot.plot([], [], label="Current", color="blue")
+        self.current_subplot.set_title("Current (A)")
+        self.current_subplot.legend()
+
+        self.voltage_line, = self.voltage_subplot.plot([], [], label="Voltage", color="blue")
+        self.voltage_subplot.set_title("Voltage (V)")
+        self.voltage_subplot.legend()
 
     def update_graphs(self):
+        # Skip update if no telemetry data yet
+        if not telemetry or "PACKET_COUNT" not in telemetry:
+            return
 
         # Update data
         self.x_data.append(telemetry["PACKET_COUNT"])
@@ -547,8 +565,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.voltage_y_data.append(random.randint(0,10))
         # self.counter += 1
 
-        # Only plot last 10 points
-        if len(self.x_data) > 10:
+        # Only plot last 25 points
+        if len(self.x_data) > 25:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)
             self.accel_r_y_data.pop(0)
@@ -560,35 +578,35 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             self.current_y_data.pop(0)
             self.voltage_y_data.pop(0)
 
-        # Plot
-        self.alt_subplot.clear()
-        self.alt_subplot.plot(self.x_data, self.altitude_y_data, color='blue')
-        self.alt_subplot.set_title("Altitude (m)")
-        self.altitude_canvas.draw()
+        # Use set_data for faster plotting instead of clear() and plot() 
+        self.alt_line.set_data(self.x_data, self.altitude_y_data)
+        self.alt_subplot.relim()
+        self.alt_subplot.autoscale_view()
+        self.altitude_canvas.draw_idle() # Use draw_idle() for better performance over draw()
 
-        self.accel_subplot.clear()
-        self.accel_subplot.plot(self.x_data, self.accel_r_y_data, color='blue')
-        self.accel_subplot.plot(self.x_data, self.accel_p_y_data, color='orange')
-        self.accel_subplot.plot(self.x_data, self.accel_y_y_data, color='green')
-        self.accel_subplot.set_title("Acceleration (°/s^2)")
-        self.accel_canvas.draw()
+        self.accel_r_line.set_data(self.x_data, self.accel_r_y_data)
+        self.accel_p_line.set_data(self.x_data, self.accel_p_y_data)
+        self.accel_y_line.set_data(self.x_data, self.accel_y_y_data)
+        self.accel_subplot.relim()
+        self.accel_subplot.autoscale_view()
+        self.accel_canvas.draw_idle()
 
-        self.rotation_subplot.clear()
-        self.rotation_subplot.plot(self.x_data, self.rotation_r_y_data, color='blue')
-        self.rotation_subplot.plot(self.x_data, self.rotation_p_y_data, color='orange')
-        self.rotation_subplot.plot(self.x_data, self.rotation_y_y_data, color='green')
-        self.rotation_subplot.set_title("Rotation Rate (°/s)")
-        self.rotation_canvas.draw()
+        self.rotation_r_line.set_data(self.x_data, self.rotation_r_y_data)
+        self.rotation_p_line.set_data(self.x_data, self.rotation_p_y_data)
+        self.rotation_y_line.set_data(self.x_data, self.rotation_y_y_data)
+        self.rotation_subplot.relim()
+        self.rotation_subplot.autoscale_view()
+        self.rotation_canvas.draw_idle()
 
-        self.current_subplot.clear()
-        self.current_subplot.plot(self.x_data, self.current_y_data, color='blue')
-        self.current_subplot.set_title("Current (A)")
-        self.current_canvas.draw()
+        self.current_line.set_data(self.x_data, self.current_y_data)
+        self.current_subplot.relim()
+        self.current_subplot.autoscale_view()
+        self.current_canvas.draw_idle()
 
-        self.voltage_subplot.clear()
-        self.voltage_subplot.plot(self.x_data, self.voltage_y_data, color='blue')
-        self.voltage_subplot.set_title("Voltage (V)")
-        self.voltage_canvas.draw()
+        self.voltage_line.set_data(self.x_data, self.voltage_y_data)
+        self.voltage_subplot.relim()
+        self.voltage_subplot.autoscale_view()
+        self.voltage_canvas.draw_idle()
 
     def reset_graphs(self):
         self.x_data = []
