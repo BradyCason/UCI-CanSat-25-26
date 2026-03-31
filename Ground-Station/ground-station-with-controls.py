@@ -251,7 +251,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         # Load the UI
         # ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
-        ui_path = os.path.join(os.path.dirname(__file__), "gui", "new-gui/new_ground_station.ui") # new GS ui_path
+        ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
         uic.loadUi(ui_path, self)
 
         # self.showFullScreen()
