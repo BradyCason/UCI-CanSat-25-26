@@ -257,7 +257,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Apply 90 degree rotation to the entire UI
         self.rotate_ui(90)
 
-        # self.showFullScreen()
+        self.showFullScreen()
 
         self.setup_UI()
         self.connect_buttons()
