@@ -938,7 +938,7 @@
       <height>111</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="voltage_graph_4"/>
+    <layout class="QVBoxLayout" name="acceleration_graph"/>
    </widget>
    <widget class="QLabel" name="mission_time_15">
     <property name="geometry">
@@ -980,7 +980,7 @@
       <height>111</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="voltage_graph_6"/>
+    <layout class="QVBoxLayout" name="rotation_graph"/>
    </widget>
    <widget class="QLabel" name="mission_time_16">
     <property name="geometry">
@@ -1022,7 +1022,7 @@
       <height>111</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="voltage_graph_7"/>
+    <layout class="QVBoxLayout" name="altitude_graph"/>
    </widget>
    <widget class="QLabel" name="mission_time_17">
     <property name="geometry">
