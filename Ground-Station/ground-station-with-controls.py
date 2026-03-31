@@ -271,15 +271,41 @@ class GroundStationWindow(QtWidgets.QMainWindow):
     def rotate_ui(self, degrees):
         '''
         Rotate the entire UI by the specified degrees (90, 180, 270)
+        using graphics scene approach from rotated_ui.py
         '''
-        transform = QtGui.QTransform()
-        transform.rotate(degrees)
-        self.centralWidget().setTransform(transform)
+        # Create graphics view and scene
+        graphics_view = QtWidgets.QGraphicsView()
+        graphics_view.setStyleSheet("border: none; background-color: white;")
+        graphics_view.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         
-        # Swap width and height for 90/270 degree rotations
-        if degrees in (90, 270):
-            current_size = self.size()
-            self.resize(current_size.height(), current_size.width())
+        scene = QtWidgets.QGraphicsScene()
+        graphics_view.setScene(scene)
+        
+        # Get the actual central widget that was set by uic.loadUi()
+        actual_central = self.centralWidget()
+        
+        # Temporarily remove the central widget from main window
+        self.takeCentralWidget()
+        
+        # Add it to the graphics scene
+        proxy = scene.addWidget(actual_central)
+        
+        # Apply rotation to the proxy
+        transform = QtGui.QTransform().rotate(degrees)
+        proxy.setTransform(transform)
+        
+        # Adjust scene rect to fit the content
+        scene.setSceneRect(scene.itemsBoundingRect())
+        
+        # Make graphics view expand to fill available space
+        graphics_view.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding
+        )
+        graphics_view.setMinimumSize(1, 1)
+        
+        # Set graphics view as the new central widget
+        self.setCentralWidget(graphics_view)
 
     def setup_UI(self):
         '''
