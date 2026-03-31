@@ -272,23 +272,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         '''
         Rotate the entire UI by the specified degrees (90, 180, 270)
         '''
-        # Create a graphics scene and view to handle the rotation
-        scene = QtWidgets.QGraphicsScene()
-        view = QtWidgets.QGraphicsView(scene)
-        
-        # Add the central widget as a graphics item
-        proxy = scene.addWidget(self.centralWidget())
-        
-        # Create transform and apply rotation
         transform = QtGui.QTransform()
         transform.rotate(degrees)
-        proxy.setTransform(transform)
-        
-        # Set the graphics view as the new central widget
-        self.setCentralWidget(view)
+        self.centralWidget().setTransform(transform)
         
         # Swap width and height for 90/270 degree rotations
-        if degrees == 90 or degrees == 270:
+        if degrees in (90, 270):
             current_size = self.size()
             self.resize(current_size.height(), current_size.width())
 
