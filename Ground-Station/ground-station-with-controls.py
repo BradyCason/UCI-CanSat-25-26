@@ -254,6 +254,9 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
         uic.loadUi(ui_path, self)
 
+        # Apply 90 degree rotation to the entire UI
+        self.rotate_ui(90)
+
         # self.showFullScreen()
 
         self.setup_UI()
@@ -264,6 +267,22 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.container_released = False
 
         self.init_graphs()
+
+    def rotate_ui(self, degrees):
+        '''
+        Rotate the entire UI by the specified degrees (90, 180, 270)
+        '''
+        transform = QtGui.QTransform()
+        transform.rotate(degrees)
+        
+        # Apply rotation to the central widget
+        if self.centralWidget():
+            self.centralWidget().setTransform(transform)
+        
+        # Swap width and height for 90/270 degree rotations
+        if degrees == 90 or degrees == 270:
+            current_size = self.size()
+            self.resize(current_size.height(), current_size.width())
 
     def setup_UI(self):
         '''
