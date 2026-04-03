@@ -57,9 +57,8 @@ void handle_command(const char *cmd) {
 		// disable
 		if (cmd[13] == 'D'){
 			set_cmd_echo("SIMDISABLE", &telemetry);
-			// Reset the altitude buffer if changing from sim to flight mode
 			if (telemetry.mode == 'S'){
-				reset_alt_dif_buf();
+				reset_state(&telemetry);
 			}
 			telemetry.mode = 'F';
 			telemetry.sim_enabled = 0;
@@ -75,7 +74,7 @@ void handle_command(const char *cmd) {
 		if (cmd[13] == 'A' && telemetry.sim_enabled == 1){
 			telemetry.mode = 'S';
 			set_cmd_echo("SIMACTIVATE", &telemetry);
-			reset_alt_dif_buf();
+			reset_state(&telemetry);
 		}
 
 	}
@@ -89,7 +88,6 @@ void handle_command(const char *cmd) {
 
 			telemetry.pressure = atof(pressure_str)/1000;
 			telemetry.altitude = calculate_altitude(&telemetry);
-			update_alt_dif_buf(&telemetry);
 			telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
 
 			char temp[12] = "SIMP";
@@ -131,7 +129,8 @@ void handle_command(const char *cmd) {
 	else if (strncmp(cmd, cal_alt_command, strlen(cal_alt_command)) == 0) {
 		telemetry.altitude_offset -= telemetry.altitude;
 		set_cmd_echo("CAL", &telemetry);
-		reset_alt_dif_buf();
+		telemetry.baro_vz = 0;
+		telemetry.velocity_world_z = 0;
 		telemetry.sim_enabled = 0;
 	}
 

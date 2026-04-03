@@ -180,7 +180,6 @@ int main(void)
   init_telemetry(&telemetry);
 
   read_baro(&hi2c1, &telemetry);
-  reset_alt_dif_buf(&telemetry);
 
   HAL_Delay(10);
 
@@ -198,7 +197,6 @@ int main(void)
 	  read_current(&hi2c1, &telemetry);
 	  if (telemetry.mode == 'F'){
 		  read_baro(&hi2c1, &telemetry);
-		  update_alt_dif_buf(&telemetry);
 //		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
 		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.alt_fused);
 	  }

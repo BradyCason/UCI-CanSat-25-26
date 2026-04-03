@@ -1,8 +1,10 @@
 #pragma once
 #include "telemetry.h"
 
-// Complementary filter weights
-#define ALPHA_VELOCITY 0.99f  // 99% IMU integrated velocity
-#define ALPHA_ALTITUDE 0.95f  // 95% integrated fused velocity
+// Complementary filter time constants
+#define TAU_VELOCITY   0.2f // seconds
+#define TAU_ALTITUDE   0.2f // seconds
+#define TAU_BARO_VEL   0.5f // seconds
 
 void complementary_filter(Telemetry_t* telemetry);
+void complementary_filter_init(Telemetry_t *telemetry);
