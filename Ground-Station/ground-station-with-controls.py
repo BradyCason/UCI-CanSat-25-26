@@ -250,14 +250,14 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # Load the UI
-        # ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
-        ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
+        ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
+        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
         uic.loadUi(ui_path, self)
 
         # Apply 90 degree rotation to the entire UI
-        self.rotate_ui(90)
+        # self.rotate_ui(90)
 
-        self.showFullScreen()
+        self.showFullScreen()           
 
         self.setup_UI()
         self.connect_buttons()
@@ -552,7 +552,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_y_data = []
 
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(300)  # 300 ms update    # Could increase interval for less Pi resource usage, but would make graphs less smooth
+        self.timer.setInterval(150)  # 150 ms update    # Could increase interval for less Pi resource usage, but would make graphs less smooth
         self.timer.timeout.connect(self.update_graphs)
         self.timer.start()
 
@@ -585,7 +585,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             return
 
         # Update data
-        self.x_data.append(telemetry["PACKET_COUNT"])
+        self.x_data.append(int(telemetry["PACKET_COUNT"]))
         self.altitude_y_data.append(float(telemetry["ALTITUDE"]))
         self.accel_r_y_data.append(float(telemetry["ACCEL_R"]))
         self.accel_p_y_data.append(float(telemetry["ACCEL_P"]))
