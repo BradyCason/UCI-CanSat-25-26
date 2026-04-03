@@ -182,7 +182,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             if field != "TEAM_ID":
                 self.telemetry_labels[field].setText(telemetry[field])
 
-        # self.update_graphs()
+        self.update_graphs()
         self.update_color_buttons()
 
     def make_button_green(self, button):
