@@ -4,8 +4,8 @@
 #include "stm32f4xx_hal.h"
 
 // Servo timing constants
-#define SERVO_MIN_PULSE_WIDTH 1000  // Minimum pulse width in microseconds (0°)
-#define SERVO_MAX_PULSE_WIDTH 2000  // Maximum pulse width in microseconds (180°)
+#define SERVO_MIN_PULSE_WIDTH 500  // Minimum pulse width in microseconds (0°)
+#define SERVO_MAX_PULSE_WIDTH 2400  // Maximum pulse width in microseconds (180°)
 #define SERVO_FREQUENCY 50          // Servo frequency in Hz
 
 // Timer and channel definitions - CHANGED TO TIM3

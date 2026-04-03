@@ -134,6 +134,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 }
+
+HAL_StatusTypeDef result;
 /* USER CODE END 0 */
 
 /**
@@ -171,8 +173,13 @@ int main(void)
   MX_I2C3_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  DWT_Init();
+
+  HAL_Delay(500);
+
   init_xbee(&huart1, USART1_IRQn);
   Init_Servos();
+
   init_baro(&hi2c1);
   init_gps(&hi2c1, &telemetry);
   init_imu(&hi2c1);
@@ -180,6 +187,7 @@ int main(void)
   init_telemetry(&telemetry);
 
   read_baro(&hi2c1, &telemetry);
+  telemetry.altitude_offset = -1.0 * telemetry.altitude;
 
   HAL_Delay(10);
 
@@ -210,6 +218,9 @@ int main(void)
 	  // Perform Paraglider control alg if it's on
 	  if (telemetry.paraglider_active){
 		  control_paraglider(&telemetry);
+	  } else {
+		  // Inactive position
+		  set_paraglider_steering(-1000);
 	  }
 
 	  if (command_ready == 1){

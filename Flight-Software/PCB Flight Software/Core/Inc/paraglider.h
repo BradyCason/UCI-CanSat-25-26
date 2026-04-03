@@ -4,6 +4,7 @@
 
 #define SERVO_MIN 0
 #define SERVO_MAX 180
-#define TURN_MAX 90
+#define TURN_MAX 170
 
 void control_paraglider(Telemetry_t *telemetry);
+void set_paraglider_steering(float turn);
