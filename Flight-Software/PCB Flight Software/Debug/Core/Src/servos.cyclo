@@ -3,7 +3,7 @@
 ../Core/Src/servos.c:38:6:Release_Payload	2
 ../Core/Src/servos.c:49:6:Reset_Payload	2
 ../Core/Src/servos.c:60:6:Release_Container	2
-../Core/Src/servos.c:73:6:Reset_Container	2
-../Core/Src/servos.c:83:6:Eject_Paraglider	2
-../Core/Src/servos.c:92:6:Set_Left_Servo_Angle	1
-../Core/Src/servos.c:96:6:Set_Right_Servo_Angle	1
+../Core/Src/servos.c:71:6:Reset_Container	2
+../Core/Src/servos.c:81:6:Eject_Paraglider	2
+../Core/Src/servos.c:90:6:Set_Left_Servo_Angle	1
+../Core/Src/servos.c:94:6:Set_Right_Servo_Angle	1

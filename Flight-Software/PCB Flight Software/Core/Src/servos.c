@@ -62,12 +62,10 @@ void Release_Container(){
 	unsigned char num_partitions = 20;
 	for (int i = 1; i <= num_partitions; ++i){
 		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_OPEN - cur_container_servo_angle) / num_partitions);
-//		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_PARAGLIDER_EJECT - cur_container_servo_angle) / num_partitions);
 		HAL_Delay(25);
 	}
 
 	cur_container_servo_angle = CONTAINER_ANGLE_OPEN;
-//	cur_container_servo_angle = CONTAINER_ANGLE_PARAGLIDER_EJECT;
 }
 
 void Reset_Container(){

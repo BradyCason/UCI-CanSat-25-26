@@ -10,4 +10,6 @@
 #define APOGEE_VELO_THRESHOLD -1.0
 #define LANDED_VELO_THRESHOLD -0.2
 
+#define GLIDER_EJECTION_DELAY 1000 // ms
+
 void update_fsm(Telemetry_t *telemetry);
