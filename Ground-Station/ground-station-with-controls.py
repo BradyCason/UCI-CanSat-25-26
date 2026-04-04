@@ -202,7 +202,8 @@ packets_sent = 0
 BAUDRATE = 115200
 COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = False
+# MAKE_CSV_FILE = False
+MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 START_DELIMITER = "~"
