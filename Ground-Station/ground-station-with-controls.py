@@ -585,17 +585,31 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         if not telemetry or "PACKET_COUNT" not in telemetry:
             return
 
-        # Update data
-        self.x_data.append(int(telemetry["PACKET_COUNT"]))
-        self.altitude_y_data.append(float(telemetry["ALTITUDE"]))
-        self.accel_r_y_data.append(float(telemetry["ACCEL_R"]))
-        self.accel_p_y_data.append(float(telemetry["ACCEL_P"]))
-        self.accel_y_y_data.append(float(telemetry["ACCEL_Y"]))
-        self.rotation_r_y_data.append(float(telemetry["GYRO_R"]))
-        self.rotation_p_y_data.append(float(telemetry["GYRO_P"]))
-        self.rotation_y_y_data.append(float(telemetry["GYRO_Y"]))
-        self.current_y_data.append(float(telemetry["CURRENT"]))
-        self.voltage_y_data.append(float(telemetry["VOLTAGE"]))
+        # Helper function to safely convert to float, return 0 if empty
+        def safe_float(value):
+            try:
+                if value == "" or value is None:
+                    return 0.0
+                return float(value)
+            except (ValueError, TypeError):
+                print(f"Warning: Could not convert '{value}' to float, using 0.0")
+                return 0.0
+
+        # Update data with error handling
+        try:
+            self.x_data.append(int(telemetry["PACKET_COUNT"]))
+            self.altitude_y_data.append(safe_float(telemetry["ALTITUDE"]))
+            self.accel_r_y_data.append(safe_float(telemetry["ACCEL_R"]))
+            self.accel_p_y_data.append(safe_float(telemetry["ACCEL_P"]))
+            self.accel_y_y_data.append(safe_float(telemetry["ACCEL_Y"]))
+            self.rotation_r_y_data.append(safe_float(telemetry["GYRO_R"]))
+            self.rotation_p_y_data.append(safe_float(telemetry["GYRO_P"]))
+            self.rotation_y_y_data.append(safe_float(telemetry["GYRO_Y"]))
+            self.current_y_data.append(safe_float(telemetry["CURRENT"]))
+            self.voltage_y_data.append(safe_float(telemetry["VOLTAGE"]))
+        except (KeyError, ValueError, TypeError) as e:
+            print(f"Warning: Skipping update_graphs due to: {e}")
+            return
 
         # self.x_data.append(self.counter)
         # self.altitude_y_data.append(random.randint(0,10))
@@ -726,6 +740,11 @@ def parse_xbee(data):
     Parse the data from an incoming Xbee packet
     '''
     global sim, telemetry, packet_count, w #, last_recieved_packet
+
+    # Validate frame has correct number of fields (only check field count, allow empty values)
+    if len(data) != len(TELEMETRY_FIELDS):
+        print(f"Incomplete frame: expected {len(TELEMETRY_FIELDS)} fields, got {len(data)}")
+        return
 
     # Ensure only recieving each packet once
     # sent_packet_count = int(data[TELEMETRY_FIELDS.index("PACKET_COUNT")])

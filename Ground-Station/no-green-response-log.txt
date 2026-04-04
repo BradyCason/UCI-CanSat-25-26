@@ -1,0 +1,19 @@
+jonathan@raspberrypi:~/UCI-CanSat-25-26/Ground-Station $ python ground-station-with-controls.py 
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:52: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(XbeeLED, GPIO.OUT)
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:54: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(sim_enable_led, GPIO.OUT)
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:56: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(sim_activate_led, GPIO.OUT)
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:58: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(sim_disable_led, GPIO.OUT)
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:60: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(telemetry_enable_led, GPIO.OUT)
+/home/jonathan/UCI-CanSat-25-26/Ground-Station/ground-station-with-controls.py:62: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(telemetry_disable_led, GPIO.OUT)
+Connected to Xbee
+qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+Packet Sent: CMD,1083,MEC,CONTAINER,ON
+Packet Sent: CMD,1083,MEC,CONTAINER,ON
+could not convert string to float: ''
+Error reading frame:  1083,00:03:07,2550,F,LAUNCH_PAD,42.4,32.4,100.9,4.0,0.3,8.2,-21.5,-0.4,-8.6,2.8,-1.3,267.6,
