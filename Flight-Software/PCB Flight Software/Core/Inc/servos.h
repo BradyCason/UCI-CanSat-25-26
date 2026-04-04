@@ -25,7 +25,8 @@
 #define PAYLOAD_ANGLE_OPEN 90
 #define PAYLOAD_ANGLE_CLOSED 0
 
-#define CONTAINER_ANGLE_OPEN 90
+#define CONTAINER_ANGLE_PARAGLIDER_EJECT 110
+#define CONTAINER_ANGLE_OPEN 45
 #define CONTAINER_ANGLE_CLOSED 0
 
 // External timer handle
@@ -38,6 +39,7 @@ void Release_Payload(void);
 void Reset_Payload(void);
 void Release_Container(void);
 void Reset_Container(void);
+void Eject_Paraglider(void);
 void Set_Left_Servo_Angle(uint8_t angle);
 void Set_Right_Servo_Angle(uint8_t angle);
 

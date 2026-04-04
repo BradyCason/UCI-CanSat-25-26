@@ -15,6 +15,7 @@ void reset_state(Telemetry_t *telemetry){
 	telemetry->sent_apogee = 0;
 	telemetry->sent_payload_release = 0;
 	telemetry->container_released = 0;
+	telemetry->paraglider_ejected = 0;
 	telemetry->payload_released = 0;
 	telemetry->paraglider_active = 0;
 	telemetry->packet_count = 0;

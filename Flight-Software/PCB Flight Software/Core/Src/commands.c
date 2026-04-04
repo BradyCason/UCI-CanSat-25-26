@@ -26,6 +26,7 @@ char release_container_command[27];
 char reset_release_container_command[28];
 char glider_on_command[24];
 char glider_off_command[25];
+char eject_command[20];
 char reset_state_command[14];
 char set_coords_command[14];
 
@@ -43,6 +44,7 @@ void init_commands(void)
 	snprintf(reset_release_container_command, sizeof(reset_release_container_command), "CMD,%s,MEC,CONTAINER,OFF", TEAM_ID);
 	snprintf(glider_on_command, sizeof(glider_on_command), "CMD,%s,MEC,GLIDER,ON", TEAM_ID);
 	snprintf(glider_off_command, sizeof(glider_off_command), "CMD,%s,MEC,GLIDER,OFF", TEAM_ID);
+	snprintf(eject_command, sizeof(eject_command), "CMD,%s,MEC,EJECT", TEAM_ID);
 	snprintf(reset_state_command, sizeof(reset_state_command), "CMD,%s,RST", TEAM_ID);
 	snprintf(set_coords_command, sizeof(set_coords_command), "CMD,%s,SC,", TEAM_ID);
 }
@@ -173,6 +175,7 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECCONTON", &telemetry);
 		Release_Container();
 		telemetry.container_released = 1;
+		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
 	}
 
@@ -182,6 +185,17 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECCONTOFF", &telemetry);
 		Reset_Container();
 		telemetry.container_released = 0;
+		telemetry.paraglider_ejected = 0;
+		telemetry.sim_enabled = 0;
+	}
+
+	// Eject paraglider
+	else if (strncmp(cmd, eject_command, strlen(eject_command)) == 0) {
+		// Update variable
+		set_cmd_echo("MECEJECT", &telemetry);
+		Eject_Paraglider();
+		telemetry.container_released = 1;
+		telemetry.paraglider_ejected = 1;
 		telemetry.sim_enabled = 0;
 	}
 

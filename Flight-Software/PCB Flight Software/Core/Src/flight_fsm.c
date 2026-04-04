@@ -11,9 +11,19 @@
 uint32_t launch_accel_detected_time = -1;
 unsigned int negative_accel_counter = 0;
 
+uint32_t probe_release_time = 0;
+
 void update_fsm(Telemetry_t *telemetry){
+	// Eject paraglider
+	if (probe_release_time != 0 && telemetry->paraglider_ejected != 1 && HAL_GetTick() - probe_release_time > GLIDER_EJECTION_DELAY){
+		Eject_Paraglider();
+		telemetry->paraglider_ejected = 1;
+		telemetry->paraglider_active = 1;
+		probe_release_time = 0;
+	}
+
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
-//		if (get_avg_alt_dif() > LAUNCH_THRESHOLD){
+//		if (baro_vz > LAUNCH_THRESHOLD){
 //			strcpy(telemetry->state, "ASCENT");
 //		}
 
@@ -57,7 +67,7 @@ void update_fsm(Telemetry_t *telemetry){
 			strcpy(telemetry->state, "PROBE_RELEASE");
 			Release_Container();
 			telemetry->container_released = 1;
-			telemetry->paraglider_active = 1;
+			probe_release_time = HAL_GetTick();
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
