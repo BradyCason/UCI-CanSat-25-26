@@ -202,7 +202,6 @@ int main(void)
   HAL_Delay(500);
 
   init_xbee(&huart1, USART1_IRQn);
-  Init_Servos();
 
   init_baro(&hi2c1);
   init_gps(&hi2c1, &telemetry);
@@ -210,8 +209,10 @@ int main(void)
   init_current(&hi2c1);
   init_telemetry(&telemetry);
 
-  read_baro(&hi2c1, &telemetry);
-  telemetry.altitude_offset = -1.0 * telemetry.altitude;
+  HAL_Delay(100);
+
+  init_fsm(&telemetry);
+  Init_Servos(&telemetry);
 
   HAL_Delay(10);
 

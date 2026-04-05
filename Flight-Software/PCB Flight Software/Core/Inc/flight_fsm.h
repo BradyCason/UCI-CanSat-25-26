@@ -10,6 +10,10 @@
 #define APOGEE_VELO_THRESHOLD -1.0
 #define LANDED_VELO_THRESHOLD -0.2
 
+#define MIN_RESET_ALT 25 // m
+#define POWER_RESET_MIN_ALT_CHANGE 10 // m
+
 #define GLIDER_EJECTION_DELAY 1000 // ms
 
+void init_fsm(Telemetry_t *telemetry);
 void update_fsm(Telemetry_t *telemetry);

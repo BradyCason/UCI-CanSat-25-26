@@ -2,6 +2,7 @@
 #define SERVOS_H
 
 #include "stm32f4xx_hal.h"
+#include "telemetry.h"
 
 // Servo timing constants
 #define SERVO_MIN_PULSE_WIDTH 500  // Minimum pulse width in microseconds (0°)
@@ -34,7 +35,7 @@ extern TIM_HandleTypeDef htim3;
 
 // Function prototypes
 void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle);
-void Init_Servos(void);
+void Init_Servos(Telemetry_t *telemetry);
 void Release_Payload(void);
 void Reset_Payload(void);
 void Release_Container(void);

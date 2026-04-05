@@ -25,14 +25,29 @@ void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle) {
     __HAL_TIM_SET_COMPARE(htim, channel, pulse);
 }
 
-void Init_Servos() {
+void Init_Servos(Telemetry_t *telemetry) {
     HAL_TIM_PWM_Start(&PAYLOAD_TIM, PAYLOAD_CHANNEL);
     HAL_TIM_PWM_Start(&CONTAINER_TIM, CONTAINER_CHANNEL);
     HAL_TIM_PWM_Start(&LEFT_SERVO_TIM, LEFT_SERVO_CHANNEL);
     HAL_TIM_PWM_Start(&RIGHT_SERVO_TIM, RIGHT_SERVO_CHANNEL);
 
-    Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_CLOSED);
-    Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED);
+    // Set container release to correct angle
+    if (!telemetry->container_released) {
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED);
+    }
+    else if (telemetry->paraglider_ejected){
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_PARAGLIDER_EJECT);
+    }
+    else {
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_OPEN);
+    }
+
+    // Set payload release to correct angle
+    if (telemetry->payload_released){
+    	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_OPEN);
+    } else {
+    	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_CLOSED);
+    }
 }
 
 void Release_Payload(){

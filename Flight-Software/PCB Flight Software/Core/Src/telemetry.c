@@ -1,4 +1,5 @@
 #include "telemetry.h"
+#include "flash_memory.h"
 #include <string.h>
 
 void init_telemetry(Telemetry_t *telemetry){
@@ -20,6 +21,8 @@ void reset_state(Telemetry_t *telemetry){
 	telemetry->paraglider_active = 0;
 	telemetry->packet_count = 0;
 	telemetry->alt_fused = 0;
+
+	store_flash_data(telemetry);
 }
 
 void set_cmd_echo(const char *cmd, Telemetry_t *telemetry)
