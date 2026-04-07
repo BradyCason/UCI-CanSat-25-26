@@ -5,6 +5,7 @@
 #include "gps.h"
 #include "flight_fsm.h"
 #include "xbee.h"
+#include "flash_memory.h"
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -125,6 +126,7 @@ void handle_command(const char *cmd) {
 			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
 		}
 
+		store_flash_data(&telemetry);
 	}
 
 	// Calibrate Altitude
@@ -134,6 +136,8 @@ void handle_command(const char *cmd) {
 		telemetry.baro_vz = 0;
 		telemetry.velocity_world_z = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Telemetry On
@@ -158,6 +162,8 @@ void handle_command(const char *cmd) {
 		Release_Payload();
 		telemetry.payload_released = 1;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset Payload Release
@@ -167,6 +173,8 @@ void handle_command(const char *cmd) {
 		Reset_Payload();
 		telemetry.payload_released = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Release Container
@@ -177,6 +185,8 @@ void handle_command(const char *cmd) {
 		telemetry.container_released = 1;
 		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset Container Release
@@ -187,6 +197,8 @@ void handle_command(const char *cmd) {
 		telemetry.container_released = 0;
 		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Eject paraglider
@@ -197,6 +209,8 @@ void handle_command(const char *cmd) {
 		telemetry.container_released = 1;
 		telemetry.paraglider_ejected = 1;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Glider On
@@ -205,6 +219,8 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECGLIDERON", &telemetry);
 		telemetry.paraglider_active = 1;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Glider Off
@@ -213,6 +229,8 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECGLIDEROFF", &telemetry);
 		telemetry.paraglider_active = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset State
@@ -229,5 +247,7 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("SC", &telemetry);
 		sscanf(&cmd[12], "%f,%f", &telemetry.target_latitude, &telemetry.target_longitude);
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 }

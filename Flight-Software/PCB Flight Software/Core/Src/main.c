@@ -135,25 +135,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 
-    if (temp == 0) {
-    	set_paraglider_steering(170);
-    }
-    else if (temp == 2) {
-    	set_paraglider_steering(0);
-    }
-    else if (temp == 4) {
-    	set_paraglider_steering(-170);
-    }
-    else if (temp == 6){
-    	set_paraglider_steering(0);
-    }
-
-    if (temp < 7) {
-    	temp++;
-    }
-    else {
-    	temp = 0;
-    }
+    // Alternate steering for drop testing. Should be removed for real flight
+//    if (telemetry.container_released){ //TODO: remove this
+//    	if (temp == 0) {
+//			set_paraglider_steering(170);
+//		}
+//		else if (temp == 2) {
+//			set_paraglider_steering(0);
+//		}
+//		else if (temp == 4) {
+//			set_paraglider_steering(-170);
+//		}
+//		else if (temp == 6){
+//			set_paraglider_steering(0);
+//		}
+//
+//		if (temp < 7) {
+//			temp++;
+//		}
+//		else {
+//			temp = 0;
+//		}
+//    }
 }
 
 HAL_StatusTypeDef result;
@@ -199,7 +202,6 @@ int main(void)
   HAL_Delay(500);
 
   init_xbee(&huart1, USART1_IRQn);
-  Init_Servos();
 
   init_baro(&hi2c1);
   init_gps(&hi2c1, &telemetry);
@@ -207,8 +209,10 @@ int main(void)
   init_current(&hi2c1);
   init_telemetry(&telemetry);
 
-  read_baro(&hi2c1, &telemetry);
-  telemetry.altitude_offset = -1.0 * telemetry.altitude;
+  HAL_Delay(100);
+
+  init_fsm(&telemetry);
+  Init_Servos(&telemetry);
 
   HAL_Delay(10);
 
@@ -234,7 +238,7 @@ int main(void)
 	  complementary_filter(&telemetry);
 
 	  // Updated FSM
-//	  update_fsm(&telemetry);
+	  update_fsm(&telemetry);
 
 	  // Perform Paraglider control alg if it's on
 	  if (telemetry.paraglider_active){

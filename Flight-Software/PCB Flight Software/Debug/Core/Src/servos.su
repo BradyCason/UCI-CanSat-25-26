@@ -1,9 +1,9 @@
 ../Core/Src/servos.c:8:6:Set_Servo_Angle	40	static
-../Core/Src/servos.c:28:6:Init_Servos	8	static
-../Core/Src/servos.c:38:6:Release_Payload	16	static
-../Core/Src/servos.c:49:6:Reset_Payload	16	static
-../Core/Src/servos.c:60:6:Release_Container	16	static
-../Core/Src/servos.c:73:6:Reset_Container	16	static
-../Core/Src/servos.c:83:6:Eject_Paraglider	16	static
-../Core/Src/servos.c:92:6:Set_Left_Servo_Angle	16	static
-../Core/Src/servos.c:96:6:Set_Right_Servo_Angle	16	static
+../Core/Src/servos.c:28:6:Init_Servos	16	static
+../Core/Src/servos.c:53:6:Release_Payload	16	static
+../Core/Src/servos.c:64:6:Reset_Payload	16	static
+../Core/Src/servos.c:75:6:Release_Container	16	static
+../Core/Src/servos.c:86:6:Reset_Container	16	static
+../Core/Src/servos.c:96:6:Eject_Paraglider	16	static
+../Core/Src/servos.c:105:6:Set_Left_Servo_Angle	16	static
+../Core/Src/servos.c:109:6:Set_Right_Servo_Angle	16	static

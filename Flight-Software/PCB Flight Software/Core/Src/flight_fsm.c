@@ -2,7 +2,11 @@
 #include <string.h>
 #include "servos.h"
 #include "main.h"
+#include "baro.h"
+#include "gps.h"
+#include "flash_memory.h"
 #include <math.h>
+#include <stdlib.h>
 
 #define CONTAINER_RELEASE_ALT_PERCENTAGE 0.8
 #define PAYLOAD_RELEASE_ALT 3
@@ -13,6 +17,60 @@ unsigned int negative_accel_counter = 0;
 
 uint32_t probe_release_time = 0;
 
+extern I2C_HandleTypeDef hi2c1;
+
+uint8_t sensors_indicate_flight(Telemetry_t *telemetry){
+	float alt_i = telemetry->altitude;
+
+	for (int i = 0; i < 250; ++i){
+		read_baro(&hi2c1, telemetry);
+		if (abs(telemetry->altitude - alt_i) > POWER_RESET_MIN_ALT_CHANGE){
+			return 1;
+		}
+		HAL_Delay(10);
+	}
+
+	return 0;
+}
+
+void init_fsm(Telemetry_t *telemetry){
+	// Get state from flash
+	Telemetry_t flash_telemetry;
+	if (load_flash_data(&flash_telemetry)){
+		telemetry->altitude_offset = 0;
+		read_baro(&hi2c1, telemetry);
+		read_gps(&hi2c1, telemetry);
+		// If Power-on reset (power removed and restored) and sensors indicate in flight and alt > threshold
+		if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) && (telemetry->altitude + flash_telemetry.altitude_offset > MIN_RESET_ALT) && sensors_indicate_flight(telemetry) == 1){
+			// reset detected
+			telemetry->altitude_offset = flash_telemetry.altitude_offset;
+			telemetry->alt_fused = telemetry->altitude + telemetry->altitude_offset;
+			telemetry->max_altitude = flash_telemetry.max_altitude;
+			telemetry->container_released = flash_telemetry.container_released;
+			telemetry->paraglider_ejected = flash_telemetry.paraglider_ejected;
+			telemetry->payload_released = flash_telemetry.payload_released;
+			telemetry->paraglider_active = flash_telemetry.paraglider_active;
+			telemetry->target_latitude = flash_telemetry.target_latitude;
+			telemetry->target_longitude = flash_telemetry.target_longitude;
+			strcpy(telemetry->state, flash_telemetry.state);
+			telemetry->mission_time_hr = flash_telemetry.mission_time_hr;
+			telemetry->mission_time_min = flash_telemetry.mission_time_min;
+			telemetry->mission_time_sec = flash_telemetry.mission_time_sec;
+
+			// Clear reset flags
+			__HAL_RCC_CLEAR_RESET_FLAGS();
+			return;
+		}
+	}
+
+	// No reset detected. Reset state
+	telemetry->altitude_offset = -1.0 * telemetry->altitude;
+	reset_state(telemetry);
+
+	// Clear reset flags
+	__HAL_RCC_CLEAR_RESET_FLAGS();
+}
+
 void update_fsm(Telemetry_t *telemetry){
 	// Eject paraglider
 	if (probe_release_time != 0 && telemetry->paraglider_ejected != 1 && HAL_GetTick() - probe_release_time > GLIDER_EJECTION_DELAY){
@@ -20,6 +78,8 @@ void update_fsm(Telemetry_t *telemetry){
 		telemetry->paraglider_ejected = 1;
 		telemetry->paraglider_active = 1;
 		probe_release_time = 0;
+
+		store_flash_data(telemetry);
 	}
 
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
@@ -42,6 +102,7 @@ void update_fsm(Telemetry_t *telemetry){
 			if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME + LAUNCH_EVAL_PERIOD_TIME){
 				// Enough time passed without negative acceleration. Launch detected
 				strcpy(telemetry->state, "ASCENT");
+				store_flash_data(telemetry);
 			}
 			else if (telemetry->accel_world_z < 0){
 				// Negative acceleration detected. Reset system.
@@ -54,11 +115,13 @@ void update_fsm(Telemetry_t *telemetry){
 	else if (strcmp(telemetry->state, "ASCENT") == 0){
 		if (telemetry->baro_vz < APOGEE_VELO_THRESHOLD){
 			strcpy(telemetry->state, "APOGEE");
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "APOGEE") == 0){
 		if (telemetry->sent_apogee == 1){
 			strcpy(telemetry->state, "DESCENT");
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "DESCENT") == 0){
@@ -68,6 +131,7 @@ void update_fsm(Telemetry_t *telemetry){
 			Release_Container();
 			telemetry->container_released = 1;
 			probe_release_time = HAL_GetTick();
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
@@ -77,12 +141,14 @@ void update_fsm(Telemetry_t *telemetry){
 			strcpy(telemetry->state, "PAYLOAD_RELEASE");
 			Release_Payload();
 			telemetry->payload_released = 1;
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PAYLOAD_RELEASE") == 0){
 		if (telemetry->baro_vz > LANDED_VELO_THRESHOLD && telemetry->sent_payload_release == 1){
 			strcpy(telemetry->state, "LANDED");
 			telemetry->paraglider_active = 0;
+			reset_flash_data();
 		}
 	}
 }

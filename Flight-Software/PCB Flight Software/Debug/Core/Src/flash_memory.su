@@ -1,0 +1,8 @@
+../Core/Src/flash_memory.c:5:10:time_seconds	16	static
+../Core/Src/flash_memory.c:10:9:get_time_dif	24	static
+../Core/Src/flash_memory.c:15:6:set_mission_time	24	static
+../Core/Src/flash_memory.c:25:10:state_number	16	static
+../Core/Src/flash_memory.c:50:6:set_state_str	24	static
+../Core/Src/flash_memory.c:75:6:store_flash_data	128	static
+../Core/Src/flash_memory.c:113:9:load_flash_data	24	static
+../Core/Src/flash_memory.c:141:6:reset_flash_data	8	static
