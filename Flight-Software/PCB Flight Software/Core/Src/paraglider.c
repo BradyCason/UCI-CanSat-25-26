@@ -1,5 +1,6 @@
 #include "paraglider.h"
 #include "servos.h"
+#include "main.h"
 #include <math.h>
 
 float bearing_to_target(float lat1_deg, float lon1_deg,
@@ -22,21 +23,50 @@ float bearing_to_target(float lat1_deg, float lon1_deg,
 }
 
 void control_paraglider(Telemetry_t *telemetry){
+	// --- PID gains (tune these) ---
+	static float Kp = 2.0f;
+	static float Ki = 0.05f;
+	static float Kd = 0.5f;
+
+	// --- persistent state ---
+	static float integral = 0.0f;
+	static float prev_error = 0.0f;
+	static uint32_t prev_time_glider = 0;
+
+	uint32_t cur_time_us = micros();
+	float dt = (float)(cur_time_us - prev_time_glider) * 1e-6f;
+
     // Find target bearing
     float target_bearing = bearing_to_target(telemetry->gps_latitude,
     		telemetry->gps_longitude, telemetry->target_latitude, telemetry->target_longitude);
 
-    float angle_dif = target_bearing - telemetry->heading;
+    float error = target_bearing - telemetry->heading;
     // Normalize to [-180, 180]
-    while (angle_dif > 180) angle_dif -= 360;
-    while (angle_dif < -180) angle_dif += 360;
+    while (error > 180) error -= 360;
+    while (error < -180) error += 360;
 
     // if absolute value of angle dif < 3 deg, no turning
-    if (fabsf(angle_dif) < 3.0f) angle_dif = 0;
+    if (fabsf(error) < 3.0f) error = 0;
 
-    // Currently a proportional (P) controller. Later: make PID?
-    float Kp = 2.0f;    // tune this. servo degrees per heading degrees
-    float turn = Kp * angle_dif;
+    // --- PID terms ---
+    // Integral (with basic anti-windup clamp)
+    integral += error * dt;
+    float integral_limit = 100.0f;  // tune this
+    if (integral > integral_limit) integral = integral_limit;
+    if (integral < -integral_limit) integral = -integral_limit;
+
+    // Derivative
+    float derivative = (error - prev_error) / dt;
+
+    // PID output
+    float turn = Kp * error + Ki * integral + Kd * derivative;
+
+    // Save state
+    prev_error = error;
+
+//    // Currently a proportional (P) controller. Later: make PID?
+//    float Kp = 2.0f;    // tune this. servo degrees per heading degrees
+//    float turn = Kp * angle_dif;
 
     set_paraglider_steering(turn);
 }
