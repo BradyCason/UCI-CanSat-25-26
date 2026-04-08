@@ -64,10 +64,6 @@ void control_paraglider(Telemetry_t *telemetry){
     // Save state
     prev_error = error;
 
-//    // Currently a proportional (P) controller. Later: make PID?
-//    float Kp = 2.0f;    // tune this. servo degrees per heading degrees
-//    float turn = Kp * angle_dif;
-
     set_paraglider_steering(turn);
 }
 
