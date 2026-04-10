@@ -156,7 +156,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
         self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
         self.release_payload_button.clicked.connect(self.release_payload_clicked)
-        # self.eject_paraglider_button.clicked.connect(self.eject_clicked)
+        self.eject_paraglider_button.clicked.connect(self.eject_paraglider_clicked)
         self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
         self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
@@ -335,50 +335,65 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         #     self.make_button_green(self.ejee)
 
     def init_graphs(self):
-        self.x_data = []
-        self.counter = 0
+      self.x_data = []
+      self.counter = 0
 
-        self.altitude_figure = Figure()
-        self.altitude_canvas = FigureCanvas(self.altitude_figure)
-        self.altitude_graph.layout().addWidget(self.altitude_canvas)
-        self.alt_subplot = self.altitude_figure.add_subplot(111)
-        self.altitude_y_data = []
+      self.altitude_figure = Figure()
+      self.altitude_canvas = FigureCanvas(self.altitude_figure)
+      self.altitude_graph.layout().addWidget(self.altitude_canvas)
+      self.alt_subplot = self.altitude_figure.add_subplot(111)
+      self.altitude_y_data = []
 
-        self.accel_figure = Figure()
-        self.accel_canvas = FigureCanvas(self.accel_figure)
-        self.acceleration_graph.layout().addWidget(self.accel_canvas)
-        self.accel_subplot = self.accel_figure.add_subplot(111)
-        self.accel_r_y_data = []
-        self.accel_p_y_data = []
-        self.accel_y_y_data = []
-        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
-        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
-        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
-        self.accel_figure.legend()
+      self.accel_figure = Figure()
+      self.accel_canvas = FigureCanvas(self.accel_figure)
+      self.acceleration_graph.layout().addWidget(self.accel_canvas)
+      self.accel_subplot = self.accel_figure.add_subplot(111)
+      self.accel_r_y_data = []
+      self.accel_p_y_data = []
+      self.accel_y_y_data = []
+      self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
+      self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
+      self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
+      self.accel_subplot.set_title("Acceleration (°/s^2)")
+      self.accel_subplot.legend()
 
-        self.rotation_figure = Figure()
-        self.rotation_canvas = FigureCanvas(self.rotation_figure)
-        self.rotation_graph.layout().addWidget(self.rotation_canvas)
-        self.rotation_subplot = self.rotation_figure.add_subplot(111)
-        self.rotation_r_y_data = []
-        self.rotation_p_y_data = []
-        self.rotation_y_y_data = []
-        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
-        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
-        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
-        self.rotation_figure.legend()
+      self.rotation_figure = Figure()
+      self.rotation_canvas = FigureCanvas(self.rotation_figure)
+      self.rotation_graph.layout().addWidget(self.rotation_canvas)
+      self.rotation_subplot = self.rotation_figure.add_subplot(111)
+      self.rotation_r_y_data = []
+      self.rotation_p_y_data = []
+      self.rotation_y_y_data = []
+      self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
+      self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
+      self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
+      self.rotation_subplot.set_title("Rotation Rate (°/s)")
+      self.rotation_subplot.legend()
 
-        self.current_figure = Figure()
-        self.current_canvas = FigureCanvas(self.current_figure)
-        self.current_graph.layout().addWidget(self.current_canvas)
-        self.current_subplot = self.current_figure.add_subplot(111)
-        self.current_y_data = []
+      self.current_figure = Figure()
+      self.current_canvas = FigureCanvas(self.current_figure)
+      self.current_graph.layout().addWidget(self.current_canvas)
+      self.current_subplot = self.current_figure.add_subplot(111)
+      self.current_y_data = []
 
-        self.voltage_figure = Figure()
-        self.voltage_canvas = FigureCanvas(self.voltage_figure)
-        self.voltage_graph.layout().addWidget(self.voltage_canvas)
-        self.voltage_subplot = self.voltage_figure.add_subplot(111)
-        self.voltage_y_data = []
+      self.voltage_figure = Figure()
+      self.voltage_canvas = FigureCanvas(self.voltage_figure)
+      self.voltage_graph.layout().addWidget(self.voltage_canvas)
+      self.voltage_subplot = self.voltage_figure.add_subplot(111)
+      self.voltage_y_data = []
+
+      # Add tight_layout to all figures to prevent label cutoff
+      self.altitude_figure.tight_layout()
+      self.accel_figure.tight_layout()
+      self.rotation_figure.tight_layout()
+      self.current_figure.tight_layout()
+      self.voltage_figure.tight_layout()
+
+      self.altitude_figure.subplots_adjust(left=0.15)  # Increase left margin
+      self.accel_figure.subplots_adjust(left=0.15)
+      self.rotation_figure.subplots_adjust(left=0.15)
+      self.current_figure.subplots_adjust(left=0.15)
+      self.voltage_figure.subplots_adjust(left=0.15)
 
         # self.timer = QtCore.QTimer()
         # self.timer.setInterval(100)  # 100 ms update
