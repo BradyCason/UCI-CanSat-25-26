@@ -38,7 +38,7 @@ BAUDRATE = 115200
 # COM_PORT = 7    # USB0 on raspberry pi
 COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
+MAKE_CSV_FILE = False # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 START_DELIMITER = "~"
@@ -343,6 +343,9 @@ class GroundStationWindow(QtWidgets.QMainWindow):
       self.altitude_graph.layout().addWidget(self.altitude_canvas)
       self.alt_subplot = self.altitude_figure.add_subplot(111)
       self.altitude_y_data = []
+      # self.altitude_line, = self.alt_subplot.plot([], [], label="Altitude", color="blue")
+      self.alt_subplot.set_title("Altitude (m)")
+      # self.alt_subplot.legend()
 
       self.accel_figure = Figure()
       self.accel_canvas = FigureCanvas(self.accel_figure)
@@ -375,12 +378,14 @@ class GroundStationWindow(QtWidgets.QMainWindow):
       self.current_graph.layout().addWidget(self.current_canvas)
       self.current_subplot = self.current_figure.add_subplot(111)
       self.current_y_data = []
+      self.current_subplot.set_title("Current (A)")
 
       self.voltage_figure = Figure()
       self.voltage_canvas = FigureCanvas(self.voltage_figure)
       self.voltage_graph.layout().addWidget(self.voltage_canvas)
       self.voltage_subplot = self.voltage_figure.add_subplot(111)
       self.voltage_y_data = []
+      self.voltage_subplot.set_title("Voltage (V)")
 
       # Add tight_layout to all figures to prevent label cutoff
       self.altitude_figure.tight_layout()
@@ -394,6 +399,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
       self.rotation_figure.subplots_adjust(left=0.15)
       self.current_figure.subplots_adjust(left=0.15)
       self.voltage_figure.subplots_adjust(left=0.15)
+
+      # Set tick params for all subplots
+      for subplot in [self.alt_subplot, self.accel_subplot, self.rotation_subplot, self.current_subplot, self.voltage_subplot]:
+          subplot.tick_params(axis='both', which='major', labelsize=8)
 
         # self.timer = QtCore.QTimer()
         # self.timer.setInterval(100)  # 100 ms update
@@ -582,7 +591,10 @@ def parse_xbee(data):
         file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
         with open(file, 'a', newline='') as f_object:
             writer_object = writer(f_object)
-            writer_object.writerow(list(telemetry.values()) + [data[-1]])
+            # Write data in the same order as TELEMETRY_FIELDS
+            row_data = [telemetry.get(field, "") for field in TELEMETRY_FIELDS]
+            # writer_object.writerow(list(telemetry.values()) + [data[-1]])
+            writer_object.writerow(row_data + [data[-1]])
 
     w.update()
 
