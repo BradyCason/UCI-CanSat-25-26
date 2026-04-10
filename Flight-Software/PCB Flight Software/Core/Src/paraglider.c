@@ -22,6 +22,14 @@ float bearing_to_target(float lat1_deg, float lon1_deg,
     return bearing;   // degrees, compass heading
 }
 
+void correct_heading(Telemetry_t *telemetry){
+	telemetry->heading = telemetry->heading - HEADING_WHEN_FACING_NORTH;
+
+	// Normalize to [0, 360)
+	while (telemetry->heading >= 360) telemetry->heading -= 360;
+	while (telemetry->heading < 0) telemetry->heading += 360;
+}
+
 void control_paraglider(Telemetry_t *telemetry){
 	// --- PID gains (tune these) ---
 	static float Kp = 2.0f;
@@ -35,6 +43,9 @@ void control_paraglider(Telemetry_t *telemetry){
 
 	uint32_t cur_time_us = micros();
 	float dt = (float)(cur_time_us - prev_time_glider) * 1e-6f;
+
+	// Correct to true heading (direction the paraglider is facing)
+	correct_heading(telemetry);
 
     // Find target bearing
     float target_bearing = bearing_to_target(telemetry->gps_latitude,
