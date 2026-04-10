@@ -5,8 +5,8 @@ import os
 from pathlib import Path
 
 # Configuration
-# CSV_FILE = "Flight_1083_telemetry_2026-04-10_09-03-54.csv"  # Update with your CSV filename
-CSV_FILE = "Flight_1083_telemetry_2026-04-04_11-15-24.csv"
+CSV_FILE = "Flight_1083_telemetry_2026-04-10_09-03-54.csv"  # Update with your CSV filename
+# CSV_FILE = "Flight_1083_telemetry_2026-04-04_11-15-24.csv"
 OUTPUT_DIR = "plots"
 
 # Create output directory if it doesn't exist
@@ -33,7 +33,8 @@ try:
     
     # Convert numeric columns to float, replacing any non-numeric values with NaN
     numeric_columns = ['ALTITUDE', 'ACCEL_R', 'ACCEL_P', 'ACCEL_Y', 'GYRO_R', 'GYRO_P', 'GYRO_Y', 
-                       'CURRENT', 'VOLTAGE', 'TEMPERATURE', 'PRESSURE', 'PACKET_COUNT']
+                       'CURRENT', 'VOLTAGE', 'TEMPERATURE', 'PRESSURE', 'PACKET_COUNT',
+                       'GPS_ALTITUDE', 'GPS_LATITUDE', 'GPS_LONGITUDE', 'GPS_SATS']
     for col in numeric_columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -59,7 +60,7 @@ except FileNotFoundError:
     exit(1)
 
 # Create figure with multiple subplots
-fig, axes = plt.subplots(3, 2, figsize=(15, 12))
+fig, axes = plt.subplots(4, 2, figsize=(15, 16))
 fig.suptitle(f'CanSat Telemetry Data - {CSV_FILE}', fontsize=16, fontweight='bold')
 
 # 1. Altitude vs Mission Time
@@ -145,20 +146,30 @@ lines = line1 + line2
 labels = [l.get_label() for l in lines]
 ax_temp.legend(lines, labels, loc='best')
 
+# 6. GPS Altitude vs Mission Time
+axes[3, 0].plot(df['MISSION_TIME_DT'], df['GPS_ALTITUDE'], marker='o', linestyle='-', linewidth=1, markersize=3, color='darkgreen')
+axes[3, 0].set_title('GPS Altitude vs Mission Time')
+axes[3, 0].set_xlabel('Mission Time')
+axes[3, 0].set_ylabel('GPS Altitude (m)')
+axes[3, 0].xaxis.set_major_locator(mdates.AutoDateLocator())
+axes[3, 0].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+axes[3, 0].tick_params(axis='x', rotation=45)
+axes[3, 0].grid(True, alpha=0.3)
 
-# # 6. Packet Count vs Mission Time
-# axes[2, 1].plot(df['MISSION_TIME_DT'], df['PACKET_COUNT'], marker='o', linestyle='-', linewidth=1, markersize=3, color='darkblue')
-# axes[2, 1].set_title('Packet Count vs Mission Time')
-# axes[2, 1].set_xlabel('Mission Time')
-# axes[2, 1].set_ylabel('Packet Count')
-# axes[2, 1].xaxis.set_major_locator(mdates.AutoDateLocator())
-# axes[2, 1].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
-# axes[2, 1].tick_params(axis='x', rotation=45)
-# axes[2, 1].grid(True, alpha=0.3)
+# 7. GPS Satellites vs Mission Time
+axes[3, 1].plot(df['MISSION_TIME_DT'], df['GPS_SATS'], marker='o', linestyle='-', linewidth=1, markersize=3, color='purple')
+axes[3, 1].set_title('GPS Satellites vs Mission Time')
+axes[3, 1].set_xlabel('Mission Time')
+axes[3, 1].set_ylabel('Number of Satellites')
+axes[3, 1].xaxis.set_major_locator(mdates.AutoDateLocator())
+axes[3, 1].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+axes[3, 1].tick_params(axis='x', rotation=45)
+axes[3, 1].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'telemetry_overview.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'telemetry_overview.png')}")
+# plt.close(fig)
 
 # Create individual high-detail plots
 fig2, ax = plt.subplots(figsize=(12, 6))
@@ -173,6 +184,7 @@ ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'altitude_detailed.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'altitude_detailed.png')}")
+plt.close(fig2)
 
 # Create acceleration detailed plot
 fig3, ax = plt.subplots(figsize=(12, 6))
@@ -190,6 +202,7 @@ ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'acceleration_detailed.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'acceleration_detailed.png')}")
+plt.close(fig3)
 
 # Create rotation rate detailed plot
 fig4, ax = plt.subplots(figsize=(12, 6))
@@ -207,6 +220,7 @@ ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'rotation_rate_detailed.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'rotation_rate_detailed.png')}")
+plt.close(fig4)
 
 # Create power profile plot
 fig5, ax = plt.subplots(figsize=(12, 6))
@@ -235,6 +249,7 @@ ax_current.legend(lines, labels, loc='best', fontsize=10)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'power_profile.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'power_profile.png')}")
+plt.close(fig5)
 
 # Create temperature and pressure detailed plot
 fig6, ax = plt.subplots(figsize=(12, 6))
@@ -263,6 +278,49 @@ ax_temp.legend(lines, labels, loc='best', fontsize=10)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'temperature_pressure_detailed.png'), dpi=150, bbox_inches='tight')
 print(f"Saved: {os.path.join(OUTPUT_DIR, 'temperature_pressure_detailed.png')}")
+plt.close(fig6)
+
+# Create GPS altitude detailed plot
+fig7, ax = plt.subplots(figsize=(12, 6))
+ax.plot(df['MISSION_TIME_DT'], df['GPS_ALTITUDE'], marker='o', linestyle='-', linewidth=2, markersize=4, color='darkgreen')
+ax.set_title('GPS Altitude (Detailed)', fontsize=14, fontweight='bold')
+ax.set_xlabel('Mission Time', fontsize=12)
+ax.set_ylabel('GPS Altitude (m)', fontsize=12)
+ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+ax.tick_params(axis='x', rotation=45)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'gps_altitude_detailed.png'), dpi=150, bbox_inches='tight')
+print(f"Saved: {os.path.join(OUTPUT_DIR, 'gps_altitude_detailed.png')}")
+plt.close(fig7)
+
+# Create GPS position detailed plot (Latitude vs Longitude)
+fig8, ax = plt.subplots(figsize=(12, 6))
+ax.plot(df['GPS_LONGITUDE'], df['GPS_LATITUDE'], marker='o', linestyle='-', linewidth=2, markersize=4, color='teal')
+ax.set_title('GPS Position Track (Latitude vs Longitude)', fontsize=14, fontweight='bold')
+ax.set_xlabel('Longitude (°)', fontsize=12)
+ax.set_ylabel('Latitude (°)', fontsize=12)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'gps_position_track.png'), dpi=150, bbox_inches='tight')
+print(f"Saved: {os.path.join(OUTPUT_DIR, 'gps_position_track.png')}")
+plt.close(fig8)
+
+# Create GPS satellites detailed plot
+fig9, ax = plt.subplots(figsize=(12, 6))
+ax.plot(df['MISSION_TIME_DT'], df['GPS_SATS'], marker='o', linestyle='-', linewidth=2, markersize=4, color='purple')
+ax.set_title('GPS Satellite Count (Detailed)', fontsize=14, fontweight='bold')
+ax.set_xlabel('Mission Time', fontsize=12)
+ax.set_ylabel('Number of Satellites', fontsize=12)
+ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+ax.tick_params(axis='x', rotation=45)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'gps_satellites_detailed.png'), dpi=150, bbox_inches='tight')
+print(f"Saved: {os.path.join(OUTPUT_DIR, 'gps_satellites_detailed.png')}")
+plt.close(fig9)
 
 # Print statistics
 print("\n=== Telemetry Statistics ===")
@@ -270,5 +328,8 @@ print(f"Altitude: {df['ALTITUDE'].min():.2f}m to {df['ALTITUDE'].max():.2f}m")
 print(f"Temperature: {df['TEMPERATURE'].min():.2f}°C to {df['TEMPERATURE'].max():.2f}°C")
 print(f"Voltage: {df['VOLTAGE'].min():.2f}V to {df['VOLTAGE'].max():.2f}V")
 print(f"Current: {df['CURRENT'].min():.2f}A to {df['CURRENT'].max():.2f}A")
+print(f"GPS Altitude: {df['GPS_ALTITUDE'].min():.2f}m to {df['GPS_ALTITUDE'].max():.2f}m")
+print(f"GPS Satellites: {df['GPS_SATS'].min():.0f} to {df['GPS_SATS'].max():.0f}")
 
+# Show only the overview window at the end
 plt.show()
