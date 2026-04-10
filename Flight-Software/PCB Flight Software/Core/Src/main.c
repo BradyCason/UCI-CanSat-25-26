@@ -243,6 +243,8 @@ int main(void)
 	  // Drop detection for drop testing. Remove for real flight
 	  if (telemetry.velocity_world_z < - 1 && telemetry.accel_world_z < -3){
 		  Eject_Paraglider();
+		  telemetry.container_released = 1;
+		  telemetry.paraglider_ejected = 1;
 	  }
 
 	  // Perform Paraglider control alg if it's on
