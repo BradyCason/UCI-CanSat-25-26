@@ -40,6 +40,11 @@ void init_fsm(Telemetry_t *telemetry){
 		telemetry->altitude_offset = 0;
 		read_baro(&hi2c1, telemetry);
 		read_gps(&hi2c1, telemetry);
+
+		// Always restore target coords
+		telemetry->target_latitude = flash_telemetry.target_latitude;
+		telemetry->target_longitude = flash_telemetry.target_longitude;
+
 		// If Power-on reset (power removed and restored) and sensors indicate in flight and alt > threshold
 		if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) && (telemetry->altitude + flash_telemetry.altitude_offset > MIN_RESET_ALT) && sensors_indicate_flight(telemetry) == 1){
 			// reset detected
@@ -50,8 +55,6 @@ void init_fsm(Telemetry_t *telemetry){
 			telemetry->paraglider_ejected = flash_telemetry.paraglider_ejected;
 			telemetry->payload_released = flash_telemetry.payload_released;
 			telemetry->paraglider_active = flash_telemetry.paraglider_active;
-			telemetry->target_latitude = flash_telemetry.target_latitude;
-			telemetry->target_longitude = flash_telemetry.target_longitude;
 			strcpy(telemetry->state, flash_telemetry.state);
 			telemetry->mission_time_hr = flash_telemetry.mission_time_hr;
 			telemetry->mission_time_min = flash_telemetry.mission_time_min;
