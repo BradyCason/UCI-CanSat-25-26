@@ -1,4 +1,5 @@
 #include "imu.h"
+#include "complementary_filter.h"
 
 HAL_StatusTypeDef BNO055_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t reg, uint8_t value)
 {
@@ -78,6 +79,8 @@ HAL_StatusTypeDef read_imu(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
         return HAL_ERROR;
 
     telemetry->heading = (int16_t)(buf[1] << 8 | buf[0]) / 16.0f; // degrees
+
+    transform_accel_to_world(telemetry);
 
     return HAL_OK;
 }

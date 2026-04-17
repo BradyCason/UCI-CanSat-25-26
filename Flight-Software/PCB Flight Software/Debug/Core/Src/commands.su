@@ -1,2 +1,2 @@
 ../Core/Src/commands.c:34:6:init_commands	8	static
-../Core/Src/commands.c:55:6:handle_command	40	static
+../Core/Src/commands.c:55:6:handle_command	32	static

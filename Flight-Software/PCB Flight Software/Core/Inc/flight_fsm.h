@@ -3,7 +3,7 @@
 #include "telemetry.h"
 
 // Liftoff detection constants
-#define LAUNCH_ACCEL_THRESHOLD 40
+#define LAUNCH_ACCEL_THRESHOLD 30
 #define RAIL_DELAY_TIME 250
 #define LAUNCH_EVAL_PERIOD_TIME 100
 

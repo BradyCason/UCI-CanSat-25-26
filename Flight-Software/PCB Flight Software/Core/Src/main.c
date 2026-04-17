@@ -160,6 +160,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 HAL_StatusTypeDef result;
+uint8_t drop_detection_active = 0;
 /* USER CODE END 0 */
 
 /**
@@ -241,10 +242,11 @@ int main(void)
 	  update_fsm(&telemetry);
 
 	  // Drop detection for drop testing. Remove for real flight
-	  if (telemetry.velocity_world_z < - 1 && telemetry.accel_world_z < -3){
+	  if (drop_detection_active == 1 && telemetry.velocity_world_z < -1 && telemetry.accel_world_z < -3){
 		  Eject_Paraglider();
 		  telemetry.container_released = 1;
 		  telemetry.paraglider_ejected = 1;
+		  drop_detection_active = 0;
 	  }
 
 	  // Perform Paraglider control alg if it's on

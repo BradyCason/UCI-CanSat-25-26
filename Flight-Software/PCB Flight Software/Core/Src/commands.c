@@ -51,7 +51,7 @@ void init_commands(void)
 }
 
 char pressure_str[7];
-
+extern uint8_t drop_detection_active;
 void handle_command(const char *cmd) {
 
 	// SIM command
@@ -102,6 +102,8 @@ void handle_command(const char *cmd) {
 
 	// set time command
 	else if (strncmp(cmd, set_time_command, strlen(set_time_command)) == 0) {
+//		drop_detection_active = 1; // TODO: REMOVE THIS
+//		set_cmd_echo("DROP!!!", &telemetry); // TODO: REMOVE THIS
 		if (cmd[12]=='G') {
 			telemetry.mission_time_hr = telemetry.gps_time_hr;
 			telemetry.mission_time_min = telemetry.gps_time_min;
