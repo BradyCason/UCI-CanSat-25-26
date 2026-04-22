@@ -1,5 +1,6 @@
 #include "paraglider.h"
 #include "servos.h"
+#include "main.h"
 #include <math.h>
 
 float bearing_to_target(float lat1_deg, float lon1_deg,
@@ -21,29 +22,86 @@ float bearing_to_target(float lat1_deg, float lon1_deg,
     return bearing;   // degrees, compass heading
 }
 
+void correct_heading(Telemetry_t *telemetry){
+	telemetry->heading = telemetry->heading - HEADING_WHEN_FACING_NORTH;
+
+	// Normalize to [0, 360)
+	while (telemetry->heading >= 360) telemetry->heading -= 360;
+	while (telemetry->heading < 0) telemetry->heading += 360;
+}
 
 void control_paraglider(Telemetry_t *telemetry){
+	// --- PID gains (tune these) ---
+	static float Kp = 2.0f;
+	static float Ki = 0.05f;
+	static float Kd = 0.5f;
+
+	// --- persistent state ---
+	static float integral = 0.0f;
+	static float prev_error = 0.0f;
+	static uint32_t prev_time_glider = 0;
+
+	uint32_t cur_time_us = micros();
+	float dt = (float)(cur_time_us - prev_time_glider) * 1e-6f;
+
+	// Correct to true heading (direction the paraglider is facing)
+	correct_heading(telemetry);
+
     // Find target bearing
     float target_bearing = bearing_to_target(telemetry->gps_latitude,
     		telemetry->gps_longitude, telemetry->target_latitude, telemetry->target_longitude);
 
-    float angle_dif = target_bearing - telemetry->heading;
+    float error = target_bearing - telemetry->heading;
     // Normalize to [-180, 180]
-    while (angle_dif > 180) angle_dif -= 360;
-    while (angle_dif < -180) angle_dif += 360;
+    while (error > 180) error -= 360;
+    while (error < -180) error += 360;
 
     // if absolute value of angle dif < 3 deg, no turning
-    if (fabsf(angle_dif) < 3.0f) angle_dif = 0;
+    if (fabsf(error) < 3.0f) error = 0;
 
-    // Currently a proportional (P) controller. Later: make PID?
-    float Kp = 0.4f;    // tune this
-    float turn = Kp * angle_dif;
+    // --- PID terms ---
+    // Integral (with basic anti-windup clamp)
+    integral += error * dt;
+    float integral_limit = 100.0f;  // tune this
+    if (integral > integral_limit) integral = integral_limit;
+    if (integral < -integral_limit) integral = -integral_limit;
 
-    // Clamp to a maximum turn amount
-    turn = fmaxf(fminf(turn, TURN_MAX), -TURN_MAX);
+    // Derivative
+    float derivative = (error - prev_error) / dt;
 
-    // Turn servos based on angle difference
-    float servo_center = (SERVO_MAX + SERVO_MIN) * 0.5f;
-    Set_Left_Servo_Angle(fmaxf(fminf(servo_center - turn, SERVO_MAX), SERVO_MIN));
-    Set_Right_Servo_Angle(fmaxf(fminf(servo_center + turn, SERVO_MAX), SERVO_MIN));
+    // PID output
+    float turn = Kp * error + Ki * integral + Kd * derivative;
+
+    // Save state
+    prev_error = error;
+
+    set_paraglider_steering(turn);
+}
+
+void set_paraglider_steering(float turn){
+	if (turn == -1000){
+		// Inactive position
+		Set_Right_Servo_Angle(0);
+		Set_Left_Servo_Angle(180);
+	} else if (turn == 0) {
+		// Both fully extended
+		Set_Left_Servo_Angle(170);
+		Set_Right_Servo_Angle(10);
+	}
+	else if (turn < 0) { // Turn left
+		// Clamp to a maximum turn amount
+		turn = fmaxf(turn, -TURN_MAX);
+		Set_Left_Servo_Angle(170 + turn);
+
+		// Fully extended
+		Set_Right_Servo_Angle(10);
+	}
+	else if (turn > 0) { // Turn right
+		// Clamp to a maximum turn amount
+		turn = fminf(turn, TURN_MAX);
+		Set_Right_Servo_Angle(10 + turn);
+
+		// Fully extended
+		Set_Left_Servo_Angle(170);
+	}
 }

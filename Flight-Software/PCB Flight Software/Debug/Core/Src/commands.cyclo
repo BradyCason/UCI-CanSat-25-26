@@ -1,2 +1,2 @@
-../Core/Src/commands.c:32:6:init_commands	1
-../Core/Src/commands.c:52:6:handle_command	22
+../Core/Src/commands.c:34:6:init_commands	1
+../Core/Src/commands.c:55:6:handle_command	22

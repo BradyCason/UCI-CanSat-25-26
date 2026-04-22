@@ -2,6 +2,9 @@
 
 extern TIM_HandleTypeDef htim2;
 
+uint8_t cur_container_servo_angle = CONTAINER_ANGLE_CLOSED;
+uint8_t cur_payload_servo_angle = PAYLOAD_ANGLE_CLOSED;
+
 void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle) {
     // Limit the angle between 0° and 180°
     if (angle > 180) {
@@ -22,50 +25,81 @@ void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle) {
     __HAL_TIM_SET_COMPARE(htim, channel, pulse);
 }
 
-void Init_Servos() {
+void Init_Servos(Telemetry_t *telemetry) {
     HAL_TIM_PWM_Start(&PAYLOAD_TIM, PAYLOAD_CHANNEL);
     HAL_TIM_PWM_Start(&CONTAINER_TIM, CONTAINER_CHANNEL);
     HAL_TIM_PWM_Start(&LEFT_SERVO_TIM, LEFT_SERVO_CHANNEL);
     HAL_TIM_PWM_Start(&RIGHT_SERVO_TIM, RIGHT_SERVO_CHANNEL);
 
-    Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_CLOSED);
-    Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED);
+    // Set container release to correct angle
+    if (!telemetry->container_released) {
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED);
+    }
+    else if (telemetry->paraglider_ejected){
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_PARAGLIDER_EJECT);
+    }
+    else {
+    	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_OPEN);
+    }
+
+    // Set payload release to correct angle
+    if (telemetry->payload_released){
+    	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_OPEN);
+    } else {
+    	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_CLOSED);
+    }
 }
 
 void Release_Payload(){
 //	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_OPEN);
 	unsigned char num_partitions = 20;
 	for (int i = 1; i <= num_partitions; ++i){
-		Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_CLOSED + i * (PAYLOAD_ANGLE_OPEN - PAYLOAD_ANGLE_CLOSED) / num_partitions);
+		Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, cur_payload_servo_angle + i * (PAYLOAD_ANGLE_OPEN - cur_payload_servo_angle) / num_partitions);
 		HAL_Delay(25);
 	}
+
+	cur_payload_servo_angle = PAYLOAD_ANGLE_OPEN;
 }
 
 void Reset_Payload(){
 //	Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, SERVO_ANGLE_CLOSED);
 	unsigned char num_partitions = 20;
 	for (int i = 1; i <= num_partitions; ++i){
-		Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, PAYLOAD_ANGLE_OPEN + i * (PAYLOAD_ANGLE_CLOSED - PAYLOAD_ANGLE_OPEN) / num_partitions);
+		Set_Servo_Angle(&PAYLOAD_TIM, PAYLOAD_CHANNEL, cur_payload_servo_angle + i * (PAYLOAD_ANGLE_CLOSED - cur_payload_servo_angle) / num_partitions);
 		HAL_Delay(25);
 	}
+
+	cur_payload_servo_angle = PAYLOAD_ANGLE_CLOSED;
 }
 
 void Release_Container(){
 //	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_OPEN);
 	unsigned char num_partitions = 20;
 	for (int i = 1; i <= num_partitions; ++i){
-		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED + i * (CONTAINER_ANGLE_OPEN - CONTAINER_ANGLE_CLOSED) / num_partitions);
+		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_OPEN - cur_container_servo_angle) / num_partitions);
 		HAL_Delay(25);
 	}
+
+	cur_container_servo_angle = CONTAINER_ANGLE_OPEN;
 }
 
 void Reset_Container(){
 //	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_CLOSED);
 	unsigned char num_partitions = 20;
 	for (int i = 1; i <= num_partitions; ++i){
-		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_OPEN + i * (CONTAINER_ANGLE_CLOSED - CONTAINER_ANGLE_OPEN) / num_partitions);
+		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_CLOSED - cur_container_servo_angle) / num_partitions);
 		HAL_Delay(25);
 	}
+	cur_container_servo_angle = CONTAINER_ANGLE_CLOSED;
+}
+
+void Eject_Paraglider(){
+	unsigned char num_partitions = 20;
+	for (int i = 1; i <= num_partitions; ++i){
+		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_PARAGLIDER_EJECT - cur_container_servo_angle) / num_partitions);
+		HAL_Delay(25);
+	}
+	cur_container_servo_angle = CONTAINER_ANGLE_PARAGLIDER_EJECT;
 }
 
 void Set_Left_Servo_Angle(uint8_t angle){

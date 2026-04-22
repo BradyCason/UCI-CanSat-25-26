@@ -5,6 +5,7 @@
 #include "gps.h"
 #include "flight_fsm.h"
 #include "xbee.h"
+#include "flash_memory.h"
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -26,6 +27,7 @@ char release_container_command[27];
 char reset_release_container_command[28];
 char glider_on_command[24];
 char glider_off_command[25];
+char eject_command[20];
 char reset_state_command[14];
 char set_coords_command[14];
 
@@ -43,12 +45,13 @@ void init_commands(void)
 	snprintf(reset_release_container_command, sizeof(reset_release_container_command), "CMD,%s,MEC,CONTAINER,OFF", TEAM_ID);
 	snprintf(glider_on_command, sizeof(glider_on_command), "CMD,%s,MEC,GLIDER,ON", TEAM_ID);
 	snprintf(glider_off_command, sizeof(glider_off_command), "CMD,%s,MEC,GLIDER,OFF", TEAM_ID);
+	snprintf(eject_command, sizeof(eject_command), "CMD,%s,MEC,EJECT", TEAM_ID);
 	snprintf(reset_state_command, sizeof(reset_state_command), "CMD,%s,RST", TEAM_ID);
 	snprintf(set_coords_command, sizeof(set_coords_command), "CMD,%s,SC,", TEAM_ID);
 }
 
 char pressure_str[7];
-
+extern uint8_t drop_detection_active;
 void handle_command(const char *cmd) {
 
 	// SIM command
@@ -57,9 +60,8 @@ void handle_command(const char *cmd) {
 		// disable
 		if (cmd[13] == 'D'){
 			set_cmd_echo("SIMDISABLE", &telemetry);
-			// Reset the altitude buffer if changing from sim to flight mode
 			if (telemetry.mode == 'S'){
-				reset_alt_dif_buf();
+				reset_state(&telemetry);
 			}
 			telemetry.mode = 'F';
 			telemetry.sim_enabled = 0;
@@ -75,7 +77,7 @@ void handle_command(const char *cmd) {
 		if (cmd[13] == 'A' && telemetry.sim_enabled == 1){
 			telemetry.mode = 'S';
 			set_cmd_echo("SIMACTIVATE", &telemetry);
-			reset_alt_dif_buf();
+			reset_state(&telemetry);
 		}
 
 	}
@@ -89,7 +91,6 @@ void handle_command(const char *cmd) {
 
 			telemetry.pressure = atof(pressure_str)/1000;
 			telemetry.altitude = calculate_altitude(&telemetry);
-			update_alt_dif_buf(&telemetry);
 			telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
 
 			char temp[12] = "SIMP";
@@ -101,6 +102,8 @@ void handle_command(const char *cmd) {
 
 	// set time command
 	else if (strncmp(cmd, set_time_command, strlen(set_time_command)) == 0) {
+//		drop_detection_active = 1; // TODO: REMOVE THIS
+//		set_cmd_echo("DROP!!!", &telemetry); // TODO: REMOVE THIS
 		if (cmd[12]=='G') {
 			telemetry.mission_time_hr = telemetry.gps_time_hr;
 			telemetry.mission_time_min = telemetry.gps_time_min;
@@ -125,14 +128,18 @@ void handle_command(const char *cmd) {
 			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
 		}
 
+		store_flash_data(&telemetry);
 	}
 
 	// Calibrate Altitude
 	else if (strncmp(cmd, cal_alt_command, strlen(cal_alt_command)) == 0) {
 		telemetry.altitude_offset -= telemetry.altitude;
 		set_cmd_echo("CAL", &telemetry);
-		reset_alt_dif_buf();
+		telemetry.baro_vz = 0;
+		telemetry.velocity_world_z = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Telemetry On
@@ -157,6 +164,8 @@ void handle_command(const char *cmd) {
 		Release_Payload();
 		telemetry.payload_released = 1;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset Payload Release
@@ -166,6 +175,8 @@ void handle_command(const char *cmd) {
 		Reset_Payload();
 		telemetry.payload_released = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Release Container
@@ -174,7 +185,10 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECCONTON", &telemetry);
 		Release_Container();
 		telemetry.container_released = 1;
+		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset Container Release
@@ -183,7 +197,22 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECCONTOFF", &telemetry);
 		Reset_Container();
 		telemetry.container_released = 0;
+		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
+	}
+
+	// Eject paraglider
+	else if (strncmp(cmd, eject_command, strlen(eject_command)) == 0) {
+		// Update variable
+		set_cmd_echo("MECEJECT", &telemetry);
+		Eject_Paraglider();
+		telemetry.container_released = 1;
+		telemetry.paraglider_ejected = 1;
+		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Glider On
@@ -192,6 +221,8 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECGLIDERON", &telemetry);
 		telemetry.paraglider_active = 1;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Glider Off
@@ -200,6 +231,8 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("MECGLIDEROFF", &telemetry);
 		telemetry.paraglider_active = 0;
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 
 	// Reset State
@@ -216,5 +249,7 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("SC", &telemetry);
 		sscanf(&cmd[12], "%f,%f", &telemetry.target_latitude, &telemetry.target_longitude);
 		telemetry.sim_enabled = 0;
+
+		store_flash_data(&telemetry);
 	}
 }

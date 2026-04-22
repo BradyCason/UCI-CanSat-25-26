@@ -29,7 +29,8 @@ Core/Src/flight_fsm.o: ../Core/Src/flight_fsm.c ../Core/Inc/flight_fsm.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/telemetry.h ../Core/Inc/servos.h ../Core/Inc/main.h
+ ../Core/Inc/telemetry.h ../Core/Inc/servos.h ../Core/Inc/main.h \
+ ../Core/Inc/baro.h ../Core/Inc/gps.h ../Core/Inc/flash_memory.h
 ../Core/Inc/flight_fsm.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -64,3 +65,6 @@ Core/Src/flight_fsm.o: ../Core/Src/flight_fsm.c ../Core/Inc/flight_fsm.h \
 ../Core/Inc/telemetry.h:
 ../Core/Inc/servos.h:
 ../Core/Inc/main.h:
+../Core/Inc/baro.h:
+../Core/Inc/gps.h:
+../Core/Inc/flash_memory.h:

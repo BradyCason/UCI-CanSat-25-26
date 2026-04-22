@@ -1,9 +1,14 @@
 #include "complementary_filter.h"
 #include "main.h"
+#include <math.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-uint32_t prev_time_cf = 0;
+static uint64_t prev_time_cf_us = 0;
 
-float prev_baro_alt = 0.0f;  // previous barometer altitude for velocity calculation
+static float prev_baro_alt = 0.0f;
+
+static bool cf_initialized = false;
 
 void transform_accel_to_world(Telemetry_t *telemetry) {
   // Average IMUs (body frame)
@@ -36,38 +41,60 @@ void transform_accel_to_world(Telemetry_t *telemetry) {
   telemetry->accel_world_z = R31*ax + R32*ay + R33*az - 9.81f;
 }
 
+void complementary_filter_init(Telemetry_t *telemetry)
+{
+    float baro_alt = telemetry->altitude;
+
+    prev_time_cf_us = micros();
+    prev_baro_alt = baro_alt;
+
+    telemetry->velocity_world_z = 0.0f;
+
+    telemetry->alt_fused = baro_alt;
+
+    cf_initialized = true;
+}
+
 void complementary_filter(Telemetry_t* telemetry) {
-	// Get time since last call
-    uint32_t cur_time = micros();
-    float dt = (cur_time - prev_time_cf) * 1e-6f;
-    if (dt <= 0.0f) return;  // safety check
-    if (dt > 0.05f) dt = 0.05f; // Clamp large dt
-    prev_time_cf = cur_time;
+	if (!cf_initialized) {
+		complementary_filter_init(telemetry);
+		return;
+	}
 
-    // STAGE 1: Velocity Fusion
-    // Use gravity-compensated, tilt-corrected vertical acceleration
-    telemetry->velocity_world_x += telemetry->accel_world_x * dt;
-    telemetry->velocity_world_y += telemetry->accel_world_y * dt;
-    telemetry->velocity_world_z += telemetry->accel_world_z * dt;
-    // float velocity_imu = velocity_fused + (-Accel_z - 9.81f) * dt;
+	uint64_t cur_time_us = micros();
+	float dt = (float)(cur_time_us - prev_time_cf_us) * 1e-6f;
+	prev_time_cf_us = cur_time_us;
 
-    // Calculate barometric velocity
-    float velocity_baro = (telemetry->altitude - prev_baro_alt) / dt;
-    prev_baro_alt = telemetry->altitude;
+	if (!isfinite(dt) || dt <= 0.0f || dt > 0.1f) {
+		return;
+	}
 
-    // Fuse velocities: 99% IMU, 1% barometer
-    telemetry->velocity_world_z = ALPHA_VELOCITY * telemetry->velocity_world_z
-				 + (1.0f - ALPHA_VELOCITY) * velocity_baro;
+	float baro_alt = telemetry->altitude;
 
-    // STAGE 2: Altitude Fusion
-    // Integrate fused velocity to get altitude prediction
-    float alt_from_velocity = telemetry->alt_fused + telemetry->velocity_world_z * dt;
+	float velocity_baro_raw = (baro_alt - prev_baro_alt) / dt;
+	prev_baro_alt = baro_alt;
 
-    // Fuse altitudes: 95% integrated velocity, 5% raw barometer
-    telemetry->alt_fused = ALPHA_ALTITUDE * alt_from_velocity
-			  + (1.0f - ALPHA_ALTITUDE) * telemetry->altitude;
+	float baro_vel_alpha = TAU_BARO_VEL / (TAU_BARO_VEL + dt);
+	telemetry->baro_vz =
+		baro_vel_alpha * telemetry->baro_vz +
+		(1.0f - baro_vel_alpha) * velocity_baro_raw;
 
-    // Damp x and y velocity to reduce drift
-    telemetry->velocity_world_x *= 0.999f;
-    telemetry->velocity_world_y *= 0.999f;
+	float velocity_imu = telemetry->velocity_world_z +
+						 telemetry->accel_world_z * dt;
+
+	float alpha_velocity = TAU_VELOCITY / (TAU_VELOCITY + dt);
+	telemetry->velocity_world_z =
+		alpha_velocity * velocity_imu +
+		(1.0f - alpha_velocity) * telemetry->baro_vz;
+
+	float altitude_pred =
+		telemetry->alt_fused + telemetry->velocity_world_z * dt;
+
+	float alpha_altitude = TAU_ALTITUDE / (TAU_ALTITUDE + dt);
+	telemetry->alt_fused =
+		alpha_altitude * altitude_pred +
+		(1.0f - alpha_altitude) * baro_alt;
+
+	if (!isfinite(telemetry->velocity_world_z)) telemetry->velocity_world_z = 0.0f;
+	if (!isfinite(telemetry->alt_fused))        telemetry->alt_fused = baro_alt;
 }

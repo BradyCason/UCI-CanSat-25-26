@@ -76,7 +76,7 @@ class ControlsThread(QtCore.QThread):
     release_payload = QtCore.pyqtSignal()
     release_paraglider = QtCore.pyqtSignal()
     reset_state = QtCore.pyqtSignal()
-    release_egg = QtCore.pyqtSignal()
+    release_container = QtCore.pyqtSignal()
     show_graphs = QtCore.pyqtSignal()
 
     def __init__(self, poll_interval=0.05, parent=None):
@@ -99,13 +99,13 @@ class ControlsThread(QtCore.QThread):
                     if p == pin_7:
                         self.telemetry_toggle.emit()
                         flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry enable LED
-                        GPIO.output(telemetry_disable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry disable LED
+                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry enabled LED
+                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry disabled LED
                     elif p == pin_8:
                         self.telemetry_toggle.emit()
                         flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry disabled: turn on telemetry enable LED
-                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry disabled: turn off telemetry disable LED
+                        GPIO.output(telemetry_enable_led, GPIO.LOW)     # Telemetry disabled: turn off telemetry enable LED
+                        GPIO.output(telemetry_disable_led, GPIO.HIGH)   # Telemetry disabled: turn on telemetry disable LED
                     elif p == pin_9:
                         self.sim_enable.emit()
                         flash_led(XbeeLED)
@@ -145,7 +145,7 @@ class ControlsThread(QtCore.QThread):
                         self.reset_state.emit()
                         flash_led(XbeeLED)
                     elif p == pin_5:
-                        self.release_egg.emit()
+                        self.release_container.emit()
                         flash_led(XbeeLED)
                     elif p == pin_18:
                         # Toggle graph process: close if running, open if not
@@ -173,7 +173,7 @@ def flash_led(LED_pin, flashes=3, on_time=0.2, off_time=0.2):
                 GPIO.output(LED_pin, GPIO.LOW)
                 time.sleep(off_time)
         except Exception:
-            pass
+            pass    
     threading.Thread(target=_worker, daemon=True).start()
 
 
@@ -181,7 +181,7 @@ TEAM_ID = "1083"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE",
+                    "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
@@ -200,9 +200,10 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = 7
+COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = False
+# MAKE_CSV_FILE = False
+MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 START_DELIMITER = "~"
@@ -210,13 +211,13 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
+""" The following serial function is used when raspberry pi or linux machine is used for GS and is set to COM_PORT = "/dev/ttyUSB0" """ 
 def connect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
-            # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-            ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+            ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
             serialConnected = True
             print("Connected to Xbee")
         except serial.serialutil.SerialException as e:
@@ -250,10 +251,14 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # Load the UI
-        ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
+        ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
+        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
         uic.loadUi(ui_path, self)
 
-        # self.showFullScreen()
+        # Apply 90 degree rotation to the entire UI
+        # self.rotate_ui(90)
+
+        self.showFullScreen()           
 
         self.setup_UI()
         self.connect_buttons()
@@ -263,6 +268,45 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.container_released = False
 
         self.init_graphs()
+
+    def rotate_ui(self, degrees):
+        '''
+        Rotate the entire UI by the specified degrees (90, 180, 270)
+        using graphics scene approach from rotated_ui.py
+        '''
+        # Create graphics view and scene
+        graphics_view = QtWidgets.QGraphicsView()
+        graphics_view.setStyleSheet("border: none; background-color: white;")
+        graphics_view.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        
+        scene = QtWidgets.QGraphicsScene()
+        graphics_view.setScene(scene)
+        
+        # Get the actual central widget that was set by uic.loadUi()
+        actual_central = self.centralWidget()
+        
+        # Temporarily remove the central widget from main window
+        self.takeCentralWidget()
+        
+        # Add it to the graphics scene
+        proxy = scene.addWidget(actual_central)
+        
+        # Apply rotation to the proxy
+        transform = QtGui.QTransform().rotate(degrees)
+        proxy.setTransform(transform)
+        
+        # Adjust scene rect to fit the content
+        scene.setSceneRect(scene.itemsBoundingRect())
+        
+        # Make graphics view expand to fill available space
+        graphics_view.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding
+        )
+        graphics_view.setMinimumSize(1, 1)
+        
+        # Set graphics view as the new central widget
+        self.setCentralWidget(graphics_view)
 
     def setup_UI(self):
         '''
@@ -487,10 +531,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.accel_r_y_data = []
         self.accel_p_y_data = []
         self.accel_y_y_data = []
-        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
-        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
-        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
-        self.accel_figure.legend()
 
         self.rotation_figure = Figure()
         self.rotation_canvas = FigureCanvas(self.rotation_figure)
@@ -499,10 +539,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.rotation_r_y_data = []
         self.rotation_p_y_data = []
         self.rotation_y_y_data = []
-        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
-        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
-        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
-        self.rotation_figure.legend()
 
         self.current_figure = Figure()
         self.current_canvas = FigureCanvas(self.current_figure)
@@ -516,24 +552,64 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_subplot = self.voltage_figure.add_subplot(111)
         self.voltage_y_data = []
 
-        # self.timer = QtCore.QTimer()
-        # self.timer.setInterval(100)  # 100 ms update
-        # self.timer.timeout.connect(self.update_graphs)
-        # self.timer.start()
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(150)  # 150 ms update    # Could increase interval for less Pi resource usage, but would make graphs less smooth
+        self.timer.timeout.connect(self.update_graphs)
+        self.timer.start()
+
+        self.alt_line, = self.alt_subplot.plot([], [], color="blue")
+        self.alt_subplot.set_title("Altitude (m)")
+
+        self.accel_r_line, = self.accel_subplot.plot([], [], label="R", color="blue")
+        self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
+        self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
+        self.accel_subplot.set_title("Acceleration (°/s^2)")
+        self.accel_subplot.legend()
+
+        self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
+        self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
+        self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
+        self.rotation_subplot.set_title("Rotation Rate (°/s)")
+        self.rotation_subplot.legend()
+
+        self.current_line, = self.current_subplot.plot([], [], label="Current", color="blue")
+        self.current_subplot.set_title("Current (A)")
+        self.current_subplot.legend()
+
+        self.voltage_line, = self.voltage_subplot.plot([], [], label="Voltage", color="blue")
+        self.voltage_subplot.set_title("Voltage (V)")
+        self.voltage_subplot.legend()
 
     def update_graphs(self):
+        # Skip update if no telemetry data yet
+        if not telemetry or "PACKET_COUNT" not in telemetry:
+            return
 
-        # Update data
-        self.x_data.append(telemetry["PACKET_COUNT"])
-        self.altitude_y_data.append(float(telemetry["ALTITUDE"]))
-        self.accel_r_y_data.append(float(telemetry["ACCEL_R"]))
-        self.accel_p_y_data.append(float(telemetry["ACCEL_P"]))
-        self.accel_y_y_data.append(float(telemetry["ACCEL_Y"]))
-        self.rotation_r_y_data.append(float(telemetry["GYRO_R"]))
-        self.rotation_p_y_data.append(float(telemetry["GYRO_P"]))
-        self.rotation_y_y_data.append(float(telemetry["GYRO_Y"]))
-        self.current_y_data.append(float(telemetry["CURRENT"]))
-        self.voltage_y_data.append(float(telemetry["VOLTAGE"]))
+        # Helper function to safely convert to float, return 0 if empty
+        def safe_float(value):
+            try:
+                if value == "" or value is None:
+                    return 0.0
+                return float(value)
+            except (ValueError, TypeError):
+                print(f"Warning: Could not convert '{value}' to float, using 0.0")
+                return 0.0
+
+        # Update data with error handling
+        try:
+            self.x_data.append(int(telemetry["PACKET_COUNT"]))
+            self.altitude_y_data.append(safe_float(telemetry["ALTITUDE"]))
+            self.accel_r_y_data.append(safe_float(telemetry["ACCEL_R"]))
+            self.accel_p_y_data.append(safe_float(telemetry["ACCEL_P"]))
+            self.accel_y_y_data.append(safe_float(telemetry["ACCEL_Y"]))
+            self.rotation_r_y_data.append(safe_float(telemetry["GYRO_R"]))
+            self.rotation_p_y_data.append(safe_float(telemetry["GYRO_P"]))
+            self.rotation_y_y_data.append(safe_float(telemetry["GYRO_Y"]))
+            self.current_y_data.append(safe_float(telemetry["CURRENT"]))
+            self.voltage_y_data.append(safe_float(telemetry["VOLTAGE"]))
+        except (KeyError, ValueError, TypeError) as e:
+            print(f"Warning: Skipping update_graphs due to: {e}")
+            return
 
         # self.x_data.append(self.counter)
         # self.altitude_y_data.append(random.randint(0,10))
@@ -547,8 +623,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.voltage_y_data.append(random.randint(0,10))
         # self.counter += 1
 
-        # Only plot last 50 points
-        if len(self.x_data) > 50:
+        # Only plot last 25 points
+        if len(self.x_data) > 25:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)
             self.accel_r_y_data.pop(0)
@@ -560,35 +636,35 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             self.current_y_data.pop(0)
             self.voltage_y_data.pop(0)
 
-        # Plot
-        self.alt_subplot.clear()
-        self.alt_subplot.plot(self.x_data, self.altitude_y_data, color='blue')
-        self.alt_subplot.set_title("Altitude (m)")
-        self.altitude_canvas.draw()
+        # Use set_data for faster plotting instead of clear() and plot() 
+        self.alt_line.set_data(self.x_data, self.altitude_y_data)
+        self.alt_subplot.relim()
+        self.alt_subplot.autoscale_view()
+        self.altitude_canvas.draw_idle() # Use draw_idle() for better performance over draw()
 
-        self.accel_subplot.clear()
-        self.accel_subplot.plot(self.x_data, self.accel_r_y_data, color='blue')
-        self.accel_subplot.plot(self.x_data, self.accel_p_y_data, color='orange')
-        self.accel_subplot.plot(self.x_data, self.accel_y_y_data, color='green')
-        self.accel_subplot.set_title("Acceleration (°/s^2)")
-        self.accel_canvas.draw()
+        self.accel_r_line.set_data(self.x_data, self.accel_r_y_data)
+        self.accel_p_line.set_data(self.x_data, self.accel_p_y_data)
+        self.accel_y_line.set_data(self.x_data, self.accel_y_y_data)
+        self.accel_subplot.relim()
+        self.accel_subplot.autoscale_view()
+        self.accel_canvas.draw_idle()
 
-        self.rotation_subplot.clear()
-        self.rotation_subplot.plot(self.x_data, self.rotation_r_y_data, color='blue')
-        self.rotation_subplot.plot(self.x_data, self.rotation_p_y_data, color='orange')
-        self.rotation_subplot.plot(self.x_data, self.rotation_y_y_data, color='green')
-        self.rotation_subplot.set_title("Rotation Rate (°/s)")
-        self.rotation_canvas.draw()
+        self.rotation_r_line.set_data(self.x_data, self.rotation_r_y_data)
+        self.rotation_p_line.set_data(self.x_data, self.rotation_p_y_data)
+        self.rotation_y_line.set_data(self.x_data, self.rotation_y_y_data)
+        self.rotation_subplot.relim()
+        self.rotation_subplot.autoscale_view()
+        self.rotation_canvas.draw_idle()
 
-        self.current_subplot.clear()
-        self.current_subplot.plot(self.x_data, self.current_y_data, color='blue')
-        self.current_subplot.set_title("Current (A)")
-        self.current_canvas.draw()
+        self.current_line.set_data(self.x_data, self.current_y_data)
+        self.current_subplot.relim()
+        self.current_subplot.autoscale_view()
+        self.current_canvas.draw_idle()
 
-        self.voltage_subplot.clear()
-        self.voltage_subplot.plot(self.x_data, self.voltage_y_data, color='blue')
-        self.voltage_subplot.set_title("Voltage (V)")
-        self.voltage_canvas.draw()
+        self.voltage_line.set_data(self.x_data, self.voltage_y_data)
+        self.voltage_subplot.relim()
+        self.voltage_subplot.autoscale_view()
+        self.voltage_canvas.draw_idle()
 
     def reset_graphs(self):
         self.x_data = []
@@ -664,6 +740,11 @@ def parse_xbee(data):
     Parse the data from an incoming Xbee packet
     '''
     global sim, telemetry, packet_count, w #, last_recieved_packet
+
+    # Validate frame has correct number of fields (only check field count, allow empty values)
+    if len(data) != len(TELEMETRY_FIELDS):
+        print(f"Incomplete frame: expected {len(TELEMETRY_FIELDS)} fields, got {len(data)}")
+        return
 
     # Ensure only recieving each packet once
     # sent_packet_count = int(data[TELEMETRY_FIELDS.index("PACKET_COUNT")])
@@ -821,8 +902,6 @@ def send_simp_data():
         time.sleep(1)
 
 
-
-
 def main():
     connect_Serial()
 
@@ -854,6 +933,7 @@ def main():
     controls.calibrate_alt.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.calibrate_alt_button.click()))
     controls.release_payload.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.release_payload_button.click()))
     controls.release_paraglider.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.activate_paraglider_button.click()))
+    controls.release_container.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.release_container_button.click()))
     controls.reset_state.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.reset_state_button.click()))
     controls.start()
 

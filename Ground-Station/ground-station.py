@@ -35,9 +35,10 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = 7    # USB0 on raspberry pi
+COM_PORT = "COM7"    # USB0 on raspberry pi
+# COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = False
+MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 START_DELIMITER = "~"
@@ -45,13 +46,29 @@ START_DELIMITER = "~"
 ser = None
 serialConnected = False
 
+# """ The following serial function is used when windows laptop is used for GS and COM_PORT is set to the correct port number for the Xbee """ 
+# def connect_Serial():
+#     global ser
+#     global serialConnected
+#     if (not SER_DEBUG):
+#         try:
+#             # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
+#             ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+#             serialConnected = True
+#             print("Connected to Xbee")
+#         except serial.serialutil.SerialException as e:
+#             if (serialConnected):
+#                 print(f"Could not connect to Xbee: {e}")
+#             serialConnected = False
+
+
+""" The following serial function is used when raspberry pi or linux machine is used for GS and is set to COM_PORT = "/dev/ttyUSB0" """ 
 def connect_Serial():
     global ser
     global serialConnected
     if (not SER_DEBUG):
         try:
-            # ser = serial.Serial("/dev/tty.usbserial-AR0JQZCB", BAUDRATE, timeout=0.05)
-            ser = serial.Serial("COM" + str(COM_PORT), BAUDRATE, timeout=0.05)
+            ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
             serialConnected = True
             print("Connected to Xbee")
         except serial.serialutil.SerialException as e:
@@ -88,7 +105,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
         uic.loadUi(ui_path, self)
 
-        self.showFullScreen()
+        # self.showFullScreen()
 
         self.setup_UI()
         self.connect_buttons()
@@ -96,6 +113,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.payload_released = False
         self.paraglider_active = False
         self.container_released = False
+        self.eject_paraglider_activated = False
 
         self.init_graphs()
 
@@ -138,6 +156,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
         self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
         self.release_payload_button.clicked.connect(self.release_payload_clicked)
+        # self.eject_paraglider_button.clicked.connect(self.eject_clicked)
         self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
         self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
@@ -151,6 +170,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
         self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
         self.release_container_button.clicked.connect(self.non_sim_button_clicked)
+        self.eject_paraglider_button.clicked.connect(self.non_sim_button_clicked)
         self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
         self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
 
@@ -279,6 +299,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         else:
             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
 
+    def eject_paraglider_clicked(self):
+        '''
+        Send eject command
+        '''
+        write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
+
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
             self.close()
@@ -304,6 +330,9 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         else:
             self.release_container_button.setText("Release Container")
             self.make_button_red(self.release_container_button)
+        # if self.eject_paraglider_activated:
+        #     self.eject_paraglider_button.setText("Reset Eject Paraglider")
+        #     self.make_button_green(self.ejee)
 
     def init_graphs(self):
         self.x_data = []
@@ -382,8 +411,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # self.voltage_y_data.append(random.randint(0,10))
         # self.counter += 1
 
-        # Only plot last 50 points
-        if len(self.x_data) > 50:
+        # Only plot last 10 points
+        if len(self.x_data) > 10:
             self.x_data.pop(0)
             self.altitude_y_data.pop(0)
             self.accel_r_y_data.pop(0)
@@ -592,7 +621,7 @@ def read_xbee():
                 # if start_byte != START_DELIMITER:
                 #     print(start_byte.decode())
 
-                # if start_byte == START_DELIMITER:
+                # if start_byte == START_DELIMITER:f
                 #     time.sleep(0.1)
                 #     frame = ser.read_until(b"\n").decode().strip()
                 #     try:

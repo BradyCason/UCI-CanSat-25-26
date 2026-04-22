@@ -109,6 +109,7 @@ void USART1_IRQHandler(void) {
 	HAL_UART_IRQHandler(&huart1);
 }
 
+uint8_t temp = 0;
 // Function called every second
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -133,7 +134,33 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
 
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
+    // Alternate steering for drop testing. Should be removed for real flight
+    if (telemetry.container_released){ //TODO: remove this
+    	if (temp == 0) {
+			set_paraglider_steering(170);
+		}
+		else if (temp == 2) {
+			set_paraglider_steering(0);
+		}
+		else if (temp == 4) {
+			set_paraglider_steering(-170);
+		}
+		else if (temp == 6){
+			set_paraglider_steering(0);
+		}
+
+		if (temp < 7) {
+			temp++;
+		}
+		else {
+			temp = 0;
+		}
+    }
 }
+
+HAL_StatusTypeDef result;
+uint8_t drop_detection_active = 0;
 /* USER CODE END 0 */
 
 /**
@@ -171,16 +198,22 @@ int main(void)
   MX_I2C3_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  DWT_Init();
+
+  HAL_Delay(500);
+
   init_xbee(&huart1, USART1_IRQn);
-  Init_Servos();
+
   init_baro(&hi2c1);
   init_gps(&hi2c1, &telemetry);
   init_imu(&hi2c1);
   init_current(&hi2c1);
   init_telemetry(&telemetry);
 
-  read_baro(&hi2c1, &telemetry);
-  reset_alt_dif_buf(&telemetry);
+  HAL_Delay(100);
+
+  init_fsm(&telemetry);
+  Init_Servos(&telemetry);
 
   HAL_Delay(10);
 
@@ -198,7 +231,6 @@ int main(void)
 	  read_current(&hi2c1, &telemetry);
 	  if (telemetry.mode == 'F'){
 		  read_baro(&hi2c1, &telemetry);
-		  update_alt_dif_buf(&telemetry);
 //		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.altitude);
 		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.alt_fused);
 	  }
@@ -209,10 +241,21 @@ int main(void)
 	  // Updated FSM
 	  update_fsm(&telemetry);
 
-	  // Perform Paraglider control alg if it's on
-	  if (telemetry.paraglider_active){
-		  control_paraglider(&telemetry);
+	  // Drop detection for drop testing. Remove for real flight
+	  if (drop_detection_active == 1 && telemetry.velocity_world_z < -1 && telemetry.accel_world_z < -3){
+		  Eject_Paraglider();
+		  telemetry.container_released = 1;
+		  telemetry.paraglider_ejected = 1;
+		  drop_detection_active = 0;
 	  }
+
+	  // Perform Paraglider control alg if it's on
+//	  if (telemetry.paraglider_active){
+//		  control_paraglider(&telemetry);
+//	  } else {
+//		  // Inactive position
+//		  set_paraglider_steering(-1000);
+//	  }
 
 	  if (command_ready == 1){
 		  handle_command(command_buffer);
@@ -224,6 +267,7 @@ int main(void)
 		  send_packet(&huart1, &telemetry);
 		  packet_ready = 0;
 	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

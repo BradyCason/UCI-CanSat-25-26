@@ -17,3 +17,16 @@ In the boot/firmware/config.txt file, add the following lines:
 dtoverlay=gpio.shutdown ... insert
 ```
 
+### To find the port that the XBee is connected on  
+Run the following command  
+```
+ls /dev/tty*
+```
+Disconnect device  
+Run the command  
+Reconnect the device  
+
+### To open pyqt designer from the terminal
+```
+pyqt5-tools designer
+```

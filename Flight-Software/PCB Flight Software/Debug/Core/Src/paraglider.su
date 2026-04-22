@@ -1,2 +1,4 @@
-../Core/Src/paraglider.c:5:7:bearing_to_target	64	static
-../Core/Src/paraglider.c:25:6:control_paraglider	40	static
+../Core/Src/paraglider.c:6:7:bearing_to_target	64	static
+../Core/Src/paraglider.c:25:6:correct_heading	16	static
+../Core/Src/paraglider.c:33:6:control_paraglider	48	static
+../Core/Src/paraglider.c:81:6:set_paraglider_steering	16	static

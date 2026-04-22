@@ -1,2 +1,4 @@
-../Core/Src/paraglider.c:5:7:bearing_to_target	2
-../Core/Src/paraglider.c:25:6:control_paraglider	4
+../Core/Src/paraglider.c:6:7:bearing_to_target	2
+../Core/Src/paraglider.c:25:6:correct_heading	3
+../Core/Src/paraglider.c:33:6:control_paraglider	6
+../Core/Src/paraglider.c:81:6:set_paraglider_steering	5

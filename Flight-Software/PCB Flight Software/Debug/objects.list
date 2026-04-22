@@ -2,6 +2,7 @@
 "./Core/Src/commands.o"
 "./Core/Src/complementary_filter.o"
 "./Core/Src/current.o"
+"./Core/Src/flash_memory.o"
 "./Core/Src/flight_fsm.o"
 "./Core/Src/gps.o"
 "./Core/Src/imu.o"

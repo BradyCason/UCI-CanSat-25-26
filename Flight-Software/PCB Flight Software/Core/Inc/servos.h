@@ -2,10 +2,11 @@
 #define SERVOS_H
 
 #include "stm32f4xx_hal.h"
+#include "telemetry.h"
 
 // Servo timing constants
-#define SERVO_MIN_PULSE_WIDTH 1000  // Minimum pulse width in microseconds (0°)
-#define SERVO_MAX_PULSE_WIDTH 2000  // Maximum pulse width in microseconds (180°)
+#define SERVO_MIN_PULSE_WIDTH 500  // Minimum pulse width in microseconds (0°)
+#define SERVO_MAX_PULSE_WIDTH 2400  // Maximum pulse width in microseconds (180°)
 #define SERVO_FREQUENCY 50          // Servo frequency in Hz
 
 // Timer and channel definitions - CHANGED TO TIM3
@@ -25,7 +26,8 @@
 #define PAYLOAD_ANGLE_OPEN 90
 #define PAYLOAD_ANGLE_CLOSED 0
 
-#define CONTAINER_ANGLE_OPEN 90
+#define CONTAINER_ANGLE_PARAGLIDER_EJECT 110
+#define CONTAINER_ANGLE_OPEN 45
 #define CONTAINER_ANGLE_CLOSED 0
 
 // External timer handle
@@ -33,11 +35,12 @@ extern TIM_HandleTypeDef htim3;
 
 // Function prototypes
 void Set_Servo_Angle(TIM_HandleTypeDef *htim, uint32_t channel, uint8_t angle);
-void Init_Servos(void);
+void Init_Servos(Telemetry_t *telemetry);
 void Release_Payload(void);
 void Reset_Payload(void);
 void Release_Container(void);
 void Reset_Container(void);
+void Eject_Paraglider(void);
 void Set_Left_Servo_Angle(uint8_t angle);
 void Set_Right_Servo_Angle(uint8_t angle);
 

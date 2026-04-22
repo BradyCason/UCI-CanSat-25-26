@@ -32,6 +32,7 @@ typedef struct {
 	uint8_t container_released;
 	uint8_t payload_released;
 	uint8_t paraglider_active;
+	uint8_t paraglider_ejected;
 	float target_latitude;
 	float target_longitude;
 	uint8_t sim_enabled;
@@ -47,9 +48,8 @@ typedef struct {
 	float accel_world_x;
 	float accel_world_y;
 	float accel_world_z;
-	float velocity_world_x;
-	float velocity_world_y;
 	float velocity_world_z;
+	float baro_vz;
 } Telemetry_t;
 
 void init_telemetry(Telemetry_t *telemetry);
