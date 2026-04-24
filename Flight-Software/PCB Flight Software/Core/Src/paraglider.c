@@ -32,9 +32,9 @@ void correct_heading(Telemetry_t *telemetry){
 
 void control_paraglider(Telemetry_t *telemetry){
 	// --- PID gains (tune these) ---
-	static float Kp = 2.0f;
-	static float Ki = 0.05f;
-	static float Kd = 0.5f;
+	static float Kp = 3.0f;
+	static float Ki = 0.05f; // 0.05
+	static float Kd = 0.5f; // 0.5
 
 	// --- persistent state ---
 	static float integral = 0.0f;

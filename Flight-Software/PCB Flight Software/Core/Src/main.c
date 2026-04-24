@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "flight_fsm.h"
 #include "servos.h"
@@ -137,27 +139,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 
     // Alternate steering for drop testing. Should be removed for real flight
-    if (telemetry.container_released){ //TODO: remove this
-    	if (temp == 0) {
-			set_paraglider_steering(170);
-		}
-		else if (temp == 2) {
-			set_paraglider_steering(0);
-		}
-		else if (temp == 4) {
-			set_paraglider_steering(-170);
-		}
-		else if (temp == 6){
-			set_paraglider_steering(0);
-		}
-
-		if (temp < 7) {
-			temp++;
-		}
-		else {
-			temp = 0;
-		}
-    }
+//    if (telemetry.container_released){ //TODO: remove this
+//    	if (temp == 0) {
+//			set_paraglider_steering(170);
+//		}
+//		else if (temp == 3) {
+//			set_paraglider_steering(0);
+//		}
+//		else if (temp == 6) {
+//			set_paraglider_steering(-170);
+//		}
+//		else if (temp == 9){
+//			set_paraglider_steering(0);
+//		}
+//
+//		if (temp < 11) {
+//			temp++;
+//		}
+//		else {
+//			temp = 0;
+//		}
+//    }
 }
 
 HAL_StatusTypeDef result;
@@ -215,6 +217,7 @@ int main(void)
 
   init_fsm(&telemetry);
   Init_Servos(&telemetry);
+  set_paraglider_steering(-1000);
 
   HAL_Delay(10);
 
@@ -251,16 +254,18 @@ int main(void)
 		  Eject_Paraglider();
 		  telemetry.container_released = 1;
 		  telemetry.paraglider_ejected = 1;
+		  telemetry.paraglider_active = 1;
 		  drop_detection_active = 0;
+		  strcpy(telemetry.state, "PROBE_RELEASE");
 	  }
 
 	  // Perform Paraglider control alg if it's on
-//	  if (telemetry.paraglider_active){
-//		  control_paraglider(&telemetry);
-//	  } else {
-//		  // Inactive position
-//		  set_paraglider_steering(-1000);
-//	  }
+	  if (telemetry.paraglider_active){
+		  control_paraglider(&telemetry);
+	  } else {
+		  // Inactive position
+		  set_paraglider_steering(-1000);
+	  }
 
 	  if (command_ready == 1){
 		  handle_command(command_buffer);
