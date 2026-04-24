@@ -14,12 +14,21 @@ import random
 
 TEAM_ID = "1083"
 
-TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
+# TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
+#                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
+#                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
+#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
+#                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+#                     "TARGET_LONGITUDE"]
+
+
+TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
+
 
 current_time = time.time()
 local_time = time.localtime(current_time)
@@ -103,6 +112,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         # Load the UI
         ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
+        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui")
         uic.loadUi(ui_path, self)
 
         # self.showFullScreen()
@@ -156,7 +166,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
         self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
         self.release_payload_button.clicked.connect(self.release_payload_clicked)
-        # self.eject_paraglider_button.clicked.connect(self.eject_clicked)
+        self.eject_paraglider_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",MEC,EJECT"))
         self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
         self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
@@ -523,6 +533,8 @@ def verify_checksum(data, checksum):
     '''
     return checksum == calc_checksum(data)
 
+
+
 def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
@@ -564,7 +576,8 @@ def parse_xbee(data):
 
     # Add data to csv file
     if MAKE_CSV_FILE:
-        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
+        csv_dir = os.path.join(os.path.dirname(__file__), "flight-csv")
+        file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
         with open(file, 'a', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(list(telemetry.values()) + [data[-1]])
@@ -692,7 +705,9 @@ def main():
 
     # Create new csv file with header
     if MAKE_CSV_FILE:
-        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
+        csv_dir = os.path.join(os.path.dirname(__file__), "flight-csv")
+        os.makedirs(csv_dir, exist_ok=True)
+        file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
         with open(file, 'w', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
