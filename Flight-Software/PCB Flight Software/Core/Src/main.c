@@ -36,6 +36,7 @@
 #include "commands.h"
 #include "paraglider.h"
 #include "complementary_filter.h"
+#include "madgwick.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -160,6 +161,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 HAL_StatusTypeDef result;
+uint8_t drop_detection_active = 0;
 /* USER CODE END 0 */
 
 /**
@@ -216,6 +218,9 @@ int main(void)
 
   HAL_Delay(10);
 
+  read_imu(&hi2c1, &telemetry);
+  Madgwick_Init(&telemetry, 0.1f);
+
   // Start 1 Hz interrupt
   HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
@@ -234,17 +239,19 @@ int main(void)
 		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.alt_fused);
 	  }
 
-	  // Filter altitude
+	  // Filter
+	  Madgwick_Update(&telemetry);
 	  complementary_filter(&telemetry);
 
 	  // Updated FSM
 	  update_fsm(&telemetry);
 
 	  // Drop detection for drop testing. Remove for real flight
-	  if (telemetry.velocity_world_z < - 1 && telemetry.accel_world_z < -3){
+	  if (drop_detection_active == 1 && telemetry.velocity_world_z < -1 && telemetry.accel_world_z < -3){
 		  Eject_Paraglider();
 		  telemetry.container_released = 1;
 		  telemetry.paraglider_ejected = 1;
+		  drop_detection_active = 0;
 	  }
 
 	  // Perform Paraglider control alg if it's on
@@ -270,7 +277,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     /* small delay so we aren't hammering I2C too hard */
-	HAL_Delay(1);
+//	HAL_Delay(1);
   }
   /* USER CODE END 3 */
 }
