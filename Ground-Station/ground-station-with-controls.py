@@ -244,7 +244,7 @@ def disconnect_Serial():
 telemetry = {}
 
 class GroundStationWindow(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self): 
         '''
         Initialize the Ground Station Window, and start timer loop for updating UI
         '''
