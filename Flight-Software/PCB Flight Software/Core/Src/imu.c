@@ -41,15 +41,21 @@ HAL_StatusTypeDef read_imu(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
 
     // Accelerometer
     if (BNO055_ReadRegs(hi2c, BNO055_ACC_DATA_X_LSB, buf, 6) != HAL_OK) return HAL_ERROR;
-    telemetry->accel_x = (int16_t)(buf[1] << 8 | buf[0]) / 100.0f; // m/s²
-    telemetry->accel_y = (int16_t)(buf[3] << 8 | buf[2]) / 100.0f;
-    telemetry->accel_z = (int16_t)(buf[5] << 8 | buf[4]) / 100.0f;
+    float accel_x = (int16_t)(buf[1] << 8 | buf[0]) / 100.0f; // m/s²
+    float accel_y = (int16_t)(buf[3] << 8 | buf[2]) / 100.0f;
+    float accel_z = (int16_t)(buf[5] << 8 | buf[4]) / 100.0f;
+    telemetry->accel_r = -accel_z;
+    telemetry->accel_p = -accel_x;
+    telemetry->accel_y = accel_y;
 
     // Gyroscope
     if (BNO055_ReadRegs(hi2c, BNO055_GYR_DATA_X_LSB, buf, 6) != HAL_OK) return HAL_ERROR;
-    telemetry->gyro_x = (int16_t)(buf[1] << 8 | buf[0]) / 16.0f; // °/s
-    telemetry->gyro_y = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
-    telemetry->gyro_z = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
+    float gyro_x = (int16_t)(buf[1] << 8 | buf[0]) / 16.0f; // °/s
+    float gyro_y = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
+    float gyro_z = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
+    telemetry->gyro_r = -gyro_z;
+    telemetry->gyro_p = -gyro_x;
+    telemetry->gyro_y = gyro_y;
 
 //    // Quaternion (unitless)
 //    if (BNO055_ReadRegs(hi2c, BNO055_QUA_DATA_W_LSB, buf, 8) != HAL_OK)

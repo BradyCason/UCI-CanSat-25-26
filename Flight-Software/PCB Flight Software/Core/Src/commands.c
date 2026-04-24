@@ -102,33 +102,33 @@ void handle_command(const char *cmd) {
 
 	// set time command
 	else if (strncmp(cmd, set_time_command, strlen(set_time_command)) == 0) {
-//		drop_detection_active = 1; // TODO: REMOVE THIS
-//		set_cmd_echo("DROP!!!", &telemetry); // TODO: REMOVE THIS
-		if (cmd[12]=='G') {
-			telemetry.mission_time_hr = telemetry.gps_time_hr;
-			telemetry.mission_time_min = telemetry.gps_time_min;
-			telemetry.mission_time_sec = telemetry.gps_time_sec;
-			set_cmd_echo("STGPS", &telemetry);
-		}
-		else {
-			char temp[3];
-			memset(temp, 0, sizeof(temp));
-			temp[0] = cmd[12];
-			temp[1] = cmd[13];
-			telemetry.mission_time_hr = atoi(temp);
-			memset(temp, 0, sizeof(temp));
-			temp[0] = cmd[15];
-			temp[1] = cmd[16];
-			telemetry.mission_time_min = atoi(temp);
-			memset(temp, 0, sizeof(temp));
-			temp[0] = cmd[18];
-			temp[1] = cmd[19];
-			telemetry.mission_time_sec = atoi(temp);
-			memset(telemetry.cmd_echo, '\0', sizeof(telemetry.cmd_echo));
-			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
-		}
-
-		store_flash_data(&telemetry);
+		drop_detection_active = 1; // TODO: REMOVE THIS
+		set_cmd_echo("DROP!!!", &telemetry); // TODO: REMOVE THIS
+//		if (cmd[12]=='G') {
+//			telemetry.mission_time_hr = telemetry.gps_time_hr;
+//			telemetry.mission_time_min = telemetry.gps_time_min;
+//			telemetry.mission_time_sec = telemetry.gps_time_sec;
+//			set_cmd_echo("STGPS", &telemetry);
+//		}
+//		else {
+//			char temp[3];
+//			memset(temp, 0, sizeof(temp));
+//			temp[0] = cmd[12];
+//			temp[1] = cmd[13];
+//			telemetry.mission_time_hr = atoi(temp);
+//			memset(temp, 0, sizeof(temp));
+//			temp[0] = cmd[15];
+//			temp[1] = cmd[16];
+//			telemetry.mission_time_min = atoi(temp);
+//			memset(temp, 0, sizeof(temp));
+//			temp[0] = cmd[18];
+//			temp[1] = cmd[19];
+//			telemetry.mission_time_sec = atoi(temp);
+//			memset(telemetry.cmd_echo, '\0', sizeof(telemetry.cmd_echo));
+//			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
+//		}
+//
+//		store_flash_data(&telemetry);
 	}
 
 	// Calibrate Altitude

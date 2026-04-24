@@ -19,6 +19,8 @@
 #define BNO055_LIA_DATA_X_LSB     0x28
 #define BNO055_EULER_H_LSB        0x1A
 
+#define BNO055_QUA_DATA_W_LSB	  0x20
+
 // Operation modes
 #define BNO055_OPR_MODE_CONFIG    0x00
 #define BNO055_OPR_MODE_NDOF      0x0C

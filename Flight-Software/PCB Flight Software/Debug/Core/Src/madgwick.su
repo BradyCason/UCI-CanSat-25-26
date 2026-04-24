@@ -1,0 +1,3 @@
+../Core/Src/madgwick.c:17:14:invSqrt	16	static
+../Core/Src/madgwick.c:25:6:Madgwick_Init	72	static
+../Core/Src/madgwick.c:69:6:Madgwick_Update	168	static

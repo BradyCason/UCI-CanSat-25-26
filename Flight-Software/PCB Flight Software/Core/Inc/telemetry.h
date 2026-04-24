@@ -14,12 +14,12 @@ typedef struct {
 	float pressure;
 	float voltage;
 	float current;
-	float gyro_x;
+	float gyro_r;
+	float gyro_p;
 	float gyro_y;
-	float gyro_z;
-	float accel_x;
+	float accel_r;
+	float accel_p;
 	float accel_y;
-	float accel_z;
 	uint8_t gps_time_hr;
 	uint8_t gps_time_min;
 	uint8_t gps_time_sec;
@@ -41,10 +41,10 @@ typedef struct {
 	float max_altitude;
 	uint8_t sent_apogee; // Helps determine when to switch out of apogee state
 	uint8_t sent_payload_release; // Ensure that payload release state is sent because it happens close to landed state
-	float qw;
-	float qx;
-	float qy;
-	float qz;
+	float q0;
+	float q1;
+	float q2;
+	float q3;
 	float accel_world_x;
 	float accel_world_y;
 	float accel_world_z;

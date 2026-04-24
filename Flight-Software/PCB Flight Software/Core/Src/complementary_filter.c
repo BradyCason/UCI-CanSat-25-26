@@ -12,15 +12,15 @@ static bool cf_initialized = false;
 
 void transform_accel_to_world(Telemetry_t *telemetry) {
   // Average IMUs (body frame)
-  float ax = telemetry->accel_x;
+  float ax = telemetry->accel_p;
   float ay = telemetry->accel_y;
-  float az = telemetry->accel_z;
+  float az = telemetry->accel_r;
 
   // Quaternion (w, x, y, z)
-  float qw = telemetry->qw;
-  float qx = telemetry->qx;
-  float qy = telemetry->qy;
-  float qz = telemetry->qz;
+  float qw = telemetry->q0;
+  float qx = telemetry->q1;
+  float qy = telemetry->q2;
+  float qz = telemetry->q3;
 
   // Rotation matrix (body → world)
   float R11 = 1.0f - 2.0f*(qy*qy + qz*qz);

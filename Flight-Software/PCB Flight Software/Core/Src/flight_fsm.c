@@ -93,7 +93,7 @@ void update_fsm(Telemetry_t *telemetry){
 		if (launch_accel_detected_time == -1){
 			// Acceleration not detected yet
 			//changed to < for vacuum testing
-			if (telemetry->accel_world_z > LAUNCH_ACCEL_THRESHOLD){
+			if (telemetry->accel_r > LAUNCH_ACCEL_THRESHOLD){
 				// Positive acceleration detected. Begin period of waiting to get off rail.
 				launch_accel_detected_time = HAL_GetTick();
 				negative_accel_counter = 0;
@@ -105,9 +105,10 @@ void update_fsm(Telemetry_t *telemetry){
 			if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME + LAUNCH_EVAL_PERIOD_TIME){
 				// Enough time passed without negative acceleration. Launch detected
 				strcpy(telemetry->state, "ASCENT");
+				launch_accel_detected_time = -1;
 				store_flash_data(telemetry);
 			}
-			else if (telemetry->accel_world_z < 0){
+			else if (telemetry->accel_r < 0){
 				// Negative acceleration detected. Reset system.
 				if (++negative_accel_counter >= 5){
 					launch_accel_detected_time = -1;

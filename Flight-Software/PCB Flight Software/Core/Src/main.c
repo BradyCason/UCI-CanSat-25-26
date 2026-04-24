@@ -36,6 +36,7 @@
 #include "commands.h"
 #include "paraglider.h"
 #include "complementary_filter.h"
+#include "madgwick.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -217,6 +218,9 @@ int main(void)
 
   HAL_Delay(10);
 
+  read_imu(&hi2c1, &telemetry);
+  Madgwick_Init(&telemetry, 0.1f);
+
   // Start 1 Hz interrupt
   HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
@@ -235,7 +239,8 @@ int main(void)
 		  telemetry.max_altitude = fmaxf(telemetry.max_altitude, telemetry.alt_fused);
 	  }
 
-	  // Filter altitude
+	  // Filter
+	  Madgwick_Update(&telemetry);
 	  complementary_filter(&telemetry);
 
 	  // Updated FSM
@@ -272,7 +277,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     /* small delay so we aren't hammering I2C too hard */
-	HAL_Delay(1);
+//	HAL_Delay(1);
   }
   /* USER CODE END 3 */
 }
