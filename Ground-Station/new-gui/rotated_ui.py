@@ -2,6 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import importlib.util
 import sys
 import os
+import subprocess
+
 
 class RotatedUI:
     """Wrapper that adds rotation to any generated UI"""
