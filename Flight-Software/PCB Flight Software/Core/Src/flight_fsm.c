@@ -24,7 +24,7 @@ uint8_t sensors_indicate_flight(Telemetry_t *telemetry){
 
 	for (int i = 0; i < 250; ++i){
 		read_baro(&hi2c1, telemetry);
-		if (abs(telemetry->altitude - alt_i) > POWER_RESET_MIN_ALT_CHANGE){
+		if (fabsf(telemetry->altitude - alt_i) > POWER_RESET_MIN_ALT_CHANGE){
 			return 1;
 		}
 		HAL_Delay(10);
