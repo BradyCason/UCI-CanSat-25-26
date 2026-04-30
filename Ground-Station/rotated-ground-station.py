@@ -11,24 +11,16 @@ import pytz
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import random
+import subprocess
 
 TEAM_ID = "1083"
 
-# TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
-#                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-#                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
-#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-#                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-#                     "TARGET_LONGITUDE"]
-
-
-TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", "ALTITUDE",
+TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
-
 
 current_time = time.time()
 local_time = time.localtime(current_time)
@@ -44,8 +36,8 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-# COM_PORT = "COM7"    # USB0 on raspberry pi
-COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
+COM_PORT = "COM7"    # USB0 on raspberry pi
+# COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
 MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
@@ -54,6 +46,22 @@ START_DELIMITER = "~"
 
 ser = None
 serialConnected = False
+
+
+def sync_ui():
+    """Automatically compiles the .ui file to a .py file"""
+    # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "new-ground-station.ui")
+    ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "final-ground-station.ui")
+    py_out = os.path.join(os.path.dirname(__file__), "out.py")
+    
+    print(f"[*] Checking UI file: {ui_path}")
+    try:
+        # Run pyuic5 (Same as your run.sh)
+        subprocess.run(["pyuic5", ui_path, "-o", py_out], check=True)
+        print("[✓] UI compiled successfully.")
+    except Exception as e:
+        print(f"[✗] Failed to compile UI: {e}")
+
 
 # """ The following serial function is used when windows laptop is used for GS and COM_PORT is set to the correct port number for the Xbee """ 
 # def connect_Serial():
@@ -110,15 +118,41 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         '''
         super().__init__()
 
-        # Load the UI
-        ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
-        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui")
-        uic.loadUi(ui_path, self)
+        sync_ui()
 
-        # self.showFullScreen()
+        # Setup rotation scaffoloding
+        self.graphics_view = QtWidgets.QGraphicsView()
+        self.graphics_view.setStyleSheet("border: none; background-color: black;") # Match your dark theme
+        self.scene = QtWidgets.QGraphicsScene()
+        self.graphics_view.setScene(self.scene)
+
+        import out 
+        self.ui_content = out.Ui_MainWindow()
+        self.ui_content.setupUi(self)
+        self.container = self.takeCentralWidget()
+
+        for attr in dir(self.ui_content):
+            widget = getattr(self.ui_content, attr)
+            if isinstance(widget, (QtWidgets.QWidget, QtCore.QObject)):
+                setattr(self, attr, widget)
+
+        self.proxy = self.scene.addWidget(self.container)
+        self.proxy.setTransform(QtGui.QTransform().rotate(90))
+
+        self.scene.setSceneRect(self.scene.itemsBoundingRect())
+        self.setCentralWidget(self.graphics_view)
+
+
+        # Load the UI
+        # ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui")
+        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "new-ground-station.ui")
+
+        # uic.loadUi(ui_path, self)
+
+        self.showFullScreen()
 
         self.setup_UI()
-        self.connect_buttons()
+        # self.connect_buttons()
 
         self.payload_released = False
         self.paraglider_active = False
@@ -146,43 +180,50 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                     label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
 
-        # Set First Color of Telemetry Toggle button
-        if telemetry_on:
-            self.telemetry_toggle_button.setText("Telemetry Toggle: On")
-            self.make_button_green(self.telemetry_toggle_button)
-        else:
-            self.telemetry_toggle_button.setText("Telemetry Toggle: Off")
-            self.make_button_red(self.telemetry_toggle_button)
+        # # Set First Color of Telemetry Toggle button
+        # if telemetry_on:
+        #     self.telemetry_toggle_button.setText("Telemetry Toggle: On")
+        #     self.make_button_green(self.telemetry_toggle_button)
+        # else:
+        #     self.telemetry_toggle_button.setText("Telemetry Toggle: Off")
+        #     self.make_button_red(self.telemetry_toggle_button)
 
-    def connect_buttons(self):
-        '''
-        Connect Buttons to their functions
-        '''
-        self.sim_enable_button.clicked.connect(lambda: self.handle_simulation("ENABLE"))
-        self.sim_activate_button.clicked.connect(lambda: self.handle_simulation("ACTIVATE"))
-        self.sim_disable_button.clicked.connect(lambda: self.handle_simulation("DISABLE"))
-        self.reset_state_button.clicked.connect(self.reset_state)
-        self.set_time_gps_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST,GPS"))
-        self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
-        self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
-        self.release_payload_button.clicked.connect(self.release_payload_clicked)
-        self.eject_paraglider_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",MEC,EJECT"))
-        self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
-        self.release_container_button.clicked.connect(self.release_container_clicked)
-        self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
-        self.set_coordinates_button.clicked.connect(self.set_coordinates)
+        # Set the launch site map
+        self.launch_site = QtWidgets.QLabel()
+        pixmap = QtGui.QPixmap(os.path.join(os.path.dirname(__file__), "gui", "launch_site.png"))
+        self.launch_site.setPixmap(pixmap.scaledToWidth(600, QtCore.Qt.SmoothTransformation))
+        self.launch_site.setAlignment(QtCore.Qt.AlignCenter)
+        self.launch_site_container.layout().addWidget(self.launch_site)
 
-        # Connect non-sim buttons to update sim button colors
-        self.reset_state_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_time_gps_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_time_utc_button.clicked.connect(self.non_sim_button_clicked)
-        self.calibrate_alt_button.clicked.connect(self.non_sim_button_clicked)
-        self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
-        self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
-        self.release_container_button.clicked.connect(self.non_sim_button_clicked)
-        self.eject_paraglider_button.clicked.connect(self.non_sim_button_clicked)
-        self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
+    # def connect_buttons(self):
+    #     '''
+    #     Connect Buttons to their functions
+    #     '''
+    #     self.sim_enable_button.clicked.connect(lambda: self.handle_simulation("ENABLE"))
+    #     self.sim_activate_button.clicked.connect(lambda: self.handle_simulation("ACTIVATE"))
+    #     self.sim_disable_button.clicked.connect(lambda: self.handle_simulation("DISABLE"))
+    #     self.reset_state_button.clicked.connect(self.reset_state)
+    #     self.set_time_gps_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST,GPS"))
+    #     self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
+    #     self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
+    #     self.release_payload_button.clicked.connect(self.release_payload_clicked)
+    #     # self.eject_paraglider_button.clicked.connect(self.eject_clicked)
+    #     self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
+    #     self.release_container_button.clicked.connect(self.release_container_clicked)
+    #     self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
+    #     self.set_coordinates_button.clicked.connect(self.set_coordinates)
+
+    #     # Connect non-sim buttons to update sim button colors
+    #     self.reset_state_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.set_time_gps_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.set_time_utc_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.calibrate_alt_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.release_container_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.eject_paraglider_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
+    #     self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
 
     def update(self):
         '''
@@ -533,8 +574,6 @@ def verify_checksum(data, checksum):
     '''
     return checksum == calc_checksum(data)
 
-
-
 def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
@@ -576,8 +615,7 @@ def parse_xbee(data):
 
     # Add data to csv file
     if MAKE_CSV_FILE:
-        csv_dir = os.path.join(os.path.dirname(__file__), "flight-csv")
-        file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
+        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
         with open(file, 'a', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(list(telemetry.values()) + [data[-1]])
@@ -705,9 +743,7 @@ def main():
 
     # Create new csv file with header
     if MAKE_CSV_FILE:
-        csv_dir = os.path.join(os.path.dirname(__file__), "flight-csv")
-        os.makedirs(csv_dir, exist_ok=True)
-        file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
+        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
         with open(file, 'w', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
