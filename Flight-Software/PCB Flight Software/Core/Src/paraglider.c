@@ -3,6 +3,8 @@
 #include "main.h"
 #include <math.h>
 
+float heading_when_north = 0;
+
 float bearing_to_target(float lat1_deg, float lon1_deg,
                         float lat2_deg, float lon2_deg)
 {
@@ -23,11 +25,15 @@ float bearing_to_target(float lat1_deg, float lon1_deg,
 }
 
 void correct_heading(Telemetry_t *telemetry){
-	telemetry->heading = telemetry->heading - HEADING_WHEN_FACING_NORTH;
+	telemetry->heading = telemetry->heading - heading_when_north;
 
 	// Normalize to [0, 360)
 	while (telemetry->heading >= 360) telemetry->heading -= 360;
 	while (telemetry->heading < 0) telemetry->heading += 360;
+}
+
+void set_north(Telemetry_t * telemetry) {
+	heading_when_north += telemetry->heading;
 }
 
 void control_paraglider(Telemetry_t *telemetry){
@@ -43,9 +49,6 @@ void control_paraglider(Telemetry_t *telemetry){
 
 	uint32_t cur_time_us = micros();
 	float dt = (float)(cur_time_us - prev_time_glider) * 1e-6f;
-
-	// Correct to true heading (direction the paraglider is facing)
-	correct_heading(telemetry);
 
     // Find target bearing
     float target_bearing = bearing_to_target(telemetry->gps_latitude,

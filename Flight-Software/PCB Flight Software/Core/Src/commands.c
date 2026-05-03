@@ -6,6 +6,7 @@
 #include "flight_fsm.h"
 #include "xbee.h"
 #include "flash_memory.h"
+#include "paraglider.h"
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,6 +31,7 @@ char glider_off_command[25];
 char eject_command[20];
 char reset_state_command[14];
 char set_coords_command[14];
+char set_north_command[15];
 
 void init_commands(void)
 {
@@ -48,6 +50,7 @@ void init_commands(void)
 	snprintf(eject_command, sizeof(eject_command), "CMD,%s,MEC,EJECT", TEAM_ID);
 	snprintf(reset_state_command, sizeof(reset_state_command), "CMD,%s,RST", TEAM_ID);
 	snprintf(set_coords_command, sizeof(set_coords_command), "CMD,%s,SC,", TEAM_ID);
+	snprintf(set_north_command, sizeof(set_north_command), "CMD,%s,SETN", TEAM_ID);
 }
 
 char pressure_str[7];
@@ -251,5 +254,12 @@ void handle_command(const char *cmd) {
 		telemetry.sim_enabled = 0;
 
 		store_flash_data(&telemetry);
+	}
+
+	// Set North
+	else if (strncmp(cmd, set_north_command, strlen(set_north_command)) == 0) {
+		set_cmd_echo("SETN", &telemetry);
+		telemetry.sim_enabled = 0;
+		set_north(&telemetry);
 	}
 }

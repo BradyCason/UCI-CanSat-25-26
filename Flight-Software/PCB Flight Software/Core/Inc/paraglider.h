@@ -6,7 +6,7 @@
 #define SERVO_MAX 180
 #define TURN_MAX 170
 
-#define HEADING_WHEN_FACING_NORTH 0.0f
-
+void correct_heading(Telemetry_t *telemetry);
+void set_north(Telemetry_t * telemetry);
 void control_paraglider(Telemetry_t *telemetry);
 void set_paraglider_steering(float turn);
