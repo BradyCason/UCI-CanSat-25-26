@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 # Configuration
-CSV_FILE = "Flight_1083_telemetry_2026-04-10_09-03-54.csv"  # Update with your CSV filename
+CSV_FILE = "flight-csv/Flight_1083_telemetry_2026-05-03_11-42-20-48-meters-drop.csv"  # Update with your CSV filename
 OUTPUT_DIR = "plots"
 
 # Create output directory if it doesn't exist

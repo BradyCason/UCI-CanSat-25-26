@@ -47,7 +47,8 @@ BAUDRATE = 115200
 # COM_PORT = "COM7"    # USB0 on raspberry pi
 COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
+MAKE_CSV_FILE = False
+ # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
 START_DELIMITER = "~"
@@ -171,6 +172,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
         self.set_coordinates_button.clicked.connect(self.set_coordinates)
+        self.set_north_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",STN"))
 
         # Connect non-sim buttons to update sim button colors
         self.reset_state_button.clicked.connect(self.non_sim_button_clicked)

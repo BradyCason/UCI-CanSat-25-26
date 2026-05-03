@@ -36,7 +36,7 @@
      </font>
     </property>
     <property name="text">
-     <string>273 Part III: Why you suck at engineering</string>
+     <string>273 Chapter III: Why you suck at engineering</string>
     </property>
    </widget>
    <widget class="Line" name="line">
@@ -2237,7 +2237,7 @@
      <string>Insert text .......</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>70</x>
