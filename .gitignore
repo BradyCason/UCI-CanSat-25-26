@@ -1,3 +1,4 @@
 .metadata
 Ground-Station/Flight*.csv
 Ground-Station/ground-station.py
+Ground-Station/plots
