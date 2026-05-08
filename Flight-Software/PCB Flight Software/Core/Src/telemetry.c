@@ -22,6 +22,7 @@ void reset_state(Telemetry_t *telemetry){
 	telemetry->paraglider_active = 0;
 	telemetry->packet_count = 0;
 	telemetry->alt_fused = 0;
+	telemetry->waiting_for_eject = 0;
 
 	Reset_Payload();
 	Reset_Container();

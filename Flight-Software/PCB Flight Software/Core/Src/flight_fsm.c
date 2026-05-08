@@ -76,11 +76,11 @@ void init_fsm(Telemetry_t *telemetry){
 
 void update_fsm(Telemetry_t *telemetry){
 	// Eject paraglider
-	if (probe_release_time != 0 && telemetry->paraglider_ejected != 1 && HAL_GetTick() - probe_release_time > GLIDER_EJECTION_DELAY){
+	if (telemetry->waiting_for_eject == 1 && telemetry->paraglider_ejected != 1 && HAL_GetTick() - probe_release_time > GLIDER_EJECTION_DELAY){
 		Eject_Paraglider();
 		telemetry->paraglider_ejected = 1;
 		telemetry->paraglider_active = 1;
-		probe_release_time = 0;
+		telemetry->waiting_for_eject = 0;
 
 		store_flash_data(telemetry);
 	}
@@ -135,13 +135,14 @@ void update_fsm(Telemetry_t *telemetry){
 			Release_Container();
 			telemetry->container_released = 1;
 			probe_release_time = HAL_GetTick();
+			telemetry->waiting_for_eject = 1;
 			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
 		// If below release alt or detects landed (In case '0' altitude shifted during flight)
 //		if (telemetry->altitude <= PAYLOAD_RELEASE_ALT || get_avg_alt_dif() > LANDED_THRESHOLD){
-		if (telemetry->alt_fused <= PAYLOAD_RELEASE_ALT || telemetry->baro_vz > LANDED_VELO_THRESHOLD){
+		if (telemetry->alt_fused <= PAYLOAD_RELEASE_ALT || (telemetry->baro_vz > LANDED_VELO_THRESHOLD && HAL_GetTick() - probe_release_time > 1500)){
 			strcpy(telemetry->state, "PAYLOAD_RELEASE");
 			Release_Payload();
 			telemetry->payload_released = 1;
