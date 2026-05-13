@@ -255,6 +255,8 @@ int main(void)
 		  telemetry.container_released = 1;
 		  telemetry.paraglider_ejected = 1;
 		  telemetry.paraglider_active = 1;
+		  extern uint32_t probe_release_time;
+		  probe_release_time = HAL_GetTick();
 		  drop_detection_active = 0;
 		  strcpy(telemetry.state, "PROBE_RELEASE");
 	  }
