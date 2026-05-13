@@ -18,32 +18,57 @@ import subprocess
 import signal, sys
 
 # --- GPIO pins (copied/kept from controls.py) ---
-XbeeLED = 19
-pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
-sim_enable_led = pin_10
-pin_23 = 23
-pin_1 = 1
-sim_activate_led = pin_23 
-sim_disable_led = pin_1
-pin_24 = 24
-telemetry_disable_led = pin_24
-pin_25 = 25
-telemetry_enable_led = pin_25
+# XbeeLED = 19
+# pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
+# sim_enable_led = pin_10
+# pin_23 = 23
+# pin_1 = 1
+# sim_activate_led = pin_23 
+# sim_disable_led = pin_1
+# pin_24 = 24
+# telemetry_disable_led = pin_24
+# pin_25 = 25
+# telemetry_enable_led = pin_25
 
-pin_9 = 9     # enable simulation
-pin_14 = 14   # activate sim
-pin_15 = 15   # deactivate sim
-pin_11 = 11   # set coords
-pin_13 = 13   # set time UTC
-pin_26 = 26   # set time GPS
-pin_16 = 16   # calibrate altitude
-pin_4 = 4     # release payload
-pin_27 = 27   # release paraglider
-pin_21 = 21   # reset state
-pin_7 = 7     # telemetry on toggle
-pin_8 = 8     # telemetry off toggle
-pin_5 = 5     # release egg pin
-pin_18 = 18   # show graphs
+# pin_9 = 9     # enable simulation
+# pin_14 = 14   # activate sim
+# pin_15 = 15   # deactivate sim
+# pin_11 = 11   # set coords
+# pin_13 = 13   # set time UTC
+# pin_26 = 26   # set time GPS
+# pin_16 = 16   # calibrate altitude
+# pin_4 = 4     # release payload
+# pin_27 = 27   # release paraglider
+# pin_21 = 21   # reset state
+# pin_7 = 7     # telemetry on toggle
+# pin_8 = 8     # telemetry off toggle
+# pin_5 = 5     # release egg pin
+# pin_18 = 18   # show graphs
+
+# top figure
+reset_button_pin = 8
+cal_alt_button_pin = 10
+set_coords_button_pin = 12
+set_time_button_pin = 16
+set_time_switch_pin = 18
+# usb: keypad
+
+# middle figure
+state_servo_pin = 33
+received_led_pin = 3
+sending_led_pin = 7
+container_release_switch_pin = 22
+container_released_led_pin = 15
+eject_paraglider_switch_pin = 24
+eject_paraglider_led_pin = 19
+paraglider_active_switch_pin = 26
+paraglider_active_led_pin = 21
+payload_release_switch_pin = 28
+payload_release_led_pin = 23
+
+# bottom figure
+sim_enable_switch_pin = 11
+sim_activate_button_pin = 13
 
 GPIO.setmode(GPIO.BCM)
 INPUT_PINS = [pin_18, pin_9, pin_14, pin_15, pin_11, pin_13, pin_26, pin_16, pin_4, pin_27, pin_21, pin_7, pin_8, pin_5]
