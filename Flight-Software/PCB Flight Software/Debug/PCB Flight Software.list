@@ -9216,7 +9216,7 @@ void Init_Servos(Telemetry_t *telemetry) {
  80052a4:	2b00      	cmp	r3, #0
  80052a6:	d005      	beq.n	80052b4 <Init_Servos+0x54>
     	Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, CONTAINER_ANGLE_PARAGLIDER_EJECT);
- 80052a8:	2278      	movs	r2, #120	@ 0x78
+ 80052a8:	2282      	movs	r2, #130	@ 0x82
  80052aa:	210c      	movs	r1, #12
  80052ac:	480e      	ldr	r0, [pc, #56]	@ (80052e8 <Init_Servos+0x88>)
  80052ae:	f7ff ff7d 	bl	80051ac <Set_Servo_Angle>
@@ -9501,7 +9501,7 @@ void Eject_Paraglider(){
 		Set_Servo_Angle(&CONTAINER_TIM, CONTAINER_CHANNEL, cur_container_servo_angle + i * (CONTAINER_ANGLE_PARAGLIDER_EJECT - cur_container_servo_angle) / num_partitions);
  8005488:	4b12      	ldr	r3, [pc, #72]	@ (80054d4 <Eject_Paraglider+0x5c>)
  800548a:	781b      	ldrb	r3, [r3, #0]
- 800548c:	f1c3 0378 	rsb	r3, r3, #120	@ 0x78
+ 800548c:	f1c3 0382 	rsb	r3, r3, #130	@ 0x82
  8005490:	687a      	ldr	r2, [r7, #4]
  8005492:	fb03 f202 	mul.w	r2, r3, r2
  8005496:	78fb      	ldrb	r3, [r7, #3]
@@ -9529,7 +9529,7 @@ void Eject_Paraglider(){
 	}
 	cur_container_servo_angle = CONTAINER_ANGLE_PARAGLIDER_EJECT;
  80054c4:	4b03      	ldr	r3, [pc, #12]	@ (80054d4 <Eject_Paraglider+0x5c>)
- 80054c6:	2278      	movs	r2, #120	@ 0x78
+ 80054c6:	2282      	movs	r2, #130	@ 0x82
  80054c8:	701a      	strb	r2, [r3, #0]
 }
  80054ca:	bf00      	nop

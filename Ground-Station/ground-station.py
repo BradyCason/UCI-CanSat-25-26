@@ -26,7 +26,7 @@ TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", 
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
 
 
@@ -44,8 +44,8 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-# COM_PORT = "COM7"    # USB0 on raspberry pi
-COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
+COM_PORT = "COM7"    # USB0 on raspberry pi
+# COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
 MAKE_CSV_FILE = False
  # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
@@ -103,6 +103,10 @@ def disconnect_Serial():
 # strings as keys and values as values, only last stored
 # need to write all commands to csv files by last filled values
 telemetry = {}
+payload_released = False
+paraglider_active = False
+container_released = False
+paraglider_ejected = False
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -120,11 +124,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         self.setup_UI()
         self.connect_buttons()
-
-        self.payload_released = False
-        self.paraglider_active = False
-        self.container_released = False
-        self.eject_paraglider_activated = False
 
         self.init_graphs()
 
@@ -294,19 +293,22 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             self.make_button_red(self.telemetry_toggle_button)
 
     def release_payload_clicked(self):
-        if self.payload_released:
+        global payload_released
+        if payload_released:
             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
         else:
             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
     
     def activate_paraglider_clicked(self):
-        if self.paraglider_active:
+        global paraglider_active
+        if paraglider_active:
             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
         else:
             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
     
     def release_container_clicked(self):
-        if self.container_released:
+        global container_released
+        if container_released:
             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
         else:
             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
@@ -315,36 +317,43 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         '''
         Send eject command
         '''
-        write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
+        global paraglider_ejected
+        if not paraglider_ejected:
+            write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
             self.close()
 
     def update_color_buttons(self):
-        if self.payload_released:
+        global payload_released
+        if payload_released:
             self.release_payload_button.setText("Reset Payload Release")
             self.make_button_green(self.release_payload_button)
         else:
             self.release_payload_button.setText("Release Payload")
             self.make_button_red(self.release_payload_button)
 
-        if self.paraglider_active:
+        global paraglider_active
+        if paraglider_active:
             self.activate_paraglider_button.setText("Deactivate Paraglider")
             self.make_button_green(self.activate_paraglider_button)
         else:
             self.activate_paraglider_button.setText("Activate Paraglider")
             self.make_button_red(self.activate_paraglider_button)
 
-        if self.container_released:
+        global container_released
+        if container_released:
             self.release_container_button.setText("Reset Container Release")
             self.make_button_green(self.release_container_button)
         else:
             self.release_container_button.setText("Release Container")
             self.make_button_red(self.release_container_button)
-        # if self.eject_paraglider_activated:
-        #     self.eject_paraglider_button.setText("Reset Eject Paraglider")
-        #     self.make_button_green(self.ejee)
+
+        global paraglider_ejected
+        if paraglider_ejected:
+            self.eject_paraglider_button.setText("Reset Eject Paraglider")
+            self.make_button_green(self.ejee)
 
     def init_graphs(self):
         self.x_data = []
@@ -556,20 +565,29 @@ def parse_xbee(data):
         if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
+    global payload_released
     if telemetry["PAYLOAD_RELEASED"] == "TRUE":
-        w.payload_released = True
+        payload_released = True
     else:
-        w.payload_released = False
+        payload_released = False
 
+    global paraglider_active
     if telemetry["PARAGLIDER_ACTIVE"] == "TRUE":
-        w.paraglider_active = True
+        paraglider_active = True
     else:
-        w.paraglider_active = False
+        paraglider_active = False
 
+    global container_released
     if telemetry["CONTAINER_RELEASED"] == "TRUE":
-        w.container_released = True
+        container_released = True
     else:
-        w.container_released = False
+        container_released = False
+
+    global paraglider_ejected
+    if telemetry["PARAGLIDER_EJECTED"] == "TRUE":
+        paraglider_ejected = True
+    else:
+        paraglider_ejected = False
 
     # if data[3] == "S":
     #     sim = True

@@ -17,34 +17,6 @@ import time
 import subprocess
 import signal, sys
 
-# --- GPIO pins (copied/kept from controls.py) ---
-# XbeeLED = 19
-# pin_10 = 10   # SIM enable LED indicator: should light on by default, turns off when clicked, turns back on when sim disable is clicked 
-# sim_enable_led = pin_10
-# pin_23 = 23
-# pin_1 = 1
-# sim_activate_led = pin_23 
-# sim_disable_led = pin_1
-# pin_24 = 24
-# telemetry_disable_led = pin_24
-# pin_25 = 25
-# telemetry_enable_led = pin_25
-
-# pin_9 = 9     # enable simulation
-# pin_14 = 14   # activate sim
-# pin_15 = 15   # deactivate sim
-# pin_11 = 11   # set coords
-# pin_13 = 13   # set time UTC
-# pin_26 = 26   # set time GPS
-# pin_16 = 16   # calibrate altitude
-# pin_4 = 4     # release payload
-# pin_27 = 27   # release paraglider
-# pin_21 = 21   # reset state
-# pin_7 = 7     # telemetry on toggle
-# pin_8 = 8     # telemetry off toggle
-# pin_5 = 5     # release egg pin
-# pin_18 = 18   # show graphs
-
 # top figure
 reset_button_pin = 8
 cal_alt_button_pin = 10
@@ -58,34 +30,37 @@ state_servo_pin = 33
 received_led_pin = 3
 sending_led_pin = 7
 container_release_switch_pin = 22
-container_released_led_pin = 15
+container_released_led_pin = 19
 eject_paraglider_switch_pin = 24
-eject_paraglider_led_pin = 19
+eject_paraglider_led_pin = 21
 paraglider_active_switch_pin = 26
-paraglider_active_led_pin = 21
+paraglider_active_led_pin = 23
 payload_release_switch_pin = 28
-payload_release_led_pin = 23
+payload_release_led_pin = 27
 
 # bottom figure
 sim_enable_switch_pin = 11
 sim_activate_button_pin = 13
+telemetry_toggle_switch_pin = 15
 
 GPIO.setmode(GPIO.BCM)
-INPUT_PINS = [pin_18, pin_9, pin_14, pin_15, pin_11, pin_13, pin_26, pin_16, pin_4, pin_27, pin_21, pin_7, pin_8, pin_5]
-for p in INPUT_PINS:
+BUTTON_PINS = [reset_button_pin, cal_alt_button_pin, set_coords_button_pin, set_time_button_pin, sim_activate_button_pin]
+SWITCH_PINS = [set_time_switch_pin, container_release_switch_pin, eject_paraglider_switch_pin, paraglider_active_switch_pin,
+              payload_release_switch_pin, sim_enable_switch_pin, telemetry_toggle_switch_pin]
+# Set input pins to internal pull ups
+for p in BUTTON_PINS + SWITCH_PINS:
     GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(XbeeLED, GPIO.OUT)
-GPIO.output(XbeeLED, GPIO.LOW)
-GPIO.setup(sim_enable_led, GPIO.OUT)
-GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM enabled by default
-GPIO.setup(sim_activate_led, GPIO.OUT)
-GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated by default
-GPIO.setup(sim_disable_led, GPIO.OUT)
-GPIO.output(sim_disable_led, GPIO.LOW)  # SIM not disabled by default
-GPIO.setup(telemetry_enable_led, GPIO.OUT)
-GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry not enabled by default but telemetry led on to indicate ready to enable telemetry
-GPIO.setup(telemetry_disable_led, GPIO.OUT)
-GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry disabled by default and telemetry red led off to indicate telemetry disabled
+LED_PINS = [received_led_pin, sending_led_pin, container_released_led_pin, eject_paraglider_led_pin,
+            paraglider_active_led_pin, payload_release_led_pin]
+# Initialize LEDS
+for p in LED_PINS:
+    GPIO.setup(p, GPIO.OUT)
+    GPIO.output(received_led_pin, GPIO.LOW)
+# Initialize servo pin
+GPIO.setup(state_servo_pin, GPIO.out)
+pwm=GPIO.PWM(state_servo_pin, 50)
+pwm.start(0)
+
 # --------------------------------------------------
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
@@ -104,85 +79,203 @@ class ControlsThread(QtCore.QThread):
     release_container = QtCore.pyqtSignal()
     show_graphs = QtCore.pyqtSignal()
 
-    def __init__(self, poll_interval=0.05, parent=None):
+    def __init__(self, control_window, poll_interval=0.05, parent=None):
         super().__init__(parent)
+        self.control_window = control_window
         self._running = True
         self.poll_interval = poll_interval
         # track previous states to detect edges (buttons are pull-up; pressed -> LOW)
-        self.prev = {p: GPIO.input(p) for p in INPUT_PINS}
+        self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
+        self.time_mode = 0  # 0 -> GPS, 1 -> UTC
+
+    def activate_sim(self):
+        global sim, sim_enable, csv_indexer
+        if sim_enable == True:
+            write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
+            sim_enable = False
+            sim = True
+            csv_indexer = 0
+
+    def enable_sim(self):
+        global sim, sim_enable, csv_indexer
+        if sim_enable == False:
+            write_xbee("CMD," + TEAM_ID + ",SIM,ENABLE")
+            sim_enable = True
+
+    def disable_sim(self):
+        global sim, sim_enable, csv_indexer
+        if sim_enable == True:
+            write_xbee("CMD," + TEAM_ID + ",SIM,DISABLE")
+            sim_enable = False
+
+    def set_coords(self):
+        # TODO: implement set coords function
+        pass
+
+        # Old code:
+        # dialog = CoordinatesDiaglog()
+        # result = dialog.exec_()
+
+        # if result == QtWidgets.QDialog.Accepted:
+        #     num1, num2 = dialog.get_values()
+        #     write_xbee("CMD," + TEAM_ID + ",SC,{:.6f},{:.6f}".format(num1, num2))
+        # else:
+        #     QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
+
+    def update(self):
+        self.update_leds()
+        self.update_state_servo()
+
+    def update_leds(self):
+        global container_released
+        if container_released:
+            GPIO.output(container_released_led_pin, GPIO.HIGH)
+        else:
+            GPIO.output(container_released_led_pin, GPIO.LOW)
+
+        global paraglider_active
+        if paraglider_active:
+            GPIO.output(paraglider_active_led_pin, GPIO.HIGH)
+        else:
+            GPIO.output(paraglider_active_led_pin, GPIO.LOW)
+
+        global paraglider_ejected
+        if paraglider_ejected:
+            GPIO.output(eject_paraglider_led_pin, GPIO.HIGH)
+        else:
+            GPIO.output(eject_paraglider_led_pin, GPIO.LOW)
+
+        global payload_released
+        if payload_released:
+            GPIO.output(payload_release_led_pin, GPIO.HIGH)
+        else:
+            GPIO.output(payload_release_led_pin, GPIO.LOW)
+
+    def set_state_servo_angle(angle):
+        """
+        Set servo angle from 0 to 180 degrees
+        """
+        duty = 2.5 + (angle / 180.0) * 10.0
+        pwm.ChangeDutyCycle(duty)
+        time.sleep(0.3)
+
+        # Stop sending signal to reduce jitter
+        pwm.ChangeDutyCycle(0)
+
+    def update_state_servo(self):
+        global state
+        if state == "LAUNCH_PAD":
+            self.set_state_servo_angle(0)
+        elif state == "ASCENT":
+            self.set_state_servo_angle(30)
+        elif state == "APOGEE":
+            self.set_state_servo_angle(60)
+        elif state == "DESCENT":
+            self.set_state_servo_angle(90)
+        elif state == "PROBE_RELEASE":
+            self.set_state_servo_angle(120)
+        elif state == "PAYLOAD_RELEASE":
+            self.set_state_servo_angle(150)
+        elif state == "LANDED":
+            self.set_state_servo_angle(180)
 
     def stop(self):
         self._running = False
 
     def run(self):
         while self._running:
-            for p in INPUT_PINS:
+            # Handle button presses
+            for p in BUTTON_PINS:
+                if GPIO.input(p) == GPIO.LOW:
+                    # Button pressed
+                    time.sleep(0.05) # debounce
+                    
+                    # Wait until button is released
+                    while GPIO.input(p) == GPIO.LOW:
+                        pass
+
+                    # Perform Action
+                    if p == sim_activate_button_pin:
+                        self.activate_sim()
+                    else:
+                        # disable simulation whenever another button is pressed
+                        self.disable_sim()
+
+                    if p == reset_button_pin:
+                        global packet_count
+                        packet_count = 0
+                        self.control_window.reset_graphs()
+                        write_xbee("CMD," + TEAM_ID + ",RST")
+                    elif p == cal_alt_button_pin:
+                        write_xbee("CMD," + TEAM_ID + ",CAL")
+                    elif p == set_coords_button_pin:
+                        # Enter set coords function
+                        self.set_coords()
+                    elif p == set_time_button_pin:
+                        if self.time_mode == 0:
+                            write_xbee("CMD," + TEAM_ID + ",ST,GPS")
+                        else :
+                            write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S"))
+
+            # Handle necessary switches
+            for p in SWITCH_PINS:
                 cur = GPIO.input(p)
-                if self.prev[p] == GPIO.HIGH and cur == GPIO.LOW:
-                    # falling edge detected -> map pin to signal
-                    if p == pin_7:
-                        self.telemetry_toggle.emit()
-                        flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.HIGH)  # Telemetry enabled: turn on telemetry enabled LED
-                        GPIO.output(telemetry_disable_led, GPIO.LOW)  # Telemetry enabled: turn off telemetry disabled LED
-                    elif p == pin_8:
-                        self.telemetry_toggle.emit()
-                        flash_led(XbeeLED)
-                        GPIO.output(telemetry_enable_led, GPIO.LOW)     # Telemetry disabled: turn off telemetry enable LED
-                        GPIO.output(telemetry_disable_led, GPIO.HIGH)   # Telemetry disabled: turn on telemetry disable LED
-                    elif p == pin_9:
-                        self.sim_enable.emit()
-                        flash_led(XbeeLED)
-                        GPIO.output(sim_enable_led, GPIO.LOW)  # SIM enabled: turn off sim enable LED
-                        GPIO.output(sim_activate_led, GPIO.HIGH) 
-                    elif p == pin_14:
-                        self.sim_activate.emit()
-                        flash_led(XbeeLED)
-                        GPIO.output(sim_disable_led, GPIO.HIGH)
-                        GPIO.output(sim_enable_led, GPIO.LOW)  # SIM activated: turn off sim enable LED
-                        GPIO.output(sim_activate_led, GPIO.LOW)  # SIM activated: turn off sim activate LED
-                    elif p == pin_15:
-                        self.sim_disable.emit()
-                        flash_led(XbeeLED)
-                        GPIO.output(sim_activate_led, GPIO.LOW)  # SIM not activated: turn off sim activate LED
-                        GPIO.output(sim_disable_led, GPIO.LOW)  # SIM disabled: turn off sim disable LED
-                        GPIO.output(sim_enable_led, GPIO.HIGH)  # SIM disabled: turn on sim enable LED
-                    elif p == pin_11:
-                        self.set_coords.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_13:
-                        self.set_time_utc.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_26:
-                        self.set_time_gps.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_16:
-                        self.calibrate_alt.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_4:
-                        self.release_payload.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_27:
-                        self.release_paraglider.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_21:
-                        self.reset_state.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_5:
-                        self.release_container.emit()
-                        flash_led(XbeeLED)
-                    elif p == pin_18:
-                        # Toggle graph process: close if running, open if not
-                        if self.graph_proc and self.graph_proc.poll() is None:
-                            self.graph_proc.terminate()
-                            self.graph_proc = None
+                if cur != self.prev_switch_state[p]:
+                    # switch was changed
+                    self.prev_switch_state[p] = cur
+
+                    time.sleep(0.05) # debounce
+
+                    # Handle simulation mode
+                    if p == sim_enable_switch_pin and cur == GPIO.HIGH:
+                        self.enable_sim()
+                    else:
+                        self.disable_sim()
+                    
+
+                    # Perform Action
+                    if p == container_release_switch_pin:
+                        if cur == GPIO.HIGH:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
                         else:
-                            self.graph_proc = subprocess.Popen(['python3','/home/jonathan/UCI-CanSat-25-26/Ground-Station/mini_map_test.py'])
-                                                
-                self.prev[p] = cur
+                            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
+                    elif p == eject_paraglider_switch_pin:
+                        if cur == GPIO.HIGH:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
+                    elif p == paraglider_active_switch_pin:
+                        if cur == GPIO.HIGH:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
+                        else:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
+                    elif p == payload_release_switch_pin:
+                        if cur == GPIO.HIGH:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
+                        else:
+                            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
+                    elif p == set_time_switch_pin:
+                        if cur == GPIO.HIGH:
+                            self.time_mode = 1
+                        else:
+                            self.time_mode = 0
+                    elif p == telemetry_toggle_switch_pin:
+                        global telemetry_on
+                        if cur == GPIO.HIGH:
+                            telemetry_on = True
+                            write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
+                        else:
+                            telemetry_on = False
+                            write_xbee("CMD,"+ TEAM_ID + ",CX,OFF")
+                                   
             time.sleep(self.poll_interval)
 
+# Old code. Jonny, do we need this?
+# Toggle graph process: close if running, open if not
+# if self.graph_proc and self.graph_proc.poll() is None:
+#     self.graph_proc.terminate()
+#     self.graph_proc = None
+# else:
+#     self.graph_proc = subprocess.Popen(['python3','/home/jonathan/UCI-CanSat-25-26/Ground-Station/mini_map_test.py'])
 
 # Helper function to flash the XBee LED without blocking the polling thread
 def flash_led(LED_pin, flashes=3, on_time=0.2, off_time=0.2):
@@ -208,7 +301,7 @@ TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", 
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
 
 current_time = time.time()
@@ -267,6 +360,11 @@ def disconnect_Serial():
 # strings as keys and values as values, only last stored
 # need to write all commands to csv files by last filled values
 telemetry = {}
+payload_released = False
+paraglider_active = False
+container_released = False
+paraglider_ejected = False
+state = "LAUNCH_PAD"
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -287,10 +385,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         self.setup_UI()
         self.connect_buttons()
-
-        self.payload_released = False
-        self.paraglider_active = False
-        self.container_released = False
 
         self.init_graphs()
 
@@ -352,42 +446,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                     label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
 
-        # Set First Color of Telemetry Toggle button
-        if telemetry_on:
-            self.telemetry_toggle_button.setText("Telemetry Toggle: On")
-            self.make_button_green(self.telemetry_toggle_button)
-        else:
-            self.telemetry_toggle_button.setText("Telemetry Toggle: Off")
-            self.make_button_red(self.telemetry_toggle_button)
-
-    def connect_buttons(self):
-        '''
-        Connect Buttons to their functions
-        '''
-        self.sim_enable_button.clicked.connect(lambda: self.handle_simulation("ENABLE"))
-        self.sim_activate_button.clicked.connect(lambda: self.handle_simulation("ACTIVATE"))
-        self.sim_disable_button.clicked.connect(lambda: self.handle_simulation("DISABLE"))
-        self.reset_state_button.clicked.connect(self.reset_state)
-        self.set_time_gps_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST,GPS"))
-        self.set_time_utc_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S")))
-        self.calibrate_alt_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",CAL"))
-        self.release_payload_button.clicked.connect(self.release_payload_clicked)
-        self.activate_paraglider_button.clicked.connect(self.activate_paraglider_clicked)
-        self.release_container_button.clicked.connect(self.release_container_clicked)
-        self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
-        self.set_coordinates_button.clicked.connect(self.set_coordinates)
-
-        # Connect non-sim buttons to update sim button colors
-        self.reset_state_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_time_gps_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_time_utc_button.clicked.connect(self.non_sim_button_clicked)
-        self.calibrate_alt_button.clicked.connect(self.non_sim_button_clicked)
-        self.release_payload_button.clicked.connect(self.non_sim_button_clicked)
-        self.activate_paraglider_button.clicked.connect(self.non_sim_button_clicked)
-        self.release_container_button.clicked.connect(self.non_sim_button_clicked)
-        self.telemetry_toggle_button.clicked.connect(self.non_sim_button_clicked)
-        self.set_coordinates_button.clicked.connect(self.non_sim_button_clicked)
-
     def update(self):
         '''
         Set telemetry fields to most recent data
@@ -400,144 +458,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.update_graphs()
-        self.update_color_buttons()
-
-    def make_button_green(self, button):
-        '''
-        Takes in a button object and makes the background green
-        '''
-        button.setStyleSheet("QPushButton{background-color: rgba(40, 167, 69, 1);} QPushButton:hover{background-color: rgba(36, 149, 62, 1);}")
-
-    def make_button_red(self, button):
-        '''
-        Takes in a button object and makes the background red
-        '''
-        button.setStyleSheet("QPushButton{background-color: rgba(220, 53, 69, 1);} QPushButton:hover{background-color: rgba(200, 45, 59, 1);}")
-
-    def make_button_blue(self, button):
-        '''
-        Takes in a button object and makes the background blue
-        '''
-        button.setStyleSheet("QPushButton{background-color: rgba(33,125,182,1);} QPushButton:hover{background-color: rgba(27, 100, 150, 1);}")
-
-    def handle_simulation(self, cmd):
-        '''
-        Send a simulation command: ("ACTIVATE", "ENABLE", "DISABLE")
-        '''
-        global sim, sim_enable, csv_indexer
-
-        if cmd == "ACTIVATE" and sim_enable == False or cmd == "ENABLE" and sim_enable == True:
-            return
-        
-        write_xbee("CMD," + TEAM_ID + ",SIM," + cmd)
-
-        if cmd == "ENABLE":
-            sim_enable = True
-        elif cmd == "DISABLE":
-            sim_enable = False
-            sim = False
-        elif cmd == "ACTIVATE":
-            sim_enable = False
-            sim = True
-            csv_indexer = 0
-        
-        self.update_sim_button_colors()
-
-        if cmd == "ACTIVATE":
-            # Wait 1 second to let the Payload receive the command
-            # before sending simp data
-            time.sleep(1)
-
-    def update_sim_button_colors(self):
-        '''
-        Set simulation buttons to the correct colors based off of
-        if it is active, enabled, or disabled
-        '''
-        global sim, sim_enable
-
-        if (sim):
-            self.make_button_blue(self.sim_enable_button)
-            self.make_button_blue(self.sim_activate_button)
-            self.make_button_red(self.sim_disable_button)
-        elif (sim_enable):
-            self.make_button_blue(self.sim_enable_button)
-            self.make_button_green(self.sim_activate_button)
-            self.make_button_blue(self.sim_disable_button)
-        else:
-            self.make_button_green(self.sim_enable_button)
-            self.make_button_blue(self.sim_activate_button)
-            self.make_button_blue(self.sim_disable_button)
-
-    def non_sim_button_clicked(self):
-        '''
-        Disable simulation when any button is pressed
-        '''
-        global sim_enable
-        sim_enable = False
-        self.update_sim_button_colors()
-    
-    def reset_state(self):
-        global packet_count
-        packet_count = 0
-        self.reset_graphs()
-        write_xbee("CMD," + TEAM_ID + ",RST")
-
-    def toggle_telemetry(self):
-        global telemetry_on
-        telemetry_on = not telemetry_on
-
-        if telemetry_on:
-            write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
-            self.telemetry_toggle_button.setText("Telemetry Toggle: On")
-            self.make_button_green(self.telemetry_toggle_button)
-        else:
-            write_xbee("CMD,"+ TEAM_ID + ",CX,OFF")
-            self.telemetry_toggle_button.setText("Telemetry Toggle: Off")
-            self.make_button_red(self.telemetry_toggle_button)
-
-    def release_payload_clicked(self):
-        if self.payload_released:
-            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
-        else:
-            write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
-    
-    def activate_paraglider_clicked(self):
-        if self.paraglider_active:
-            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
-        else:
-            write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
-    
-    def release_container_clicked(self):
-        if self.container_released:
-            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
-        else:
-            write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
-
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Escape:
-            self.close()
-
-    def update_color_buttons(self):
-        if self.payload_released:
-            self.release_payload_button.setText("Reset Payload Release")
-            self.make_button_green(self.release_payload_button)
-        else:
-            self.release_payload_button.setText("Release Payload")
-            self.make_button_red(self.release_payload_button)
-
-        if self.paraglider_active:
-            self.activate_paraglider_button.setText("Deactivate Paraglider")
-            self.make_button_green(self.activate_paraglider_button)
-        else:
-            self.activate_paraglider_button.setText("Activate Paraglider")
-            self.make_button_red(self.activate_paraglider_button)
-
-        if self.container_released:
-            self.release_container_button.setText("Reset Container Release")
-            self.make_button_green(self.release_container_button)
-        else:
-            self.release_container_button.setText("Release Container")
-            self.make_button_red(self.release_container_button)
 
     def init_graphs(self):
         self.x_data = []
@@ -703,16 +623,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.current_y_data = []
         self.voltage_y_data = []
 
-    def set_coordinates(self):
-        dialog = CoordinatesDiaglog()
-        result = dialog.exec_()
-
-        if result == QtWidgets.QDialog.Accepted:
-            num1, num2 = dialog.get_values()
-            write_xbee("CMD," + TEAM_ID + ",SC,{:.6f},{:.6f}".format(num1, num2))
-        else:
-            QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
-
 
 class CoordinatesDiaglog(QtWidgets.QDialog):
     def __init__(self):
@@ -764,7 +674,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global sim, telemetry, packet_count, w #, last_recieved_packet
+    global sim, telemetry, packet_count, w, controls #, last_recieved_packet
 
     # Validate frame has correct number of fields (only check field count, allow empty values)
     if len(data) != len(TELEMETRY_FIELDS):
@@ -784,20 +694,32 @@ def parse_xbee(data):
         if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
+    global payload_released
     if telemetry["PAYLOAD_RELEASED"] == "TRUE":
-        w.payload_released = True
+        payload_released = True
     else:
-        w.payload_released = False
+        payload_released = False
 
+    global paraglider_active
     if telemetry["PARAGLIDER_ACTIVE"] == "TRUE":
-        w.paraglider_active = True
+        paraglider_active = True
     else:
-        w.paraglider_active = False
+        paraglider_active = False
 
+    global container_released
     if telemetry["CONTAINER_RELEASED"] == "TRUE":
-        w.container_released = True
+        container_released = True
     else:
-        w.container_released = False
+        container_released = False
+
+    global paraglider_ejected
+    if telemetry["PARAGLIDER_EJECTED"] == "TRUE":
+        paraglider_ejected = True
+    else:
+        paraglider_ejected = False
+
+    global state
+    state = telemetry["STATE"]
 
     # if data[3] == "S":
     #     sim = True
@@ -812,6 +734,8 @@ def parse_xbee(data):
             writer_object.writerow(list(telemetry.values()) + [data[-1]])
 
     w.update()
+    controls.update()
+
 
 def read_xbee():
     '''
@@ -850,6 +774,7 @@ def read_xbee():
 
                         split_data = data.split(",")
                         if len(split_data) == len(TELEMETRY_FIELDS):
+                            flash_led(received_led_pin)
                             parse_xbee(split_data)
                         else:
                             print("Incorrect number of fields in frame: ", frame)
@@ -893,6 +818,8 @@ def write_xbee(cmd):
     Write commands to the Xbee
     '''
     # Frame Format: ~<data>,<checksum>
+
+    flash_led(sending_led_pin)
 
     # Create Packet
     global packets_sent
@@ -947,7 +874,8 @@ def main():
     threading.Thread(target=send_simp_data, daemon=True).start()
 
     # Start GPIO controls thread and connect signals to safe GUI actions
-    controls = ControlsThread()
+    global controls
+    controls = ControlsThread(w)
     controls.telemetry_toggle.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.telemetry_toggle_button.click()))
     controls.sim_enable.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.sim_enable_button.click()))
     controls.sim_activate.connect(lambda: QtCore.QTimer.singleShot(0, lambda: w.sim_activate_button.click()))
