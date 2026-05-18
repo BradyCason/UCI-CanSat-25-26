@@ -23,19 +23,20 @@ cal_alt_button_pin = 10
 set_coords_button_pin = 12
 set_time_button_pin = 16
 set_time_switch_pin = 18
+set_north_button_pin = 22
 # usb: keypad
 
 # middle figure
 state_servo_pin = 33
 received_led_pin = 3
 sending_led_pin = 7
-container_release_switch_pin = 22
+container_release_switch_pin = 24
 container_released_led_pin = 19
-eject_paraglider_switch_pin = 24
+eject_paraglider_switch_pin = 26
 eject_paraglider_led_pin = 21
-paraglider_active_switch_pin = 26
+paraglider_active_switch_pin = 28
 paraglider_active_led_pin = 23
-payload_release_switch_pin = 28
+payload_release_switch_pin = 32
 payload_release_led_pin = 27
 
 # bottom figure
@@ -44,7 +45,7 @@ sim_activate_button_pin = 13
 telemetry_toggle_switch_pin = 15
 
 GPIO.setmode(GPIO.BCM)
-BUTTON_PINS = [reset_button_pin, cal_alt_button_pin, set_coords_button_pin, set_time_button_pin, sim_activate_button_pin]
+BUTTON_PINS = [reset_button_pin, cal_alt_button_pin, set_coords_button_pin, set_time_button_pin, sim_activate_button_pin, set_north_button_pin]
 SWITCH_PINS = [set_time_switch_pin, container_release_switch_pin, eject_paraglider_switch_pin, paraglider_active_switch_pin,
               payload_release_switch_pin, sim_enable_switch_pin, telemetry_toggle_switch_pin]
 # Set input pins to internal pull ups
@@ -217,6 +218,8 @@ class ControlsThread(QtCore.QThread):
                             write_xbee("CMD," + TEAM_ID + ",ST,GPS")
                         else :
                             write_xbee("CMD," + TEAM_ID + ",ST," + datetime.now(pytz.timezone("UTC")).strftime("%H:%M:%S"))
+                    elif p == set_north_button_pin:
+                        write_xbee("CMD," + TEAM_ID + ",SETN")
 
             # Handle necessary switches
             for p in SWITCH_PINS:
@@ -439,6 +442,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS:
+            if field == "PARAGLIDER_EJECTED":
+                continue
             label = self.telemetry_container_1.findChild(QtWidgets.QLabel, field)
             if (not label):
                 label = self.telemetry_container_2.findChild(QtWidgets.QLabel, field)
@@ -454,7 +459,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry_on
 
         for field in TELEMETRY_FIELDS:
-            if field != "TEAM_ID":
+            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED":
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.update_graphs()
@@ -754,7 +759,8 @@ def read_xbee():
                 buffer += ser.read(ser.inWaiting()).decode(errors='replace')
 
                 start_idx = buffer.find(START_DELIMITER)
-                end_idx = buffer.find("\n", start_idx)
+                end_idx = buffer.find(START_DELIMITER, start_idx + 1) - 1
+                # end_idx = buffer.find("\n", start_idx)
                 next_start = buffer.find(START_DELIMITER, start_idx + 1)
 
                 if next_start != -1 and (end_idx == -1 or next_start < end_idx):

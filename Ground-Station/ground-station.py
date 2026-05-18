@@ -14,20 +14,20 @@ import random
 
 TEAM_ID = "1083"
 
-# TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
-#                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-#                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
-#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-#                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-#                     "TARGET_LONGITUDE"]
-
-
-TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", "ALTITUDE",
+TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
                     "TARGET_LONGITUDE"]
+
+
+# TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", "ALTITUDE",
+#                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
+#                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
+#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
+#                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+#                     "TARGET_LONGITUDE"]
 
 
 current_time = time.time()
@@ -139,6 +139,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS:
+            if field == "PARAGLIDER_EJECTED":
+                continue
             label = self.telemetry_container_1.findChild(QtWidgets.QLabel, field)
             if (not label):
                 label = self.telemetry_container_2.findChild(QtWidgets.QLabel, field)
@@ -171,7 +173,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.release_container_button.clicked.connect(self.release_container_clicked)
         self.telemetry_toggle_button.clicked.connect(self.toggle_telemetry)
         self.set_coordinates_button.clicked.connect(self.set_coordinates)
-        self.set_north_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",STN"))
+        self.set_north_button.clicked.connect(lambda: write_xbee("CMD," + TEAM_ID + ",SETN"))
 
         # Connect non-sim buttons to update sim button colors
         self.reset_state_button.clicked.connect(self.non_sim_button_clicked)
@@ -193,7 +195,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry_on
 
         for field in TELEMETRY_FIELDS:
-            if field != "TEAM_ID":
+            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED":
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.update_graphs()
@@ -353,7 +355,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global paraglider_ejected
         if paraglider_ejected:
             self.eject_paraglider_button.setText("Reset Eject Paraglider")
-            self.make_button_green(self.ejee)
+            self.make_button_green(self.eject_paraglider_button)
+        else:
+            self.eject_paraglider_button.setText("Eject Paraglider")
+            self.make_button_red(self.eject_paraglider_button)
 
     def init_graphs(self):
         self.x_data = []

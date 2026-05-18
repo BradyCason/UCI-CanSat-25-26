@@ -4,7 +4,7 @@
 
 #define SERVO_MIN 0
 #define SERVO_MAX 180
-#define TURN_MAX 170
+#define TURN_MAX 140
 
 void correct_heading(Telemetry_t *telemetry);
 void set_north(Telemetry_t * telemetry);

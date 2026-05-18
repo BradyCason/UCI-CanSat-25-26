@@ -38,7 +38,7 @@ void set_north(Telemetry_t * telemetry) {
 
 void control_paraglider(Telemetry_t *telemetry){
 	// --- PID gains (tune these) ---
-	static float Kp = 3.0f;
+	static float Kp = 2.5f;
 	static float Ki = 0.05f; // 0.05
 	static float Kd = 0.5f; // 0.5
 

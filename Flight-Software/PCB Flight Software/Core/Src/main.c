@@ -264,6 +264,7 @@ int main(void)
 	  // Perform Paraglider control alg if it's on
 	  if (telemetry.paraglider_active){
 		  control_paraglider(&telemetry);
+//		  set_paraglider_steering(-140);
 	  } else {
 		  // Inactive position
 		  set_paraglider_steering(-1000);
