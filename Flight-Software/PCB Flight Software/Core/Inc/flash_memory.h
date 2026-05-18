@@ -14,6 +14,7 @@
 #define FLASH_GLIDER_ACTIVE_ADDRESS 0x080E001C
 #define FLASH_TARGET_LAT_ADDRESS 0x080E0020
 #define FLASH_TARGET_LONG_ADDRESS 0x080E0024
+#define FLASH_HEADING_WHEN_NORTH_ADDRESS 0x080E0028
 
 void store_flash_data(Telemetry_t *telemetry);
 uint8_t load_flash_data(Telemetry_t *telemetry);

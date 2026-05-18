@@ -2,6 +2,8 @@
 #include <string.h>
 #include <math.h>
 
+extern float heading_when_north;
+
 uint32_t time_seconds(uint8_t hr, uint8_t min, uint8_t sec){
 	return 3600 * hr + 60 * min + sec;
 }
@@ -80,7 +82,7 @@ void store_flash_data(Telemetry_t *telemetry){
 //	HAL_Delay(100);
 
 	uint32_t altitude_offset_bits = 0;
-	uint32_t apogee_altitude_bits, target_lat_bits, target_long_bits;
+	uint32_t apogee_altitude_bits, target_lat_bits, target_long_bits, heading_when_north_bits;
 	uint32_t container_released_bits = telemetry->container_released ? 1 : 0;
 	uint32_t glider_ejected_bits = telemetry->paraglider_ejected ? 1 : 0;
 	uint32_t payload_released_bits = telemetry->payload_released ? 1 : 0;
@@ -93,6 +95,7 @@ void store_flash_data(Telemetry_t *telemetry){
 	memcpy(&apogee_altitude_bits, &(telemetry->max_altitude), sizeof(telemetry->max_altitude));
 	memcpy(&target_lat_bits, &(telemetry->target_latitude), sizeof(telemetry->target_latitude));
 	memcpy(&target_long_bits, &(telemetry->target_longitude), sizeof(telemetry->target_longitude));
+	memcpy(&heading_when_north_bits, &heading_when_north, sizeof(heading_when_north));
 
 	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_ALTITUDE_OFFSET_ADDRESS, altitude_offset_bits);
 	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_TIME_DIF_ADDRESS, get_time_dif(telemetry));
@@ -104,6 +107,7 @@ void store_flash_data(Telemetry_t *telemetry){
 	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_GLIDER_ACTIVE_ADDRESS, glider_active_bits);
 	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_TARGET_LAT_ADDRESS, target_lat_bits);
 	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_TARGET_LONG_ADDRESS, target_long_bits);
+	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_HEADING_WHEN_NORTH_ADDRESS, heading_when_north_bits);
 
 //	HAL_Delay(100);
 
@@ -130,6 +134,7 @@ uint8_t load_flash_data(Telemetry_t *telemetry){
 	telemetry->paraglider_active = (*(uint32_t*)FLASH_GLIDER_ACTIVE_ADDRESS) ? 1 : 0;
 	memcpy(&(telemetry->target_latitude), (float*)FLASH_TARGET_LAT_ADDRESS, sizeof(float));
 	memcpy(&(telemetry->target_longitude), (float*)FLASH_TARGET_LONG_ADDRESS, sizeof(float));
+	memcpy(&heading_when_north, (float*)FLASH_HEADING_WHEN_NORTH_ADDRESS, sizeof(float));
 
 	set_state_str(telemetry, *(uint32_t*)FLASH_STATE_ADDRESS);
 
