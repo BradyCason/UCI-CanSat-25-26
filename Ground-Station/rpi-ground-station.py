@@ -693,10 +693,11 @@ def parse_xbee(data):
     # last_recieved_packet = sent_packet_count
 
     packet_count += 1
-    telemetry["PACKET_COUNT"] = str(packet_count)
 
     for i in range(len(data)):
-        if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
+        if TELEMETRY_FIELDS[i] == "PACKET_COUNT":
+            telemetry["PACKET_COUNT"] = str(packet_count)
+        else:
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
     global payload_released

@@ -47,7 +47,7 @@ BAUDRATE = 115200
 COM_PORT = "COM7"    # USB0 on raspberry pi
 # COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
 
-MAKE_CSV_FILE = False
+MAKE_CSV_FILE = True
  # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
 SER_DEBUG = False       # Set as True whenever testing without XBee connected
 
@@ -564,10 +564,11 @@ def parse_xbee(data):
     # last_recieved_packet = sent_packet_count
 
     packet_count += 1
-    telemetry["PACKET_COUNT"] = str(packet_count)
 
     for i in range(len(data)):
-        if TELEMETRY_FIELDS[i] != "PACKET_COUNT":
+        if TELEMETRY_FIELDS[i] == "PACKET_COUNT":
+            telemetry["PACKET_COUNT"] = str(packet_count)
+        else:
             telemetry[TELEMETRY_FIELDS[i]] = data[i]
 
     global payload_released
@@ -605,7 +606,7 @@ def parse_xbee(data):
         file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
         with open(file, 'a', newline='') as f_object:
             writer_object = writer(f_object)
-            writer_object.writerow(list(telemetry.values()) + [data[-1]])
+            writer_object.writerow(list(telemetry.values()))
 
     w.update()
 
@@ -735,7 +736,7 @@ def main():
         file = os.path.join(csv_dir, "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
         with open(file, 'w', newline='') as f_object:
             writer_object = writer(f_object)
-            writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
+            writer_object.writerow(TELEMETRY_FIELDS)
 
     # Run the app
     app = QtWidgets.QApplication(sys.argv)
