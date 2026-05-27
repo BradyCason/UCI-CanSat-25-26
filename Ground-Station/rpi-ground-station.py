@@ -75,6 +75,7 @@ class ControlsThread(QtCore.QThread):
         self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
         self.time_mode = 0  # 0 -> GPS, 1 -> UTC
+        self.set_state_servo_angle(180)
 
     def activate_sim(self):
         global sim, sim_enable, csv_indexer
@@ -139,16 +140,17 @@ class ControlsThread(QtCore.QThread):
         else:
             GPIO.output(payload_release_led_pin, GPIO.LOW)
 
-    def set_state_servo_angle(angle):
+    def set_state_servo_angle(self, angle):
         """
         Set servo angle from 0 to 180 degrees
         """
+        global pwm
         duty = 2.5 + (angle / 180.0) * 10.0
         pwm.ChangeDutyCycle(duty)
         time.sleep(0.3)
 
         # Stop sending signal to reduce jitter
-        pwm.ChangeDutyCycle(0)
+        # pwm.ChangeDutyCycle(0)
 
     def update_state_servo(self):
         global state
@@ -818,6 +820,8 @@ def write_xbee(cmd):
     packets_sent += 1
     checksum = calc_checksum(f"{cmd}")
     frame = f"{START_DELIMITER}{cmd},{checksum:02X}"
+
+    print(f"Attempting to send: {cmd}")
 
     # Send to XBee
     if (not SER_DEBUG):
