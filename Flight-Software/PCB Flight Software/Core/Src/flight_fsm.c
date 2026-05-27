@@ -86,11 +86,10 @@ void update_fsm(Telemetry_t *telemetry){
 	}
 
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
-//		if (baro_vz > LAUNCH_THRESHOLD){
-//			strcpy(telemetry->state, "ASCENT");
-//		}
-
-		if (launch_accel_detected_time == -1){
+		if (telemetry->baro_vz > 30){
+			strcpy(telemetry->state, "ASCENT");
+		}
+		else if (launch_accel_detected_time == -1){
 			// Acceleration not detected yet
 			//changed to < for vacuum testing
 			if (telemetry->accel_r > LAUNCH_ACCEL_THRESHOLD){

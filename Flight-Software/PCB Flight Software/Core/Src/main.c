@@ -226,6 +226,7 @@ int main(void)
 
   // Start 1 Hz interrupt
   HAL_TIM_Base_Start_IT(&htim3);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
