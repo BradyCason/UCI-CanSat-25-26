@@ -822,109 +822,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="telemetry_container_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>1240</y>
-      <width>281</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Liberation Sans</family>
-      <pointsize>16</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="2" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0">
-       <item>
-        <layout class="QVBoxLayout" name="telemetry_panel">
-         <item>
-          <widget class="QLabel" name="target_lat_label">
-           <property name="font">
-            <font>
-             <family>Liberation Sans</family>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <italic>false</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: none;</string>
-           </property>
-           <property name="text">
-            <string>Target Latitude (°):</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="target_long_label">
-           <property name="font">
-            <font>
-             <family>Liberation Sans</family>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <italic>false</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: none;</string>
-           </property>
-           <property name="text">
-            <string>Target Longitude (°):</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_11">
-         <item>
-          <widget class="QLabel" name="TARGET_LATITUDE">
-           <property name="font">
-            <font>
-             <family>Liberation Sans</family>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <italic>false</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="TARGET_LONGITUDE">
-           <property name="font">
-            <font>
-             <family>Liberation Sans</family>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <italic>false</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="telemetry_container_6" native="true">
     <property name="geometry">
      <rect>
@@ -2123,6 +2020,44 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLabel" name="target_lat_label">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;</string>
+           </property>
+           <property name="text">
+            <string>Target Latitude (°):</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="target_long_label">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;</string>
+           </property>
+           <property name="text">
+            <string>Target Longitude (°):</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -2184,6 +2119,38 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLabel" name="TARGET_LATITUDE">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="TARGET_LONGITUDE">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -2219,9 +2186,9 @@
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>1050</y>
+      <y>1070</y>
       <width>361</width>
-      <height>171</height>
+      <height>181</height>
      </rect>
     </property>
     <property name="font">
