@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>2016</height>
+    <width>1034</width>
+    <height>2097</height>
    </rect>
   </property>
   <property name="font">
@@ -20,56 +20,21 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>711</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Cantarell Extra Bold</family>
-      <pointsize>24</pointsize>
-      <weight>75</weight>
-      <italic>false</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>273 Chapter III: Why you suck at engineering</string>
-    </property>
-   </widget>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>20</y>
-      <width>361</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>421</width>
+      <x>0</x>
+      <y>0</y>
+      <width>491</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Cantarell Extra Bold</family>
-      <pointsize>20</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>24</pointsize>
       <weight>75</weight>
-      <italic>false</italic>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -81,103 +46,33 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
-      <width>141</width>
-      <height>21</height>
+      <y>540</y>
+      <width>881</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
-      <italic>true</italic>
+      <family>Liberation Sans</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
-     <string>Insert text .......</string>
+     <string>A proper ground station does not simply display data. It transforms thousands of confusing numbers into slightly more organized confusion. Telemetry visualization systems allow operators to monitor mission health, track flight performance, and confidently announce problems they do not yet understand. A good interface should contain enough graphs, counters, and blinking values to make nearby spectators assume something important is happening.</string>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>450</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>490</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>530</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="Line" name="line_2">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>100</y>
-      <width>871</width>
+      <x>10</x>
+      <y>50</y>
+      <width>1011</width>
       <height>20</height>
      </rect>
     </property>
@@ -188,9 +83,9 @@
    <widget class="Line" name="line_3">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>550</y>
-      <width>871</width>
+      <x>10</x>
+      <y>500</y>
+      <width>1011</width>
       <height>20</height>
      </rect>
     </property>
@@ -201,8 +96,8 @@
    <widget class="Line" name="line_4">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>110</y>
+      <x>0</x>
+      <y>60</y>
       <width>20</width>
       <height>451</height>
      </rect>
@@ -215,7 +110,7 @@
     <property name="geometry">
      <rect>
       <x>1010</x>
-      <y>110</y>
+      <y>60</y>
       <width>20</width>
       <height>451</height>
      </rect>
@@ -227,10 +122,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>240</y>
-      <width>421</width>
-      <height>261</height>
+      <x>20</x>
+      <y>190</y>
+      <width>481</width>
+      <height>271</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="voltage_graph"/>
@@ -238,9 +133,9 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>240</y>
-      <width>411</width>
+      <x>530</x>
+      <y>190</y>
+      <width>471</width>
       <height>261</height>
      </rect>
     </property>
@@ -249,28 +144,31 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>570</y>
-      <width>351</width>
+      <x>280</x>
+      <y>510</y>
+      <width>451</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
       <italic>true</italic>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Figure 8-1: Check When Worried</string>
+     <string>Figure 8-1: The “Something Is Definitely Happening” Panel</string>
     </property>
    </widget>
    <widget class="Line" name="line_6">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>610</y>
-      <width>991</width>
+      <y>640</y>
+      <width>821</width>
       <height>20</height>
      </rect>
     </property>
@@ -281,20 +179,23 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>1010</y>
-      <width>961</width>
-      <height>71</height>
+      <x>110</x>
+      <y>1040</y>
+      <width>461</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
       <italic>true</italic>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Figure 8-2: Lost the CanSat? No Worries! This might show you where it crashed.</string>
+     <string>Figure 8-2: GPS Data (Accurate Within Several Parking Lots)</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -304,8 +205,8 @@
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>969</y>
-      <width>51</width>
+      <y>999</y>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
@@ -317,10 +218,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Noto Sans</family>
-      <pointsize>16</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>18</pointsize>
       <weight>75</weight>
-      <italic>true</italic>
+      <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -334,9 +235,9 @@
    <widget class="Line" name="line_7">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>620</y>
-      <width>20</width>
+      <x>820</x>
+      <y>650</y>
+      <width>16</width>
       <height>391</height>
      </rect>
     </property>
@@ -348,8 +249,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>1000</y>
-      <width>991</width>
+      <y>1030</y>
+      <width>821</width>
       <height>20</height>
      </rect>
     </property>
@@ -361,7 +262,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>620</y>
+      <y>650</y>
       <width>20</width>
       <height>391</height>
      </rect>
@@ -374,7 +275,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>640</y>
+      <y>670</y>
       <width>461</width>
       <height>321</height>
      </rect>
@@ -461,10 +362,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Noto Sans</family>
+      <family>Liberation Sans</family>
       <pointsize>18</pointsize>
       <weight>75</weight>
-      <italic>true</italic>
+      <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -503,10 +404,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Noto Sans</family>
+      <family>Liberation Sans</family>
       <pointsize>18</pointsize>
       <weight>75</weight>
-      <italic>true</italic>
+      <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -545,10 +446,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Noto Sans</family>
+      <family>Liberation Sans</family>
       <pointsize>18</pointsize>
       <weight>75</weight>
-      <italic>true</italic>
+      <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -556,101 +457,39 @@
      <string notr="true"/>
     </property>
     <property name="text">
-     <string>Altitute:</string>
+     <string>Altitude:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>330</x>
       <y>1880</y>
-      <width>551</width>
+      <width>341</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>22</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
       <italic>true</italic>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Fig 8-3: Proof that it's moving (or not)</string>
+     <string>Figure 8-3: Graphs Engineers Nod At Seriously</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_18">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1170</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_19">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1200</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_21">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1230</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_22">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1270</y>
-      <width>171</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_23">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1310</y>
-      <width>171</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="logo">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>120</y>
+      <x>930</x>
+      <y>530</y>
       <width>75</width>
       <height>75</height>
      </rect>
@@ -680,9 +519,9 @@
    <widget class="QLabel" name="title">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>40</y>
-      <width>441</width>
+      <x>530</x>
+      <y>0</y>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -694,10 +533,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Cantarell Extra Bold</family>
-      <pointsize>18</pointsize>
+      <family>Open Sans Extrabold</family>
+      <pointsize>24</pointsize>
       <weight>75</weight>
-      <italic>false</italic>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -714,50 +553,39 @@
      <number>0</number>
     </property>
    </widget>
-   <widget class="QWidget" name="telemetry_container_1" native="true">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>1090</y>
-      <width>191</width>
-      <height>276</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>1</horstretch>
-      <verstretch>1</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_10"/>
-   </widget>
    <widget class="QWidget" name="telemetry_container_3" native="true">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>320</x>
       <y>1080</y>
-      <width>271</width>
+      <width>321</width>
       <height>276</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
     <layout class="QGridLayout" name="gridLayout_5">
-     <item row="0" column="1">
+     <item row="0" column="0">
       <layout class="QVBoxLayout" name="control_panel_2" stretch="0">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_14">
            <item>
             <widget class="QLabel" name="temp_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
                <kerning>true</kerning>
               </font>
@@ -774,10 +602,10 @@
             <widget class="QLabel" name="accel_r_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -790,10 +618,10 @@
             <widget class="QLabel" name="accel_p_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -806,10 +634,10 @@
             <widget class="QLabel" name="accel_y_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
                <kerning>true</kerning>
               </font>
@@ -823,10 +651,10 @@
             <widget class="QLabel" name="gyro_r_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -842,10 +670,10 @@
             <widget class="QLabel" name="gyro_p_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -858,31 +686,15 @@
             <widget class="QLabel" name="gyro_y_label_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
              <property name="text">
               <string>Gyro Y (°/s):</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="heading_label_2">
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-               <weight>75</weight>
-               <italic>true</italic>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Heading (°):</string>
              </property>
             </widget>
            </item>
@@ -894,10 +706,10 @@
             <widget class="QLabel" name="TEMPERATURE_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -910,10 +722,10 @@
             <widget class="QLabel" name="ACCEL_R_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -926,10 +738,10 @@
             <widget class="QLabel" name="ACCEL_P_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -942,10 +754,10 @@
             <widget class="QLabel" name="ACCEL_Y_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -958,10 +770,10 @@
             <widget class="QLabel" name="GYRO_R_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -974,10 +786,10 @@
             <widget class="QLabel" name="GYRO_P_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -990,26 +802,10 @@
             <widget class="QLabel" name="GYRO_Y_2">
              <property name="font">
               <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="HEADING_2">
-             <property name="font">
-              <font>
-               <family>Sans Serif Collection</family>
-               <pointsize>10</pointsize>
-               <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1029,25 +825,34 @@
    <widget class="QWidget" name="telemetry_container_2" native="true">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>1080</y>
-      <width>191</width>
-      <height>81</height>
+      <x>640</x>
+      <y>1240</y>
+      <width>281</width>
+      <height>121</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="2" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0">
        <item>
         <layout class="QVBoxLayout" name="telemetry_panel">
          <item>
           <widget class="QLabel" name="target_lat_label">
            <property name="font">
             <font>
-             <family>Sans Serif Collection</family>
-             <pointsize>10</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -1063,10 +868,10 @@
           <widget class="QLabel" name="target_long_label">
            <property name="font">
             <font>
-             <family>Sans Serif Collection</family>
-             <pointsize>10</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -1086,10 +891,10 @@
           <widget class="QLabel" name="TARGET_LATITUDE">
            <property name="font">
             <font>
-             <family>Sans Serif Collection</family>
-             <pointsize>10</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -1102,10 +907,10 @@
           <widget class="QLabel" name="TARGET_LONGITUDE">
            <property name="font">
             <font>
-             <family>Sans Serif Collection</family>
-             <pointsize>10</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -1123,9 +928,9 @@
    <widget class="QWidget" name="telemetry_container_6" native="true">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>500</y>
-      <width>351</width>
+      <x>10</x>
+      <y>460</y>
+      <width>501</width>
       <height>51</height>
      </rect>
     </property>
@@ -1152,10 +957,10 @@
             <widget class="QLabel" name="volt_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
-               <pointsize>14</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1175,10 +980,10 @@
             <widget class="QLabel" name="VOLTAGE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
-               <pointsize>14</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1198,9 +1003,9 @@
    <widget class="QWidget" name="telemetry_container_7" native="true">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>500</y>
-      <width>351</width>
+      <x>520</x>
+      <y>460</y>
+      <width>491</width>
       <height>51</height>
      </rect>
     </property>
@@ -1234,10 +1039,10 @@
             <widget class="QLabel" name="current_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
-               <pointsize>14</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1254,10 +1059,10 @@
             <widget class="QLabel" name="CURRENT">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
-               <pointsize>14</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1277,9 +1082,9 @@
    <widget class="QWidget" name="telemetry_container_8" native="true">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>110</y>
-      <width>851</width>
+      <x>10</x>
+      <y>60</y>
+      <width>501</width>
       <height>131</height>
      </rect>
     </property>
@@ -1319,10 +1124,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Caladea</family>
-               <pointsize>18</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1338,10 +1143,10 @@
             <widget class="QLabel" name="packet_count">
              <property name="font">
               <font>
-               <family>Caladea</family>
-               <pointsize>18</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1357,10 +1162,10 @@
             <widget class="QLabel" name="cmd_echo">
              <property name="font">
               <font>
-               <family>Caladea</family>
-               <pointsize>18</pointsize>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1380,10 +1185,10 @@
             <widget class="QLabel" name="MISSION_TIME">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1396,10 +1201,10 @@
             <widget class="QLabel" name="PACKET_COUNT">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1412,10 +1217,10 @@
             <widget class="QLabel" name="CMD_ECHO">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1435,8 +1240,8 @@
    <widget class="QWidget" name="telemetry_container_9" native="true">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>630</y>
+      <x>510</x>
+      <y>660</y>
       <width>311</width>
       <height>351</height>
      </rect>
@@ -1471,10 +1276,10 @@
             <widget class="QLabel" name="location">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1487,10 +1292,10 @@
             <widget class="QLabel" name="target_location">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1503,10 +1308,10 @@
             <widget class="QLabel" name="gps_alt_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1519,10 +1324,10 @@
             <widget class="QLabel" name="gps_time_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1538,10 +1343,10 @@
             <widget class="QLabel" name="gps_sats_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1557,10 +1362,10 @@
             <widget class="QLabel" name="gps_lat_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1576,10 +1381,10 @@
             <widget class="QLabel" name="gps_long_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1599,10 +1404,10 @@
             <widget class="QLabel" name="LOCATION">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1615,10 +1420,10 @@
             <widget class="QLabel" name="TARGET_LOCATION">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1631,10 +1436,10 @@
             <widget class="QLabel" name="GPS_ALTITUDE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1647,10 +1452,10 @@
             <widget class="QLabel" name="GPS_TIME">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1663,10 +1468,10 @@
             <widget class="QLabel" name="GPS_LATITUDE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1679,10 +1484,10 @@
             <widget class="QLabel" name="GPS_LONGITUDE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1695,10 +1500,10 @@
             <widget class="QLabel" name="GPS_SATS">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1720,7 +1525,7 @@
      <rect>
       <x>20</x>
       <y>1750</y>
-      <width>231</width>
+      <width>331</width>
       <height>121</height>
      </rect>
     </property>
@@ -1760,10 +1565,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1785,10 +1590,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1810,10 +1615,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1833,10 +1638,10 @@
             <widget class="QLabel" name="MISSION_TIME_7">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1849,10 +1654,10 @@
             <widget class="QLabel" name="MISSION_TIME_8">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1865,10 +1670,10 @@
             <widget class="QLabel" name="MISSION_TIME_9">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1890,7 +1695,7 @@
      <rect>
       <x>360</x>
       <y>1760</y>
-      <width>231</width>
+      <width>301</width>
       <height>121</height>
      </rect>
     </property>
@@ -1930,10 +1735,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1955,10 +1760,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -1980,10 +1785,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2003,10 +1808,10 @@
             <widget class="QLabel" name="MISSION_TIME_11">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2019,10 +1824,10 @@
             <widget class="QLabel" name="MISSION_TIME_12">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2035,10 +1840,10 @@
             <widget class="QLabel" name="MISSION_TIME_15">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2060,7 +1865,7 @@
      <rect>
       <x>680</x>
       <y>1760</y>
-      <width>301</width>
+      <width>321</width>
       <height>121</height>
      </rect>
     </property>
@@ -2094,10 +1899,10 @@
             <widget class="QLabel" name="max_altitude_2">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2110,10 +1915,10 @@
             <widget class="QLabel" name="alt_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2129,10 +1934,10 @@
             <widget class="QLabel" name="pressure_label">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2152,10 +1957,10 @@
             <widget class="QLabel" name="PRESSURE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2168,10 +1973,10 @@
             <widget class="QLabel" name="MAX_ALTITUDE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2184,10 +1989,10 @@
             <widget class="QLabel" name="ALTITUDE">
              <property name="font">
               <font>
-               <family>Noto Sans</family>
+               <family>Liberation Sans</family>
                <pointsize>16</pointsize>
                <weight>75</weight>
-               <italic>true</italic>
+               <italic>false</italic>
                <bold>true</bold>
               </font>
              </property>
@@ -2204,43 +2009,29 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label_24">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1140</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_25">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>1110</y>
-      <width>171</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Insert text .......</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_26">
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>1070</y>
+      <y>640</y>
       <width>171</width>
-      <height>41</height>
+      <height>351</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>Insert text .......</string>
+     <string>Figure 8-1 shows the primary telemetry status display. These indicators help operators determine whether the CanSat is functioning correctly or merely producing numbers with confidence. The packet counter is especially important because rapidly increasing values create the illusion that the mission is under control.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -2248,9 +2039,18 @@
      <rect>
       <x>20</x>
       <y>1090</y>
-      <width>283</width>
+      <width>287</width>
       <height>258</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
     </property>
     <layout class="QVBoxLayout" name="simulation_panel_2" stretch="0">
      <property name="sizeConstraint">
@@ -2261,51 +2061,13 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_19">
          <item>
-          <widget class="QLabel" name="state">
-           <property name="font">
-            <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
-             <weight>75</weight>
-             <italic>true</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: none;</string>
-           </property>
-           <property name="text">
-            <string>State:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="mode">
-           <property name="font">
-            <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
-             <weight>75</weight>
-             <italic>true</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: none;</string>
-           </property>
-           <property name="text">
-            <string>Mode:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QLabel" name="container_released">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -2321,10 +2083,10 @@
           <widget class="QLabel" name="payload_released">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -2340,10 +2102,10 @@
           <widget class="QLabel" name="paraglider_active">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -2366,45 +2128,13 @@
        <item>
         <layout class="QVBoxLayout" name="state_fields_2">
          <item>
-          <widget class="QLabel" name="STATE">
-           <property name="font">
-            <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
-             <weight>75</weight>
-             <italic>true</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="MODE">
-           <property name="font">
-            <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
-             <weight>75</weight>
-             <italic>true</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QLabel" name="CONTAINER_RELEASED">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -2420,10 +2150,10 @@
           <widget class="QLabel" name="PAYLOAD_RELEASED">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
@@ -2439,15 +2169,203 @@
           <widget class="QLabel" name="PARAGLIDER_ACTIVE">
            <property name="font">
             <font>
-             <family>Noto Sans</family>
-             <pointsize>14</pointsize>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
-             <italic>true</italic>
+             <italic>false</italic>
              <bold>true</bold>
             </font>
            </property>
            <property name="styleSheet">
             <string notr="true">font-weight: bold;</string>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_27">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>1910</y>
+      <width>1011</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Figure 8-3 shows acceleration, gyroscope, and altitude graphs used to analyze flight behavior throughout the mission. Aerospace engineers enjoy graphs because they make even catastrophic failures appear scientific. Sudden spikes usually indicate either important flight events or someone accidentally dropping the CanSat during setup.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_28">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>1050</y>
+      <width>361</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Figure 8-2 shows the GPS visualization interface, which allows teams to track the CanSat’s location in real time and estimate which field they will eventually need to search. A higher satellite count generally improves positioning accuracy, although operators will still insist the map is wrong whenever the CanSat lands somewhere inconvenient.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_7">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>60</y>
+      <width>471</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Liberation Sans</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <layout class="QVBoxLayout" name="simulation_panel_11" stretch="0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="0,0">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_28">
+         <item>
+          <widget class="QLabel" name="state">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;</string>
+           </property>
+           <property name="text">
+            <string>State:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="mode">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;</string>
+           </property>
+           <property name="text">
+            <string>Mode:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="heading_label_2">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Heading (°):</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="state_fields_11">
+         <item>
+          <widget class="QLabel" name="STATE">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="MODE">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="HEADING_2">
+           <property name="font">
+            <font>
+             <family>Liberation Sans</family>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
            </property>
            <property name="text">
             <string>N/A</string>
@@ -2466,7 +2384,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1034</width>
      <height>42</height>
     </rect>
    </property>

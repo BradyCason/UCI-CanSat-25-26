@@ -3,6 +3,7 @@ import importlib.util
 import sys
 import os
 import subprocess
+import signal
 
 
 class RotatedUI:
@@ -97,6 +98,20 @@ def main():
     try:
         app = QtWidgets.QApplication(sys.argv)
         main_window = QtWidgets.QMainWindow()
+
+        signal.signal(signal.SIGINT, lambda *args: app.quit())  # Handle Ctrl+C gracefully
+        timer = QtCore.QTimer()
+        timer.start(500)
+        timer.timeout.connect(lambda: None)  # Keep the event loop responsive
+
+        class MainWindow(QtWidgets.QMainWindow):
+            def keyPressEvent(self, event):
+                if event.key() == QtCore.Qt.Key_Escape:
+                    self.close()
+                else:
+                    super().keyPressEvent(event)
+        
+        main_window = MainWindow()
         
         # Load and setup rotated UI
         rotator = RotatedUI(args.input)
@@ -104,6 +119,7 @@ def main():
         
         # Configure window
         main_window.resize(args.width, args.height)
+        main_window.showFullScreen()
         main_window.show()
         
         print(f"[✓] Loaded: {args.input}")
@@ -115,9 +131,13 @@ def main():
     except FileNotFoundError as e:
         print(f"[✗] Error: {e}")
         sys.exit(1)
+    except KeyboardInterrupt:
+        print("\n[✓] Exiting gracefully...")
+        sys.exit(0)
     except Exception as e:
         print(f"[✗] Unexpected error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
