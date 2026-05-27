@@ -24,6 +24,7 @@ set_coords_button_pin = 18
 set_time_button_pin = 23
 set_time_switch_pin = 24
 set_north_button_pin = 25
+telemetry_toggle_switch_pin = 22
 
 # middle figure
 state_servo_pin = 13
@@ -41,7 +42,6 @@ payload_release_led_pin = 0
 # bottom figure
 sim_enable_switch_pin = 17
 sim_activate_button_pin = 27
-telemetry_toggle_switch_pin = 22
 
 GPIO.setmode(GPIO.BCM)
 BUTTON_PINS = [reset_button_pin, cal_alt_button_pin, set_coords_button_pin, set_time_button_pin, sim_activate_button_pin, set_north_button_pin]

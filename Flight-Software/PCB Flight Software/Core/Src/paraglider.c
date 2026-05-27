@@ -40,7 +40,7 @@ void control_paraglider(Telemetry_t *telemetry){
 	// --- PID gains (tune these) ---
 	static float Kp = 2.5f;
 	static float Ki = 0.05f; // 0.05
-	static float Kd = 0.5f; // 0.5
+	static float Kd = 1.0f; // 0.5
 
 	// --- persistent state ---
 	static float integral = 0.0f;
@@ -82,29 +82,20 @@ void control_paraglider(Telemetry_t *telemetry){
 }
 
 void set_paraglider_steering(float turn){
-	if (turn == -1000){
-		// Inactive position
-		Set_Right_Servo_Angle(0);
-		Set_Left_Servo_Angle(180);
-	} else if (turn == 0) {
-		// Both fully extended
-		Set_Left_Servo_Angle(170);
-		Set_Right_Servo_Angle(10);
-	}
-	else if (turn < 0) { // Turn left
+	if (turn <= 0) { // Turn left
 		// Clamp to a maximum turn amount
 		turn = fmaxf(turn, -TURN_MAX);
-		Set_Left_Servo_Angle(170 + turn);
+		Set_Left_Servo_Angle(180 + turn);
 
 		// Fully extended
-		Set_Right_Servo_Angle(10);
+		Set_Right_Servo_Angle(0);
 	}
 	else if (turn > 0) { // Turn right
 		// Clamp to a maximum turn amount
 		turn = fminf(turn, TURN_MAX);
-		Set_Right_Servo_Angle(10 + turn);
+		Set_Right_Servo_Angle(turn);
 
 		// Fully extended
-		Set_Left_Servo_Angle(170);
+		Set_Left_Servo_Angle(180);
 	}
 }

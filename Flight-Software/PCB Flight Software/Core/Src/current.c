@@ -20,7 +20,7 @@ void init_current(I2C_HandleTypeDef *hi2c)
 //	HAL_I2C_Mem_Write(&hi2c1, INA219_ADDRESS, 0x00, 1, ina_config, 2, 1000);
 
 	// NEW CODE --------------------------------------------------------------------------
-	// Calibration for 0.1Ω shunt, 2A max
+	// Calibration for 0.4Ω shunt, 0.5A max
 	uint16_t calib = 0x1A36;  // 6710 decimal
 	uint8_t calib_buf[2] = { calib >> 8, calib & 0xFF };
 
@@ -90,6 +90,6 @@ void read_current(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry) {
 		int16_t raw_current = (int16_t)((buf[0] << 8) | buf[1]);
 
 		// Current LSB = 61 µA
-		telemetry->current = raw_current * 0.000061f; // Amps
+		telemetry->current = raw_current * 0.00001525f; // Amps
 	}
 }
