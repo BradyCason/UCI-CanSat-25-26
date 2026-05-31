@@ -1,6 +1,7 @@
 #include "imu.h"
 #include "complementary_filter.h"
 #include "paraglider.h"
+#include <math.h>
 
 HAL_StatusTypeDef BNO055_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t reg, uint8_t value)
 {
@@ -87,8 +88,15 @@ HAL_StatusTypeDef read_imu(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
 
     telemetry->heading = (int16_t)(buf[1] << 8 | buf[0]) / 16.0f; // degrees
     correct_heading(telemetry);
-    telemetry->tilt_yaw = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
-    telemetry->tilt_pitch = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
+
+    // Tilt
+    float roll_deg  = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
+    float pitch_deg = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
+
+    float roll_rad  = roll_deg  * (M_PI / 180.0f);
+    float pitch_rad = pitch_deg * (M_PI / 180.0f);
+
+    telemetry->tilt = acosf(cosf(roll_rad) * cosf(pitch_rad)) * (180.0f / M_PI);
 
     transform_accel_to_world(telemetry);
 

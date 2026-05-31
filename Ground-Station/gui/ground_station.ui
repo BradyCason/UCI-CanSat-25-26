@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1242</width>
-    <height>906</height>
+    <height>947</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -540,7 +540,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="CURRENT">
+                  <widget class="QLabel" name="VOLTAGE">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>
@@ -555,7 +555,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="VOLTAGE">
+                  <widget class="QLabel" name="CURRENT">
                    <property name="font">
                     <font>
                      <family>Sans Serif Collection</family>

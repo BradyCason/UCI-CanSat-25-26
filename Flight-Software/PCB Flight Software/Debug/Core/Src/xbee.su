@@ -1,4 +1,4 @@
 ../Core/Src/xbee.c:19:6:init_xbee	16	static
 ../Core/Src/xbee.c:26:9:calculate_checksum	24	static
-../Core/Src/xbee.c:34:6:send_packet	1472	static
+../Core/Src/xbee.c:34:6:send_packet	1456	static
 ../Core/Src/xbee.c:81:6:HAL_UARTEx_RxEventCallback	24	static

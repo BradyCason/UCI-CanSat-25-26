@@ -449,7 +449,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry, telemetry_on, lost_packet_count
 
         for field in TELEMETRY_FIELDS:
-            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED" and field != "TILT_PITCH" and field != "TILT_YAW":
+            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED" and field != "TILT":
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.telemetry_labels["LOST_PACKET_COUNT"].setText(str(lost_packet_count))

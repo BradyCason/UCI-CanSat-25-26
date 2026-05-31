@@ -52,8 +52,7 @@ typedef struct {
 	float accel_world_z;
 	float velocity_world_z;
 	float baro_vz;
-	float tilt_yaw;
-	float tilt_pitch;
+	float tilt;
 } Telemetry_t;
 
 void init_telemetry(Telemetry_t *telemetry);

@@ -47,7 +47,7 @@ void send_packet(UART_HandleTypeDef *huart, Telemetry_t *telemetry){
 		 telemetry->gps_altitude, telemetry->gps_latitude, telemetry->gps_longitude, telemetry->gps_sats, telemetry->cmd_echo, telemetry->heading,
 		 telemetry->max_altitude, (telemetry->container_released == 1) ? "TRUE" : "FALSE", (telemetry->payload_released == 1) ? "TRUE" : "FALSE",
 		 (telemetry->paraglider_ejected == 1) ? "TRUE" : "FALSE", (telemetry->paraglider_active == 1) ? "TRUE" : "FALSE", telemetry->target_latitude,
-		 telemetry->target_longitude, telemetry->tilt_pitch, telemetry->tilt_yaw);
+		 telemetry->target_longitude, telemetry->tilt);
 
 	uint8_t checksum = calculate_checksum(data);
 	snprintf(packet, sizeof(packet), "~%s,%u\n", data, checksum);
