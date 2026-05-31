@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1242</width>
-    <height>889</height>
+    <height>906</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -260,6 +260,24 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
+                  <widget class="QLabel" name="lost_packet_count">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
+                   </property>
+                   <property name="text">
+                    <string>Lost Packet Count:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QLabel" name="cmd_echo_2">
                    <property name="font">
                     <font>
@@ -428,6 +446,24 @@ QPushButton:hover {
                      <weight>75</weight>
                      <bold>true</bold>
                     </font>
+                   </property>
+                   <property name="text">
+                    <string>N/A</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="LOST_PACKET_COUNT">
+                   <property name="font">
+                    <font>
+                     <family>Sans Serif Collection</family>
+                     <pointsize>10</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-weight: bold;</string>
                    </property>
                    <property name="text">
                     <string>N/A</string>

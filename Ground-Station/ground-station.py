@@ -40,6 +40,8 @@ telemetry_on = True
 csv_indexer = 0
 
 packet_count = 0
+lost_packet_count = 0
+prev_mission_sec = -1
 packets_sent = 0
 
 # xbee communication parameters
@@ -138,7 +140,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         # Get telemetry labels
         self.telemetry_labels = {}
-        for field in TELEMETRY_FIELDS:
+        for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
             if field == "PARAGLIDER_EJECTED":
                 continue
             label = self.telemetry_container_1.findChild(QtWidgets.QLabel, field)
@@ -191,12 +193,13 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         '''
         Set telemetry fields to most recent data
         '''
-        global telemetry
-        global telemetry_on
+        global telemetry, telemetry_on, lost_packet_count
 
         for field in TELEMETRY_FIELDS:
             if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED":
                 self.telemetry_labels[field].setText(telemetry[field])
+
+        self.telemetry_labels["LOST_PACKET_COUNT"].setText(str(lost_packet_count))
 
         self.update_graphs()
         self.update_color_buttons()
@@ -276,8 +279,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.update_sim_button_colors()
     
     def reset_state(self):
-        global packet_count
+        global packet_count, lost_packet_count, prev_mission_sec
         packet_count = 0
+        lost_packet_count = 0
+        prev_mission_sec = -1
         self.reset_graphs()
         write_xbee("CMD," + TEAM_ID + ",RST")
 
@@ -555,7 +560,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global sim, telemetry, packet_count, w #, last_recieved_packet
+    global sim, telemetry, packet_count, lost_packet_count, prev_mission_sec, w #, last_recieved_packet
 
     # Ensure only recieving each packet once
     # sent_packet_count = int(data[TELEMETRY_FIELDS.index("PACKET_COUNT")])
@@ -599,6 +604,15 @@ def parse_xbee(data):
     #     sim = True
     # else:
     #     sim = False
+
+    # Update lost_packet_count
+    cur_mission_sec = int(telemetry["MISSION_TIME"][-2:])
+    if (prev_mission_sec != -1):
+        missed_packets = cur_mission_sec - prev_mission_sec - 1
+        if (missed_packets < 0):
+            missed_packets += 60
+        lost_packet_count += missed_packets
+    prev_mission_sec = cur_mission_sec
 
     # Add data to csv file
     if MAKE_CSV_FILE:

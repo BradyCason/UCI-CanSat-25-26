@@ -1056,6 +1056,25 @@
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="packet_count_2">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: none;</string>
+             </property>
+             <property name="text">
+              <string>Lost Packet Count:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="cmd_echo">
              <property name="font">
               <font>
@@ -1096,6 +1115,22 @@
            </item>
            <item>
             <widget class="QLabel" name="PACKET_COUNT">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>16</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="LOST_PACKET_COUNT">
              <property name="font">
               <font>
                <family>Liberation Sans</family>
@@ -1936,7 +1971,7 @@
      <rect>
       <x>20</x>
       <y>1090</y>
-      <width>287</width>
+      <width>358</width>
       <height>258</height>
      </rect>
     </property>
@@ -2352,7 +2387,7 @@
      <x>0</x>
      <y>0</y>
      <width>1034</width>
-     <height>42</height>
+     <height>51</height>
     </rect>
    </property>
   </widget>
