@@ -82,11 +82,13 @@ HAL_StatusTypeDef read_imu(I2C_HandleTypeDef *hi2c, Telemetry_t *telemetry)
 //    data->linear_accel.z = (int16_t)(buf[5] << 8 | buf[4]) / 100.0f;
 
     // Heading (Euler yaw)
-    if (BNO055_ReadRegs(hi2c, BNO055_EULER_H_LSB, buf, 2) != HAL_OK)
+    if (BNO055_ReadRegs(hi2c, BNO055_EULER_H_LSB, buf, 6) != HAL_OK)
         return HAL_ERROR;
 
     telemetry->heading = (int16_t)(buf[1] << 8 | buf[0]) / 16.0f; // degrees
     correct_heading(telemetry);
+    telemetry->tilt_yaw = (int16_t)(buf[3] << 8 | buf[2]) / 16.0f;
+    telemetry->tilt_pitch = (int16_t)(buf[5] << 8 | buf[4]) / 16.0f;
 
     transform_accel_to_world(telemetry);
 

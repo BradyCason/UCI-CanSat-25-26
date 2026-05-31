@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #define CONTAINER_RELEASE_ALT_PERCENTAGE 0.8
-#define PAYLOAD_RELEASE_ALT 6
+#define PAYLOAD_RELEASE_ALT 8
 
 // Liftoff detection variables
 uint32_t launch_accel_detected_time = -1;

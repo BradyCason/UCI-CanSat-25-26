@@ -16,18 +16,17 @@ TEAM_ID = "1083"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE",
-                    "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "HEADING", "MAX_ALTITUDE",
+                    "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
+                    "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-                    "TARGET_LONGITUDE"]
+                    "TARGET_LONGITUDE", "TILT_PITCH", "TILT_YAW"]
 
-
-# TELEMETRY_FIELDS = ["PACKET_COUNT", "TEAM_ID", "MISSION_TIME", "MODE", "STATE", "ALTITUDE",
+# TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
 #                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-#                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
-#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
+#                     "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE",
+#                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "HEADING", "MAX_ALTITUDE",
 #                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-#                     "TARGET_LONGITUDE"]
+#                     "TARGET_LONGITUDE", "TILT_PITCH", "TILT_YAW"]
 
 
 current_time = time.time()
@@ -196,7 +195,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry, telemetry_on, lost_packet_count
 
         for field in TELEMETRY_FIELDS:
-            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED":
+            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED" and field != "TILT_PITCH" and field != "TILT_YAW":
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.telemetry_labels["LOST_PACKET_COUNT"].setText(str(lost_packet_count))
