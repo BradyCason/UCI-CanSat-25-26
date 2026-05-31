@@ -16,6 +16,7 @@ uint32_t launch_accel_detected_time = -1;
 unsigned int negative_accel_counter = 0;
 
 uint32_t probe_release_time = 0;
+uint32_t eject_time = 0;
 
 extern I2C_HandleTypeDef hi2c1;
 
@@ -79,10 +80,17 @@ void update_fsm(Telemetry_t *telemetry){
 	if (telemetry->waiting_for_eject == 1 && telemetry->paraglider_ejected != 1 && HAL_GetTick() - probe_release_time > GLIDER_EJECTION_DELAY){
 		Eject_Paraglider();
 		telemetry->paraglider_ejected = 1;
-		telemetry->paraglider_active = 1;
 		telemetry->waiting_for_eject = 0;
+		telemetry->waiting_for_para_activate = 1;
+		eject_time = HAL_GetTick();
 
 		store_flash_data(telemetry);
+	}
+
+	// Activate Paraglider
+	if (telemetry->waiting_for_para_activate == 1 && telemetry->paraglider_active != 1 && HAL_GetTick() - eject_time > PARAGLIDER_ACTIVE_DELAY){
+		telemetry->paraglider_active = 1;
+		telemetry->waiting_for_para_activate = 0;
 	}
 
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){

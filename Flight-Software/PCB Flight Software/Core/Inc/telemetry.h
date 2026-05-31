@@ -34,6 +34,7 @@ typedef struct {
 	uint8_t paraglider_active;
 	uint8_t paraglider_ejected;
 	uint8_t waiting_for_eject;
+	uint8_t waiting_for_para_activate;
 	float target_latitude;
 	float target_longitude;
 	uint8_t sim_enabled;

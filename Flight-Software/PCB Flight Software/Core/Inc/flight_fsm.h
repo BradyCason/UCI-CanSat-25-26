@@ -14,6 +14,7 @@
 #define POWER_RESET_MIN_ALT_CHANGE 10 // m
 
 #define GLIDER_EJECTION_DELAY 1000 // ms
+#define PARAGLIDER_ACTIVE_DELAY 1500 // ms
 
 void init_fsm(Telemetry_t *telemetry);
 void update_fsm(Telemetry_t *telemetry);

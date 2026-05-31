@@ -260,12 +260,14 @@ int main(void)
 		  probe_release_time = HAL_GetTick();
 		  drop_detection_active = 0;
 		  strcpy(telemetry.state, "PROBE_RELEASE");
+		  HAL_Delay(1500);
 	  }
 
 	  // Perform Paraglider control alg if it's on
 	  if (telemetry.paraglider_active){
 //		  control_paraglider(&telemetry);
-		  set_paraglider_steering(-160);
+//		  set_paraglider_steering(-145);
+		  set_paraglider_steering(0);
 	  } else {
 		  // Inactive position
 		  set_paraglider_steering(0);

@@ -23,6 +23,7 @@ void reset_state(Telemetry_t *telemetry){
 	telemetry->packet_count = 0;
 	telemetry->alt_fused = 0;
 	telemetry->waiting_for_eject = 0;
+	telemetry->waiting_for_para_activate = 0;
 
 	Reset_Payload();
 	Reset_Container();
