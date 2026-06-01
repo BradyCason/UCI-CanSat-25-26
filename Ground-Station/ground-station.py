@@ -14,19 +14,19 @@ import random
 
 TEAM_ID = "1083"
 
-TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
-                    "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
-                    "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
-                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-                    "TARGET_LONGITUDE"]
-
 # TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
 #                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
 #                     "ACCEL_P", "ACCEL_Y", "HEADING", "GPS_TIME", "GPS_ALTITUDE",
 #                     "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "MAX_ALTITUDE",
 #                     "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-#                     "TARGET_LONGITUDE", "TILT"]
+#                     "TARGET_LONGITUDE"]
+
+TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
+                    "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
+                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE", "GPS_LATITUDE", "GPS_LONGITUDE", 
+                    "GPS_SATS","CMD_ECHO", "HEADING", "MAX_ALTITUDE", "CONTAINER_RELEASED", "PAYLOAD_RELEASED",
+                    "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+                    "TARGET_LONGITUDE", "TILT"]
 
 # TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
 #                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
@@ -147,7 +147,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
-            if field == "PARAGLIDER_EJECTED":
+            if field == "PARAGLIDER_EJECTED" or field == "TEAM_ID":
                 continue
             label = self.telemetry_container_1.findChild(QtWidgets.QLabel, field)
             if (not label):
@@ -155,6 +155,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                 if (not label):
                     label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
+            if label:
+                print(label.objectName(), field)
 
         # Set First Color of Telemetry Toggle button
         if telemetry_on:

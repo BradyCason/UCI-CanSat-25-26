@@ -292,10 +292,10 @@ TEAM_ID = "1083"
 
 TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", "ALTITUDE",
                     "TEMPERATURE", "PRESSURE", "VOLTAGE", "CURRENT", "GYRO_R", "GYRO_P", "GYRO_Y", "ACCEL_R",
-                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE",
-                    "GPS_LATITUDE", "GPS_LONGITUDE", "GPS_SATS","CMD_ECHO", "HEADING", "MAX_ALTITUDE",
-                    "CONTAINER_RELEASED", "PAYLOAD_RELEASED", "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
-                    "TARGET_LONGITUDE", "TILT_PITCH", "TILT_YAW"]
+                    "ACCEL_P", "ACCEL_Y", "GPS_TIME", "GPS_ALTITUDE", "GPS_LATITUDE", "GPS_LONGITUDE", 
+                    "GPS_SATS","CMD_ECHO", "HEADING", "MAX_ALTITUDE", "CONTAINER_RELEASED", "PAYLOAD_RELEASED",
+                    "PARAGLIDER_EJECTED", "PARAGLIDER_ACTIVE", "TARGET_LATITUDE",
+                    "TARGET_LONGITUDE", "TILT"]
 
 current_time = time.time()
 local_time = time.localtime(current_time)
