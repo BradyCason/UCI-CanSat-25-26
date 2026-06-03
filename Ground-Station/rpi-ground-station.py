@@ -222,7 +222,7 @@ class ControlsThread(QtCore.QThread):
 
                     time.sleep(0.05) # debounce
 
-                    # Handle simulation mode
+                    # Handle simulation mode 
                     if p == sim_enable_switch_pin and cur == GPIO.HIGH:
                         self.enable_sim()
                     else:
@@ -231,15 +231,15 @@ class ControlsThread(QtCore.QThread):
 
                     # Perform Action
                     if p == container_release_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW: # low means when we flip SW conductive it sends command
                             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
                     elif p == eject_paraglider_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW: # low means when we flip SW conductive it sends command
                             write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
                     elif p == paraglider_active_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW:
                             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
