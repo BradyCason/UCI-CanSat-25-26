@@ -65,6 +65,7 @@ pwm.start(0)
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
 class ControlsThread(QtCore.QThread):
+    open_set_coords = QtCore.pyqtSignal() # Signal to open set coords dialog in main thread
 
     def __init__(self, control_window, poll_interval=0.05, parent=None):
         super().__init__(parent)
@@ -99,7 +100,8 @@ class ControlsThread(QtCore.QThread):
 
     def set_coords(self):
         # TODO: implement set coords function
-        pass
+        
+        self.open_set_coords.emit() # Emit signal to open dialog in main thread
 
         # Old code:
         # dialog = CoordinatesDiaglog()
@@ -381,6 +383,15 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.setup_UI()
 
         self.init_graphs()
+
+    def show_set_coords_dialog(self):
+        dialog = CoordinatesDiaglog()
+        result = dialog.exec_()
+        if result == QtWidgets.QDialog.Accepted:
+            lat, lon = dialog.get_values()
+            write_xbee("CMD," + TEAM_ID + ",SC,{:.6f},{:.6f}".format(lat, lon))
+        else:
+            QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
 
     def rotate_ui(self, degrees):
         '''
@@ -886,6 +897,7 @@ def main():
     # Start GPIO controls thread and connect signals to safe GUI actions
     global controls
     controls = ControlsThread(w)
+    controls.open_set_coords.connect(w.show_set_coords_dialog)
     controls.start()
 
     # ensure clean shutdown: stop thread and cleanup GPIO
