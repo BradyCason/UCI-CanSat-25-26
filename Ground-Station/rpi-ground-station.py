@@ -81,10 +81,13 @@ class ControlsThread(QtCore.QThread):
     def activate_sim(self):
         global sim, sim_enable, csv_indexer
         if sim_enable == True:
-            write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
-            sim_enable = False
-            sim = True
-            csv_indexer = 0
+            if (serialConnected or SER_DEBUG):
+                write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
+                sim_enable = False
+                sim = True
+                csv_indexer = 0
+            else:
+                print("Attemped to send activate simulation, but XBee is not connected.")
 
     def enable_sim(self):
         global sim, sim_enable, csv_indexer
