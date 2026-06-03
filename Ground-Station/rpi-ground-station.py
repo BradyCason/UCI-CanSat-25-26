@@ -65,6 +65,7 @@ pwm.start(0)
 
 # Worker thread: poll GPIO and emit Qt signals on falling edge
 class ControlsThread(QtCore.QThread):
+    open_set_coords = QtCore.pyqtSignal() # Signal to open set coords dialog in main thread
 
     def __init__(self, control_window, poll_interval=0.05, parent=None):
         super().__init__(parent)
@@ -80,10 +81,13 @@ class ControlsThread(QtCore.QThread):
     def activate_sim(self):
         global sim, sim_enable, csv_indexer
         if sim_enable == True:
-            write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
-            sim_enable = False
-            sim = True
-            csv_indexer = 0
+            if (serialConnected or SER_DEBUG):
+                write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
+                sim_enable = False
+                sim = True
+                csv_indexer = 0
+            else:
+                print("Attemped to send activate simulation, but XBee is not connected.")
 
     def enable_sim(self):
         global sim, sim_enable, csv_indexer
@@ -99,7 +103,8 @@ class ControlsThread(QtCore.QThread):
 
     def set_coords(self):
         # TODO: implement set coords function
-        pass
+        
+        self.open_set_coords.emit() # Emit signal to open dialog in main thread
 
         # Old code:
         # dialog = CoordinatesDiaglog()
@@ -220,7 +225,7 @@ class ControlsThread(QtCore.QThread):
 
                     time.sleep(0.05) # debounce
 
-                    # Handle simulation mode
+                    # Handle simulation mode 
                     if p == sim_enable_switch_pin and cur == GPIO.HIGH:
                         self.enable_sim()
                     else:
@@ -229,15 +234,15 @@ class ControlsThread(QtCore.QThread):
 
                     # Perform Action
                     if p == container_release_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW: # low means when we flip SW conductive it sends command
                             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,ON")
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,CONTAINER,OFF")
                     elif p == eject_paraglider_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW: # low means when we flip SW conductive it sends command
                             write_xbee("CMD," + TEAM_ID + ",MEC,EJECT")
                     elif p == paraglider_active_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW:
                             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,ON")
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
@@ -381,6 +386,15 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.setup_UI()
 
         self.init_graphs()
+
+    def show_set_coords_dialog(self):
+        dialog = CoordinatesDiaglog()
+        result = dialog.exec_()
+        if result == QtWidgets.QDialog.Accepted:
+            lat, lon = dialog.get_values()
+            write_xbee("CMD," + TEAM_ID + ",SC,{:.6f},{:.6f}".format(lat, lon))
+        else:
+            QtWidgets.QMessageBox.information(self, "Cancelled", "You pressed Cancel!")
 
     def rotate_ui(self, degrees):
         '''
@@ -886,6 +900,7 @@ def main():
     # Start GPIO controls thread and connect signals to safe GUI actions
     global controls
     controls = ControlsThread(w)
+    controls.open_set_coords.connect(w.show_set_coords_dialog)
     controls.start()
 
     # ensure clean shutdown: stop thread and cleanup GPIO
