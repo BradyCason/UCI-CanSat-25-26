@@ -2,7 +2,7 @@
 ../Core/Src/main.c:105:10:micros	1
 ../Core/Src/main.c:111:6:USART1_IRQHandler	1
 ../Core/Src/main.c:117:6:HAL_TIM_PeriodElapsedCallback	5
-../Core/Src/main.c:173:5:main	9
+../Core/Src/main.c:173:5:main	6
 ../Core/Src/main.c:300:6:SystemClock_Config	3
 ../Core/Src/main.c:342:13:MX_I2C1_Init	2
 ../Core/Src/main.c:376:13:MX_I2C3_Init	2

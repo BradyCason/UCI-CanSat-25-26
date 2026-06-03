@@ -251,23 +251,23 @@ int main(void)
 	  update_fsm(&telemetry);
 
 	  // Drop detection for drop testing. Remove for real flight
-	  if (drop_detection_active == 1 && telemetry.velocity_world_z < -1 && telemetry.accel_world_z < -3){
-		  Eject_Paraglider();
-		  telemetry.container_released = 1;
-		  telemetry.paraglider_ejected = 1;
-		  telemetry.paraglider_active = 1;
-		  extern uint32_t probe_release_time;
-		  probe_release_time = HAL_GetTick();
-		  drop_detection_active = 0;
-		  strcpy(telemetry.state, "PROBE_RELEASE");
-		  HAL_Delay(1500);
-	  }
+//	  if (drop_detection_active == 1 && telemetry.velocity_world_z < -1 && telemetry.accel_world_z < -3){
+//		  Eject_Paraglider();
+//		  telemetry.container_released = 1;
+//		  telemetry.paraglider_ejected = 1;
+//		  telemetry.paraglider_active = 1;
+//		  extern uint32_t probe_release_time;
+//		  probe_release_time = HAL_GetTick();
+//		  drop_detection_active = 0;
+//		  strcpy(telemetry.state, "PROBE_RELEASE");
+//		  HAL_Delay(1500);
+//	  }
 
 	  // Perform Paraglider control alg if it's on
 	  if (telemetry.paraglider_active){
-//		  control_paraglider(&telemetry);
-//		  set_paraglider_steering(-145);
-		  set_paraglider_steering(0);
+		  control_paraglider(&telemetry);
+//		  set_paraglider_steering(-180);
+//		  set_paraglider_steering(0);
 	  } else {
 		  // Inactive position
 		  set_paraglider_steering(0);

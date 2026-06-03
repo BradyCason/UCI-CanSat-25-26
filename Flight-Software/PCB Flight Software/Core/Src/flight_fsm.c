@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #define CONTAINER_RELEASE_ALT_PERCENTAGE 0.8
-#define PAYLOAD_RELEASE_ALT 8
+#define PAYLOAD_RELEASE_ALT 6
 
 // Liftoff detection variables
 uint32_t launch_accel_detected_time = -1;
@@ -94,34 +94,35 @@ void update_fsm(Telemetry_t *telemetry){
 	}
 
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
-//		if (telemetry->baro_vz > 30){
-//			strcpy(telemetry->state, "ASCENT");
-//		}
-//		else if (launch_accel_detected_time == -1){
-//			// Acceleration not detected yet
-//			//changed to < for vacuum testing
-//			if (telemetry->accel_r > LAUNCH_ACCEL_THRESHOLD){
-//				// Positive acceleration detected. Begin period of waiting to get off rail.
-//				launch_accel_detected_time = HAL_GetTick();
-//				negative_accel_counter = 0;
-//			}
-//		}
-//		else if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME){
-//			// In evaluation period. Monitor for any negative acceleration value.
-//			// If detected, reset the system and begin again.
-//			if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME + LAUNCH_EVAL_PERIOD_TIME){
-//				// Enough time passed without negative acceleration. Launch detected
-//				strcpy(telemetry->state, "ASCENT");
-//				launch_accel_detected_time = -1;
-//				store_flash_data(telemetry);
-//			}
-//			else if (telemetry->accel_r < 0){
-//				// Negative acceleration detected. Reset system.
-//				if (++negative_accel_counter >= 5){
-//					launch_accel_detected_time = -1;
-//				}
-//			}
-//		}
+		if (telemetry->baro_vz > 30){
+			strcpy(telemetry->state, "ASCENT");
+			store_flash_data(telemetry);
+		}
+		else if (launch_accel_detected_time == -1){
+			// Acceleration not detected yet
+			//changed to < for vacuum testing
+			if (telemetry->accel_r > LAUNCH_ACCEL_THRESHOLD){
+				// Positive acceleration detected. Begin period of waiting to get off rail.
+				launch_accel_detected_time = HAL_GetTick();
+				negative_accel_counter = 0;
+			}
+		}
+		else if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME){
+			// In evaluation period. Monitor for any negative acceleration value.
+			// If detected, reset the system and begin again.
+			if (HAL_GetTick() - launch_accel_detected_time > RAIL_DELAY_TIME + LAUNCH_EVAL_PERIOD_TIME){
+				// Enough time passed without negative acceleration. Launch detected
+				strcpy(telemetry->state, "ASCENT");
+				launch_accel_detected_time = -1;
+				store_flash_data(telemetry);
+			}
+			else if (telemetry->accel_r < 0){
+				// Negative acceleration detected. Reset system.
+				if (++negative_accel_counter >= 5){
+					launch_accel_detected_time = -1;
+				}
+			}
+		}
 	}
 	else if (strcmp(telemetry->state, "ASCENT") == 0){
 		if (telemetry->baro_vz < APOGEE_VELO_THRESHOLD){

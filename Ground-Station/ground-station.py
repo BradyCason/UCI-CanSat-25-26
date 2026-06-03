@@ -155,8 +155,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                 if (not label):
                     label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
-            if label:
-                print(label.objectName(), field)
 
         # Set First Color of Telemetry Toggle button
         if telemetry_on:

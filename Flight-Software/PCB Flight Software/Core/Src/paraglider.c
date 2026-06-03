@@ -33,12 +33,16 @@ void correct_heading(Telemetry_t *telemetry){
 }
 
 void set_north(Telemetry_t * telemetry) {
+	// Check for invalid number
+	if (isnan(telemetry->heading)) telemetry->heading = 0;
+
+	// Update heading offset
 	heading_when_north += telemetry->heading;
 }
 
 void control_paraglider(Telemetry_t *telemetry){
 	// --- PID gains (tune these) ---
-	static float Kp = 2.5f;
+	static float Kp = 2.0f;
 	static float Ki = 0.05f; // 0.05
 	static float Kd = 1.0f; // 0.5
 
