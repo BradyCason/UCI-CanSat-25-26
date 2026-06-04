@@ -289,6 +289,7 @@ class ControlsThread(QtCore.QThread):
                             self.time_mode = 1 # UTC
                         else:
                             self.time_mode = 0 # GPS
+                        print(self.time_mode)
                     elif p == telemetry_toggle_switch_pin:
                         global telemetry_on
                         if cur == GPIO.HIGH:
