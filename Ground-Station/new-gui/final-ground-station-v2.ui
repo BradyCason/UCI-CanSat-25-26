@@ -93,9 +93,9 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>1170</y>
+      <y>1160</y>
       <width>651</width>
-      <height>50</height>
+      <height>40</height>
      </rect>
     </property>
     <property name="font">
@@ -719,7 +719,7 @@
      </font>
     </property>
     <property name="text">
-     <string>operators determine whether the CanSat is functioning correctly or merely producing numbers with confidence. The packet counter is especially important because increasing</string>
+     <string>operators determine whether the CanSat is functioning correctly or merely producing numbers with confidence. The packet counter is especially important because</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -797,7 +797,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>780</y>
+      <y>770</y>
       <width>811</width>
       <height>391</height>
      </rect>
