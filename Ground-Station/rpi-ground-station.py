@@ -175,7 +175,7 @@ class ControlsThread(QtCore.QThread):
         time.sleep(0.3)
 
         # Stop sending signal to reduce jitter
-        # pwm.ChangeDutyCycle(0)
+        pwm.ChangeDutyCycle(0)
 
     def update_state_servo(self):
         global state, cur_servo_state
