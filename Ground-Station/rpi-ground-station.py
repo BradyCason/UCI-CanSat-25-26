@@ -77,7 +77,6 @@ class ControlsThread(QtCore.QThread):
         self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
         self.read_initial_time_mode()
-        self.set_state_servo_angle(180)
 
     def read_initial_time_mode(self):
         if GPIO.input(set_time_switch_pin) == GPIO.HIGH:
@@ -205,6 +204,10 @@ class ControlsThread(QtCore.QThread):
         self._running = False
 
     def run(self):
+
+        print("Setting servo to 90 degrees")
+        self.set_state_servo_angle(90)
+
         while self._running:
             # Handle button presses
             for p in BUTTON_PINS:
