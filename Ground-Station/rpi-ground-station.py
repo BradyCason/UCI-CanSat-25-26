@@ -480,13 +480,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.title.setText("CanSat Ground Station - TEAM " + TEAM_ID)
 
         # Get telemetry labels
-        print(self.figure_1_2)
-        print(self.figure_1_2.figure_1)
+        print(self.figure_1)
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
             if field == "PARAGLIDER_EJECTED":
                 continue
-            label = self.top_right_layout.findChild(QtWidgets.QLabel, field) 
+            label = self.figure_1.findChild(QtWidgets.QLabel, field) 
             if (not label):
                 label = self.top_left_layout.findChild(QtWidgets.QLabel, field)
                 if (not label):
