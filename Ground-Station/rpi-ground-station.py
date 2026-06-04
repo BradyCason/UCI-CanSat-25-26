@@ -483,7 +483,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
-            if field == "PARAGLIDER_EJECTED":
+            if field == "PARAGLIDER_EJECTED" or field == "TILT" or field == "CONTAINER_RELEASED" or field == "PAYLOAD_RELEASED" or field == "PARAGLIDER_EJECTED" or field == "PARAGLIDER_ACTIVE":
                 continue
             label = self.figure_1.findChild(QtWidgets.QLabel, field) 
             if (not label):
