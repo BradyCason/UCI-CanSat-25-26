@@ -415,6 +415,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.setup_UI()
 
         self.init_graphs()
+    
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape:
+            QtWidgets.QApplication.quit()
+        else:
+            super().keyPressEvent(event)
 
     def show_set_coords_dialog(self):
         dialog = CoordinatesDiaglog()
@@ -574,6 +580,25 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.voltage_line, = self.voltage_subplot.plot([], [], label="Voltage", color="blue")
         self.voltage_subplot.set_title("Voltage (V)")
         self.voltage_subplot.legend()
+
+        # Set color
+        for fig in [
+            self.altitude_figure,
+            self.accel_figure,
+            self.rotation_figure,
+            self.current_figure,
+            self.voltage_figure
+        ]:
+            fig.set_facecolor("#D9D9D9")
+
+        for ax in [
+            self.alt_subplot,
+            self.accel_subplot,
+            self.rotation_subplot,
+            self.current_subplot,
+            self.voltage_subplot
+        ]:
+            ax.set_facecolor("#D9D9D9")
 
     def update_graphs(self):
         # Skip update if no telemetry data yet
