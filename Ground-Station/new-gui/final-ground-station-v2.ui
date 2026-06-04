@@ -48,7 +48,7 @@
       <x>10</x>
       <y>600</y>
       <width>971</width>
-      <height>201</height>
+      <height>190</height>
      </rect>
     </property>
     <property name="font">
@@ -61,7 +61,7 @@
      </font>
     </property>
     <property name="text">
-     <string>A proper ground station does not simply display data. It transforms thousands of confusing numbers into slightly more organized confusion. Telemetry visualization systems allow operators to monitor mission health, track flight performance, and confidently announce problems they do not yet understand. A good interface should contain enough graphs, counters, and blinking values to make nearby spectators assume something important is happening.</string>
+     <string>A proper ground station does not simply display data. It transforms thousands of confusing numbers into slightly more organized confusion. Telemetry visualization systems allow operators to monitor mission health, track flight performance, and confidently announce problems they do not yet understand. Figure 8-1 shows the primary telemetry</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -95,7 +95,7 @@
       <x>200</x>
       <y>1170</y>
       <width>651</width>
-      <height>41</height>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
@@ -703,10 +703,10 @@
    <widget class="QLabel" name="label_26">
     <property name="geometry">
      <rect>
-      <x>840</x>
-      <y>750</y>
+      <x>830</x>
+      <y>780</y>
       <width>181</width>
-      <height>391</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="font">
@@ -719,7 +719,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Figure 8-1 shows the primary telemetry status display. These indicators help operators determine whether the CanSat is functioning correctly or merely producing numbers with confidence. The packet counter is especially important because rapidly increasing values create the illusion that the mission is under control.</string>
+     <string>status display. These indicators help operators determine whether the CanSat is functioning correctly or merely</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -729,7 +729,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>1180</y>
+      <y>1190</y>
       <width>991</width>
       <height>181</height>
      </rect>
@@ -744,7 +744,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Figure 8-2 shows the GPS visualization interface, which allows teams to track the CanSat’s location in real time and estimate which field they will eventually need to search. A higher satellite count generally improves positioning accuracy, although operators will still insist the map is wrong whenever the CanSat lands somewhere inconvenient.</string>
+     <string>producing numbers with confidence. Figure 8-2 shows the GPS visualization interface, allowing teams to track the CanSat’s location in real time. Figure 8-3 shows acceleration, gyroscope, and altitude graphs used to analyze flight behavior throughout the mission. Aerospace engineers enjoy graphs because they make even catastrophic failures appear scientific.</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -1143,7 +1143,7 @@
    <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>1370</y>
       <width>991</width>
       <height>501</height>
