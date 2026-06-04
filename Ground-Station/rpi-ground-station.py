@@ -189,26 +189,26 @@ class ControlsThread(QtCore.QThread):
         if state == "LAUNCH_PAD":
             self.set_state_servo_angle(180)
         elif state == "ASCENT":
-            self.set_state_servo_angle(30)
+            self.set_state_servo_angle(150)
         elif state == "APOGEE":
-            self.set_state_servo_angle(60)
+            self.set_state_servo_angle(120)
         elif state == "DESCENT":
             self.set_state_servo_angle(90)
         elif state == "PROBE_RELEASE":
-            self.set_state_servo_angle(120)
+            self.set_state_servo_angle(60)
         elif state == "PAYLOAD_RELEASE":
-            self.set_state_servo_angle(150)
+            self.set_state_servo_angle(30)
         elif state == "LANDED":
-            self.set_state_servo_angle(180)
+            self.set_state_servo_angle(10)
 
     def stop(self):
         self._running = False
 
     def run(self):
 
-        print("\n Servo Calibration Sweep")
-        self.set_state_servo_angle(180)
-        print("Calibration Complete, starting in Launch Pad position")
+        # print("\n Servo Calibration Sweep")
+        # self.set_state_servo_angle(180)
+        # print("Calibration Complete, starting in Launch Pad position")
 
         while self._running:
             # Handle button presses
