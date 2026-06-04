@@ -391,7 +391,7 @@
           <x>490</x>
           <y>10</y>
           <width>469</width>
-          <height>154</height>
+          <height>165</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="top_right_layout_2" stretch="0,0">
@@ -1528,7 +1528,7 @@
       <item>
        <layout class="QVBoxLayout" name="bottom_middle_layout">
         <item>
-         <widget class="QLabel" name="MISSION_TIME_11">
+         <widget class="QLabel" name="GYRO_R">
           <property name="font">
            <font>
             <family>Liberation Sans</family>
@@ -1547,7 +1547,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="MISSION_TIME_12">
+         <widget class="QLabel" name="GYRO_P">
           <property name="font">
            <font>
             <family>Liberation Sans</family>
@@ -1566,7 +1566,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="MISSION_TIME_15">
+         <widget class="QLabel" name="GYRO_Y">
           <property name="font">
            <font>
             <family>Liberation Sans</family>
