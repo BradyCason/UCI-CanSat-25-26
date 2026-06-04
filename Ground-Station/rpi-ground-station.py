@@ -436,7 +436,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.map_widget = MapWidget(image_path, self)
 
         if hasattr(self, 'launch_site_container'):
-            self.minimap_layout.addWidget(self.map_widget)
+            self.launch_site_container.layout().addWidget(self.map_widget)
         else:
             self.map_widget.move(50, 50)  # Place it somewhere in the window if container not found
             self.map_widget.show()
