@@ -416,9 +416,6 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         self.init_graphs()
 
-        global controls
-        controls.set_state_servo_angle(180)
-
     
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
