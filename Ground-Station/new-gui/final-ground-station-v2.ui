@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1034</width>
+    <width>1007</width>
     <height>2097</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="title">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -729,9 +729,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>1860</y>
+      <y>1890</y>
       <width>1011</width>
-      <height>151</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
@@ -1776,7 +1776,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1034</width>
+     <width>1007</width>
      <height>43</height>
     </rect>
    </property>
