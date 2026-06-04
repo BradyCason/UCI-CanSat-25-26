@@ -490,11 +490,10 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                 label = self.figure_2.findChild(QtWidgets.QLabel, field)
                 if (not label):
                     label = self.figure_3.findChild(QtWidgets.QLabel, field)
-                    if (not label):
-                        label = self.voltage_layout.findChild(QtWidgets.QLabel, field)
             
             self.telemetry_labels[field] = label
-            print(label)
+            if not label:
+                print(field)
 
     def update(self):
         '''
