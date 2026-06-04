@@ -415,6 +415,9 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.setup_UI()
 
         self.init_graphs()
+
+        self.set_state_servo_angle(180)
+
     
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape:
@@ -480,7 +483,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.title.setText("CanSat Ground Station - TEAM " + TEAM_ID)
 
         # Get telemetry labels
+<<<<<<< HEAD
         print(self.figure_1)
+=======
+        # print(self.figure_1_2)
+        # print(self.figure_1_2.figure_1)
+>>>>>>> 5d04ba89bf7b27e5b50fdc1e3b0406fd1699ec41
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
             if field == "PARAGLIDER_EJECTED":
