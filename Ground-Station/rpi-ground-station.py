@@ -187,7 +187,7 @@ class ControlsThread(QtCore.QThread):
         
         # Set servo angle
         if state == "LAUNCH_PAD":
-            self.set_state_servo_angle(170)
+            self.set_state_servo_angle(180)
         elif state == "ASCENT":
             self.set_state_servo_angle(30)
         elif state == "APOGEE":
