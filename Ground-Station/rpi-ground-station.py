@@ -345,7 +345,7 @@ packets_sent = 0
 
 # xbee communication parameters
 BAUDRATE = 115200
-COM_PORT = "/dev/ttyUSB0"    # USB0 on raspberry pi
+COM_PORTS = ["/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2", "/dev/ttyUSB3"]  # USB on raspberry pi
 
 # MAKE_CSV_FILE = False
 MAKE_CSV_FILE = True # Set to True to create a CSV log file of telemetry data, must be set before running the program to work
@@ -361,9 +361,11 @@ def connect_Serial():
     global ser, serialConnected
     if (not SER_DEBUG):
         try:
-            ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
-            serialConnected = True
-            print("Connected to Xbee")
+            for com_port in COM_PORTS:
+                ser = serial.Serial(com_port, BAUDRATE, timeout=0.05)
+                serialConnected = True
+                print("Connected to Xbee")
+                break
         except serial.serialutil.SerialException as e:
             if (serialConnected):
                 print(f"Could not connect to Xbee: {e}")
@@ -401,12 +403,12 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # Load the UI
-        ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
-        # ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "testing.ui") # new GS ui_path
+        # ui_path = os.path.join(os.path.dirname(__file__), "gui", "ground_station.ui") # previous GS ui_path 
+        ui_path = os.path.join(os.path.dirname(__file__), "new-gui", "final-ground-station.ui") # new GS ui_path
         uic.loadUi(ui_path, self)
 
         # Apply 90 degree rotation to the entire UI
-        # self.rotate_ui(90)
+        self.rotate_ui(90)
 
         # self.showFullScreen()
 
