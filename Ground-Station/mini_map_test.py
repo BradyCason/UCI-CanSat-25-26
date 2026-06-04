@@ -8,11 +8,13 @@ from PyQt5.QtCore import Qt
 class MapWidget(QLabel):
     def __init__(self, image_path, parent=None):
         super().__init__(parent)
-        self.setFixedSize(200, 200)  # Fixed mini-map size
+        # Don't set fixed size - let it expand to fill container
+        self.setMinimumSize(200, 200)  # Minimum size instead of fixed
         self.setStyleSheet("border: 2px solid black; background: #ddd;")
 
-        # Load and scale the image (make it bigger than the minimap)
-        self.image = QPixmap(image_path).scaled(
+        # Load the base image
+        self.base_image = QPixmap(image_path)
+        self.image = self.base_image.scaled(
             800, 800, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
         )
 
@@ -39,6 +41,15 @@ class MapWidget(QLabel):
             self.offset_y = max(self.offset_y - self.step, self.height() - self.image.height())
 
         self.update()
+
+    def resizeEvent(self, event):
+        # Rescale the image based on new widget size
+        super().resizeEvent(event)
+        # Scale image to 4x the widget size for panning capability
+        new_size = max(event.size().width(), event.size().height()) * 4
+        self.image = self.base_image.scaled(
+            new_size, new_size, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
+        )
 
     def paintEvent(self, event):
         painter = QPainter(self)
