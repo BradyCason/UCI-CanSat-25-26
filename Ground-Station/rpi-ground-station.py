@@ -303,7 +303,7 @@ class ControlsThread(QtCore.QThread):
 #     self.graph_proc = subprocess.Popen(['python3','/home/jonathan/UCI-CanSat-25-26/Ground-Station/mini_map_test.py'])
 
 # Helper function to flash the XBee LED without blocking the polling thread
-def flash_led(LED_pin, flashes=3, on_time=0.2, off_time=0.2):
+def flash_led(LED_pin, flashes=3, on_time=0.1, off_time=0.1):
     """
     Flash the given LED pin `flashes` times on a daemon thread so the
     ControlsThread isn't blocked by sleep calls.
