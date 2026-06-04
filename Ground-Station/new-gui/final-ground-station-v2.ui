@@ -61,7 +61,7 @@
      </font>
     </property>
     <property name="text">
-     <string>A proper ground station does not simply display data. It transforms thousands of confusing numbers into slightly more organized confusion. Telemetry visualization systems allow operators to monitor mission health, track flight performance, and confidently announce problems they do not yet understand. Figure 8-1 shows the primary telemetry</string>
+     <string>A proper ground station does not simply display data. It transforms thousands of confusing numbers into slightly more organized confusion. Telemetry visualization systems allow operators to monitor mission health, track flight performance, and confidently announce problems they do not yet understand. Figure 8-1 shows the primary telemetry status display. These indicators help</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -719,7 +719,7 @@
      </font>
     </property>
     <property name="text">
-     <string>status display. These indicators help operators determine whether the CanSat is functioning correctly or merely</string>
+     <string>operators determine whether the CanSat is functioning correctly or merely producing numbers with confidence. The packet counter is especially important because increasing values create the illusion that the mission is under control.</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
