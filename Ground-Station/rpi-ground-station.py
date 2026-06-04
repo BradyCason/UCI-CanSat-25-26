@@ -207,7 +207,9 @@ class ControlsThread(QtCore.QThread):
     def run(self):
 
         print("\n Servo Calibration Sweep")
-        self.set_state_servo_angle(160)
+        self.set_state_servo_angle(90)
+        time.sleep(15)
+        self.set_state_servo_angle(45)
         time.sleep(15)
         print("Calibration Complete, starting in Launch Pad position")
 
