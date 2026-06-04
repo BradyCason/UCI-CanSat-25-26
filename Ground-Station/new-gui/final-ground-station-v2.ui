@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1007</width>
-    <height>2097</height>
+    <height>1989</height>
    </rect>
   </property>
   <property name="font">
@@ -70,7 +70,7 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>190</x>
       <y>550</y>
       <width>681</width>
       <height>50</height>
@@ -79,7 +79,7 @@
     <property name="font">
      <font>
       <family>MS Shell Dlg 2</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -93,7 +93,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>1140</y>
+      <y>1150</y>
       <width>651</width>
       <height>41</height>
      </rect>
@@ -101,7 +101,7 @@
     <property name="font">
      <font>
       <family>MS Shell Dlg 2</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -118,18 +118,18 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>1840</y>
+      <y>1860</y>
       <width>421</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Open Sans Extrabold</family>
-      <pointsize>11</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
+      <family>MS Shell Dlg 2</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -173,7 +173,7 @@
    <widget class="QWidget" name="telemetry_container_8" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>70</y>
       <width>991</width>
       <height>501</height>
@@ -729,7 +729,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>1170</y>
+      <y>1180</y>
       <width>991</width>
       <height>181</height>
      </rect>
@@ -755,7 +755,7 @@
      <rect>
       <x>40</x>
       <y>0</y>
-      <width>61</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -1144,7 +1144,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>1350</y>
+      <y>1370</y>
       <width>991</width>
       <height>501</height>
      </rect>
