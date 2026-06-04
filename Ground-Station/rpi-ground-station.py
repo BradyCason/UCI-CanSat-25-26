@@ -172,7 +172,7 @@ class ControlsThread(QtCore.QThread):
         global pwm
         duty = 2.5 + (angle / 180.0) * 10.0
         pwm.ChangeDutyCycle(duty)
-        time.sleep(0.3)
+        time.sleep(0.6)
 
         # Stop sending signal to reduce jitter
         pwm.ChangeDutyCycle(0)
@@ -188,18 +188,19 @@ class ControlsThread(QtCore.QThread):
         # Set servo angle
         if state == "LAUNCH_PAD":
             self.set_state_servo_angle(180)
+
         elif state == "ASCENT":
             self.set_state_servo_angle(150)
         elif state == "APOGEE":
             self.set_state_servo_angle(120)
         elif state == "DESCENT":
-            self.set_state_servo_angle(90)
+            self.set_state_servo_angle(75)
         elif state == "PROBE_RELEASE":
             self.set_state_servo_angle(60)
         elif state == "PAYLOAD_RELEASE":
-            self.set_state_servo_angle(30)
+            self.set_state_servo_angle(28)
         elif state == "LANDED":
-            self.set_state_servo_angle(10)
+            self.set_state_servo_angle()
 
     def stop(self):
         self._running = False
