@@ -22,12 +22,20 @@ class MapWidget(QLabel):
         self.offset_x = 0
         self.offset_y = 0
         self.step = 20  # Movement speed
+        self.rotation = 0  # Rotation angle in degrees
 
         self.setFocusPolicy(Qt.StrongFocus)
 
         # Load the sniper scope icon (small image)
         scope_path = os.path.join(os.path.dirname(__file__), "gui", "scope.png")
         self.scope_icon = QPixmap(scope_path).scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+    def set_rotation(self, angle):
+        '''
+        Set rotation angle for the map (in degrees) and update the display
+        '''
+        self.rotation = angle
+        self.update()
 
     def keyPressEvent(self, event):
         # Move image, but prevent it from moving too far (keep some image visible)
@@ -46,7 +54,7 @@ class MapWidget(QLabel):
         # Rescale the image based on new widget size
         super().resizeEvent(event)
         # Scale image to fit the widget with slight zoom for panning (1.5x widget size)
-        new_size = max(event.size().width(), event.size().height()) * 1.5
+        new_size = max(event.size().width(), event.size().height()) 
         self.image = self.base_image.scaled(
             int(new_size), int(new_size), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
         )
@@ -54,6 +62,21 @@ class MapWidget(QLabel):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setClipRect(0, 0, self.width(), self.height())  # Clip to label bounds
+
+        if self.rotation != 0:
+            # Rotate the image around its center
+            transform = painter.transform()
+            center_x = self.width() / 2
+            center_y = self.height() / 2
+            transform.translate(center_x, center_y)
+            transform.rotate(self.rotation)
+            transform.translate(-center_x, -center_y)
+            painter.setTransform(transform)
+        
+        if self.rotation != 0:
+            # When rotated, we need to adjust the offset to keep the image centered
+            painter.restore()  # Reset to original transform to draw the image
+
         painter.drawPixmap(self.offset_x, self.offset_y, self.image)
 
         # Draw the scope icon centered
