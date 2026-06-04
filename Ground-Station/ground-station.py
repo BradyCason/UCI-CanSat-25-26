@@ -232,7 +232,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         '''
         Send a simulation command: ("ACTIVATE", "ENABLE", "DISABLE")
         '''
-        global sim, sim_enable, csv_indexer
+        global sim_enable, csv_indexer
 
         if cmd == "ACTIVATE" and sim_enable == False or cmd == "ENABLE" and sim_enable == True:
             return
@@ -243,10 +243,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             sim_enable = True
         elif cmd == "DISABLE":
             sim_enable = False
-            sim = False
         elif cmd == "ACTIVATE":
             sim_enable = False
-            sim = True
             csv_indexer = 0
         
         self.update_sim_button_colors()
@@ -566,7 +564,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global sim, telemetry, packet_count, lost_packet_count, prev_mission_sec, w #, last_recieved_packet
+    global telemetry, packet_count, lost_packet_count, prev_mission_sec, w #, last_recieved_packet
 
     # Ensure only recieving each packet once
     # sent_packet_count = int(data[TELEMETRY_FIELDS.index("PACKET_COUNT")])
@@ -606,10 +604,11 @@ def parse_xbee(data):
     else:
         paraglider_ejected = False
 
-    # if data[3] == "S":
-    #     sim = True
-    # else:
-    #     sim = False
+    global sim
+    if telemetry['MODE'] == "S":
+        sim = True
+    else:
+        sim = False
 
     # Update lost_packet_count
     cur_mission_sec = int(telemetry["MISSION_TIME"][-2:])

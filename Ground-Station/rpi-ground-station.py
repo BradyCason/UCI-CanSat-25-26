@@ -42,6 +42,7 @@ payload_release_led_pin = 0
 # bottom figure
 sim_enable_switch_pin = 17
 sim_activate_button_pin = 27
+sim_activated_led_pin = 19
 
 GPIO.setmode(GPIO.BCM)
 BUTTON_PINS = [reset_button_pin, cal_alt_button_pin, set_coords_button_pin, set_time_button_pin, sim_activate_button_pin, set_north_button_pin]
@@ -51,7 +52,7 @@ SWITCH_PINS = [set_time_switch_pin, container_release_switch_pin, eject_paraglid
 for p in BUTTON_PINS + SWITCH_PINS:
     GPIO.setup(p, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 LED_PINS = [received_led_pin, sending_led_pin, container_released_led_pin, eject_paraglider_led_pin,
-            paraglider_active_led_pin, payload_release_led_pin]
+            paraglider_active_led_pin, payload_release_led_pin, sim_activated_led_pin]
 # Initialize LEDS
 for p in LED_PINS:
     GPIO.setup(p, GPIO.OUT)
@@ -75,8 +76,22 @@ class ControlsThread(QtCore.QThread):
         # track previous states to detect edges (buttons are pull-up; pressed -> LOW)
         self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
-        self.time_mode = 0  # 0 -> GPS, 1 -> UTC
+        self.read_initial_time_mode()
         self.set_state_servo_angle(180)
+
+    def read_initial_time_mode(self):
+        if GPIO.input(set_time_switch_pin) == GPIO.HIGH:
+            self.time_mode = 1 # UTC
+        else:
+            self.time_mode = 0 # GPS
+
+    def read_initial_telemetry_toggle(self):
+        global telemetry_on
+        if GPIO.input(telemetry_toggle_switch_pin) == GPIO.HIGH:
+            telemetry_on = True
+        else:
+            telemetry_on = False
+            write_xbee("CMD,"+ TEAM_ID + ",CX,OFF")
 
     def activate_sim(self):
         global sim, sim_enable, csv_indexer
@@ -84,19 +99,18 @@ class ControlsThread(QtCore.QThread):
             if (serialConnected or SER_DEBUG):
                 write_xbee("CMD," + TEAM_ID + ",SIM,ACTIVATE")
                 sim_enable = False
-                sim = True
                 csv_indexer = 0
             else:
                 print("Attemped to send activate simulation, but XBee is not connected.")
 
     def enable_sim(self):
-        global sim, sim_enable, csv_indexer
+        global sim_enable
         if sim_enable == False:
             write_xbee("CMD," + TEAM_ID + ",SIM,ENABLE")
             sim_enable = True
 
     def disable_sim(self):
-        global sim, sim_enable, csv_indexer
+        global sim_enable
         if sim_enable == True:
             write_xbee("CMD," + TEAM_ID + ",SIM,DISABLE")
             sim_enable = False
@@ -145,6 +159,12 @@ class ControlsThread(QtCore.QThread):
         else:
             GPIO.output(payload_release_led_pin, GPIO.LOW)
 
+        global sim
+        if sim:
+            GPIO.output(sim_activated_led_pin, GPIO.HIGH)
+        else:
+            GPIO.output(sim_activated_led_pin, GPIO.LOW)
+
     def set_state_servo_angle(self, angle):
         """
         Set servo angle from 0 to 180 degrees
@@ -158,7 +178,14 @@ class ControlsThread(QtCore.QThread):
         # pwm.ChangeDutyCycle(0)
 
     def update_state_servo(self):
-        global state
+        global state, cur_servo_state
+
+        # If already correct, return
+        if cur_servo_state == state:
+            return
+        cur_servo_state = state
+        
+        # Set servo angle
         if state == "LAUNCH_PAD":
             self.set_state_servo_angle(0)
         elif state == "ASCENT":
@@ -226,7 +253,7 @@ class ControlsThread(QtCore.QThread):
                     time.sleep(0.05) # debounce
 
                     # Handle simulation mode 
-                    if p == sim_enable_switch_pin and cur == GPIO.HIGH:
+                    if p == sim_enable_switch_pin and cur == GPIO.LOW:
                         self.enable_sim()
                     else:
                         self.disable_sim()
@@ -247,15 +274,15 @@ class ControlsThread(QtCore.QThread):
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,GLIDER,OFF")
                     elif p == payload_release_switch_pin:
-                        if cur == GPIO.HIGH:
+                        if cur == GPIO.LOW:
                             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,ON")
                         else:
                             write_xbee("CMD," + TEAM_ID + ",MEC,PAYLOAD,OFF")
                     elif p == set_time_switch_pin:
                         if cur == GPIO.HIGH:
-                            self.time_mode = 1
+                            self.time_mode = 1 # UTC
                         else:
-                            self.time_mode = 0
+                            self.time_mode = 0 # GPS
                     elif p == telemetry_toggle_switch_pin:
                         global telemetry_on
                         if cur == GPIO.HIGH:
@@ -331,8 +358,7 @@ serialConnected = False
 
 """ The following serial function is used when raspberry pi or linux machine is used for GS and is set to COM_PORT = "/dev/ttyUSB0" """ 
 def connect_Serial():
-    global ser
-    global serialConnected
+    global ser, serialConnected
     if (not SER_DEBUG):
         try:
             ser = serial.Serial(COM_PORT, BAUDRATE, timeout=0.05)
@@ -365,6 +391,7 @@ paraglider_active = False
 container_released = False
 paraglider_ejected = False
 state = "LAUNCH_PAD"
+cur_servo_state = None
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -685,7 +712,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global sim, telemetry, packet_count, lost_packet_count, prev_mission_sec, w, controls #, last_recieved_packet
+    global telemetry, packet_count, lost_packet_count, prev_mission_sec, w, controls #, last_recieved_packet
 
     # Validate frame has correct number of fields (only check field count, allow empty values)
     if len(data) != len(TELEMETRY_FIELDS):
@@ -733,10 +760,11 @@ def parse_xbee(data):
     global state
     state = telemetry["STATE"]
 
-    # if data[3] == "S":
-    #     sim = True
-    # else:
-    #     sim = False
+    global sim
+    if telemetry["MODE"] == "S":
+        sim = True
+    else:
+        sim = False
 
     # Update lost_packet_count
     cur_mission_sec = int(telemetry["MISSION_TIME"][-2:])
@@ -844,12 +872,10 @@ def write_xbee(cmd):
     flash_led(sending_led_pin)
 
     # Create Packet
-    global packets_sent
+    global packets_sent, ser
     packets_sent += 1
     checksum = calc_checksum(f"{cmd}")
     frame = f"{START_DELIMITER}{cmd},{checksum:02X}"
-
-    print(f"Attempting to send: {cmd}")
 
     # Send to XBee
     if (not SER_DEBUG):
@@ -857,6 +883,8 @@ def write_xbee(cmd):
             if (ser):
                 ser.write(frame.encode())
                 print(f"Packet Sent: {cmd}")
+            else:
+                print(f"Serial not connected for: {cmd}")
         except serial.serialutil.SerialException as e:
             print(f"Packet Not Sent: {e}")
 
@@ -864,8 +892,7 @@ def send_simp_data():
     '''
     Send simulated pressure data from the csv file at 1 Hz
     '''
-    global sim
-    global csv_indexer
+    global sim, csv_indexer
     csv_file = open(os.path.join(os.path.dirname(__file__), "pres.csv"), 'r')
     csv_lines = csv_file.readlines()
     csv_indexer = 0
