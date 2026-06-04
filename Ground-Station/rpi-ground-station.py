@@ -205,6 +205,12 @@ class ControlsThread(QtCore.QThread):
         self._running = False
 
     def run(self):
+
+        print("\n Servo Calibration Sweep")
+        self.set_state_servo_angle(0)
+        time.sleep(10)
+        print("Calibration Complete, starting in Launch Pad position")
+
         while self._running:
             # Handle button presses
             for p in BUTTON_PINS:
