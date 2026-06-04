@@ -480,7 +480,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
                 continue
             label = self.telemetry_container_10.findChild(QtWidgets.QLabel, field)
             if (not label):
-                label = self.telemetry_container_2.findChild(QtWidgets.QLabel, field)
+                label = self.telemetry_container_12.findChild(QtWidgets.QLabel, field)
                 if (not label):
                     label = self.telemetry_container_3.findChild(QtWidgets.QLabel, field)
             self.telemetry_labels[field] = label
