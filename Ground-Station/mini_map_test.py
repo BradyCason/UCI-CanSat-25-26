@@ -45,10 +45,10 @@ class MapWidget(QLabel):
     def resizeEvent(self, event):
         # Rescale the image based on new widget size
         super().resizeEvent(event)
-        # Scale image to 4x the widget size for panning capability
-        new_size = max(event.size().width(), event.size().height()) * 4
+        # Scale image to fit the widget with slight zoom for panning (1.5x widget size)
+        new_size = max(event.size().width(), event.size().height()) * 1.5
         self.image = self.base_image.scaled(
-            new_size, new_size, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
+            int(new_size), int(new_size), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
         )
 
     def paintEvent(self, event):
