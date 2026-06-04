@@ -483,7 +483,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Get telemetry labels
         self.telemetry_labels = {}
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
-            if field == "PARAGLIDER_EJECTED" or field == "TILT" or field == "CONTAINER_RELEASED" or field == "PAYLOAD_RELEASED" or field == "PARAGLIDER_EJECTED" or field == "PARAGLIDER_ACTIVE":
+            if field == "PARAGLIDER_EJECTED" or field == "TILT" or field == "CONTAINER_RELEASED" or field == "PAYLOAD_RELEASED" or field == "PARAGLIDER_EJECTED" or field == "PARAGLIDER_ACTIVE" or field == "STATE":
                 continue
             label = self.figure_1.findChild(QtWidgets.QLabel, field) 
             if (not label):
@@ -502,7 +502,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         global telemetry, telemetry_on, lost_packet_count
 
         for field in TELEMETRY_FIELDS:
-            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED" and field != "TILT" and field != "CONTAINER_RELEASED" and field != "PARAGLIDER_ACTIVE" and field != "PAYLOAD_RELEASED":
+            if field != "TEAM_ID" and field != "PARAGLIDER_EJECTED" and field != "TILT" and field != "CONTAINER_RELEASED" and field != "PARAGLIDER_ACTIVE" and field != "PAYLOAD_RELEASED" and field != "STATE":
                 self.telemetry_labels[field].setText(telemetry[field])
 
         self.telemetry_labels["LOST_PACKET_COUNT"].setText(str(lost_packet_count))

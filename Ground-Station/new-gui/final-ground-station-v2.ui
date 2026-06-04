@@ -391,31 +391,12 @@
           <x>490</x>
           <y>10</y>
           <width>469</width>
-          <height>165</height>
+          <height>151</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="top_right_layout_2" stretch="0,0">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_28">
-           <item>
-            <widget class="QLabel" name="state">
-             <property name="font">
-              <font>
-               <family>Liberation Sans</family>
-               <pointsize>16</pointsize>
-               <weight>75</weight>
-               <italic>false</italic>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border: none;</string>
-             </property>
-             <property name="text">
-              <string>State:</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLabel" name="mode">
              <property name="font">
@@ -478,25 +459,6 @@
          </item>
          <item>
           <layout class="QVBoxLayout" name="top_right_layout">
-           <item>
-            <widget class="QLabel" name="STATE">
-             <property name="font">
-              <font>
-               <family>Liberation Sans</family>
-               <pointsize>16</pointsize>
-               <weight>75</weight>
-               <italic>false</italic>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border: none;</string>
-             </property>
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLabel" name="MODE">
              <property name="font">
