@@ -565,21 +565,25 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         self.accel_p_line, = self.accel_subplot.plot([], [], label="P", color="orange")
         self.accel_y_line, = self.accel_subplot.plot([], [], label="Y", color="green")
         self.accel_subplot.set_title("Acceleration (°/s^2)")
-        self.accel_subplot.legend()
+        leg = self.accel_subplot.legend()
+        leg.get_frame().set_facecolor("#D9D9D9")
 
         self.rotation_r_line, = self.rotation_subplot.plot([], [], label="R", color="blue")
         self.rotation_p_line, = self.rotation_subplot.plot([], [], label="P", color="orange")
         self.rotation_y_line, = self.rotation_subplot.plot([], [], label="Y", color="green")
         self.rotation_subplot.set_title("Rotation Rate (°/s)")
-        self.rotation_subplot.legend()
+        leg = self.rotation_subplot.legend()
+        leg.get_frame().set_facecolor("#D9D9D9")
 
         self.current_line, = self.current_subplot.plot([], [], label="Current", color="blue")
         self.current_subplot.set_title("Current (A)")
-        self.current_subplot.legend()
+        leg = self.current_subplot.legend()
+        leg.get_frame().set_facecolor("#D9D9D9")
 
         self.voltage_line, = self.voltage_subplot.plot([], [], label="Voltage", color="blue")
         self.voltage_subplot.set_title("Voltage (V)")
-        self.voltage_subplot.legend()
+        leg = self.voltage_subplot.legend()
+        leg.get_frame().set_facecolor("#D9D9D9")
 
         # Set color
         for fig in [
