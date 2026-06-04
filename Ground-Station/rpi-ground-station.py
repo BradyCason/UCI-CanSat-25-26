@@ -478,7 +478,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         for field in TELEMETRY_FIELDS + ["LOST_PACKET_COUNT"]:
             if field == "PARAGLIDER_EJECTED":
                 continue
-            label = self.telemetry_container_1.findChild(QtWidgets.QLabel, field)
+            label = self.telemetry_container_10.findChild(QtWidgets.QLabel, field)
             if (not label):
                 label = self.telemetry_container_2.findChild(QtWidgets.QLabel, field)
                 if (not label):
