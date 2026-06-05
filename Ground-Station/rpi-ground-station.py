@@ -186,10 +186,10 @@ class ControlsThread(QtCore.QThread):
             for _ in range(3):
                 for p in LED_PINS:
                     GPIO.output(p, GPIO.HIGH)
-                time.sleep(0.5)
+                time.sleep(0.8)
                 for p in LED_PINS:
                     GPIO.output(p, GPIO.LOW)
-                time.sleep(0.5)
+                time.sleep(0.8)
 
     def servo_calibration_sweep(self):
         for angle in range(181, 0, -1):
