@@ -238,6 +238,7 @@ class ControlsThread(QtCore.QThread):
         self._servo_busy = True
         self.servo_calibration_sweep()
         self._servo_busy = False
+        self.LEDs_calibration_flash()
         print("Calibration Complete, returning to Launch Pad position")
 
         while self._running:
