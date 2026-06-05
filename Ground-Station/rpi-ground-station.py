@@ -185,9 +185,12 @@ class ControlsThread(QtCore.QThread):
         for angle in range(0, 181, 1):
             self.set_state_servo_angle(angle, delay=0.02, pwm_off_hold=False)
         time.sleep(10)
-        for angle in range(180, 0, -30):
-            self.set_state_servo_angle(angle, delay=0.6, pwm_off_hold=True)
+        for angle in range(180, -1, -30):
+            self.set_state_servo_angle(angle, delay=0.6, pwm_off_hold=False)
             time.sleep(1)
+
+        global pwm
+        pwm.ChangeDutyCycle(0)
 
     def update_state_servo(self):
         if self._servo_busy:
@@ -203,7 +206,6 @@ class ControlsThread(QtCore.QThread):
         # Set servo angle
         if state == "LAUNCH_PAD":
             self.set_state_servo_angle(180)
-
         elif state == "ASCENT":
             self.set_state_servo_angle(150)
         elif state == "APOGEE":
