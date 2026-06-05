@@ -843,7 +843,6 @@ def read_xbee():
                 buffer += ser.read(ser.inWaiting()).decode(errors='replace')
 
                 start_idx = buffer.find(START_DELIMITER)
-                # end_idx = buffer.find(START_DELIMITER, start_idx + 1) - 1
                 end_idx = buffer.find("\n", start_idx)
                 next_start = buffer.find(START_DELIMITER, start_idx + 1)
 

@@ -75,7 +75,7 @@ volatile float             g_fsm_vz_mps         = 0.0f;
 Telemetry_t telemetry;
 
 uint8_t packet_ready = 0;
-uint8_t command_ready = 0;
+volatile uint8_t command_ready = 0;
 char command_buffer[RX_BFR_SIZE-1];
 /* USER CODE END PV */
 
@@ -217,7 +217,7 @@ int main(void)
 
   init_fsm(&telemetry);
   Init_Servos(&telemetry);
-  set_paraglider_steering(-1000);
+  set_paraglider_steering(0);
 
   HAL_Delay(10);
 

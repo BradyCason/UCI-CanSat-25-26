@@ -46,6 +46,11 @@ void init_fsm(Telemetry_t *telemetry){
 		telemetry->target_latitude = flash_telemetry.target_latitude;
 		telemetry->target_longitude = flash_telemetry.target_longitude;
 
+		if (telemetry->target_latitude == 0 || isnan(telemetry->target_latitude)){
+			telemetry->target_latitude = 38.375983;
+			telemetry->target_longitude = -79.607861;
+		}
+
 		// If Power-on reset (power removed and restored) and sensors indicate in flight and alt > threshold
 		if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) && (telemetry->altitude + flash_telemetry.altitude_offset > MIN_RESET_ALT) && sensors_indicate_flight(telemetry) == 1){
 			// reset detected
@@ -84,7 +89,7 @@ void update_fsm(Telemetry_t *telemetry){
 		telemetry->waiting_for_para_activate = 1;
 		eject_time = HAL_GetTick();
 
-		store_flash_data(telemetry);
+//		store_flash_data(telemetry);
 	}
 
 	// Activate Paraglider
@@ -94,9 +99,9 @@ void update_fsm(Telemetry_t *telemetry){
 	}
 
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
-		if (telemetry->baro_vz > 30){
+		if (telemetry->baro_vz > 15){
 			strcpy(telemetry->state, "ASCENT");
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 		else if (launch_accel_detected_time == -1){
 			// Acceleration not detected yet
@@ -114,9 +119,9 @@ void update_fsm(Telemetry_t *telemetry){
 				// Enough time passed without negative acceleration. Launch detected
 				strcpy(telemetry->state, "ASCENT");
 				launch_accel_detected_time = -1;
-				store_flash_data(telemetry);
+//				store_flash_data(telemetry);
 			}
-			else if (telemetry->accel_r < 0){
+			else if (telemetry->accel_r < 9.81){
 				// Negative acceleration detected. Reset system.
 				if (++negative_accel_counter >= 5){
 					launch_accel_detected_time = -1;
@@ -127,13 +132,13 @@ void update_fsm(Telemetry_t *telemetry){
 	else if (strcmp(telemetry->state, "ASCENT") == 0){
 		if (telemetry->baro_vz < APOGEE_VELO_THRESHOLD){
 			strcpy(telemetry->state, "APOGEE");
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "APOGEE") == 0){
 		if (telemetry->sent_apogee == 1){
 			strcpy(telemetry->state, "DESCENT");
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "DESCENT") == 0){
@@ -144,7 +149,7 @@ void update_fsm(Telemetry_t *telemetry){
 			telemetry->container_released = 1;
 			probe_release_time = HAL_GetTick();
 			telemetry->waiting_for_eject = 1;
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
@@ -154,14 +159,14 @@ void update_fsm(Telemetry_t *telemetry){
 			strcpy(telemetry->state, "PAYLOAD_RELEASE");
 			Release_Payload();
 			telemetry->payload_released = 1;
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PAYLOAD_RELEASE") == 0){
 		if (telemetry->baro_vz > LANDED_VELO_THRESHOLD && telemetry->sent_payload_release == 1){
 			strcpy(telemetry->state, "LANDED");
 			telemetry->paraglider_active = 0;
-			reset_flash_data();
+//			reset_flash_data();
 		}
 	}
 }

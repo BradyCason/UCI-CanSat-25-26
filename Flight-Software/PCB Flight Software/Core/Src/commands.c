@@ -56,7 +56,6 @@ void init_commands(void)
 char pressure_str[7];
 extern uint8_t drop_detection_active;
 void handle_command(const char *cmd) {
-
 	// SIM command
 	if (strncmp(cmd, sim_command, strlen(sim_command)) == 0) {
 
@@ -132,7 +131,7 @@ void handle_command(const char *cmd) {
 			snprintf(telemetry.cmd_echo, sizeof(telemetry.cmd_echo), "ST%02d:%02d:%02d", telemetry.mission_time_hr, telemetry.mission_time_min, telemetry.mission_time_sec);
 		}
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Calibrate Altitude
@@ -169,7 +168,7 @@ void handle_command(const char *cmd) {
 		telemetry.payload_released = 1;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Reset Payload Release
@@ -179,8 +178,6 @@ void handle_command(const char *cmd) {
 		Reset_Payload();
 		telemetry.payload_released = 0;
 		telemetry.sim_enabled = 0;
-
-		store_flash_data(&telemetry);
 	}
 
 	// Release Container
@@ -192,7 +189,7 @@ void handle_command(const char *cmd) {
 		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Reset Container Release
@@ -204,7 +201,7 @@ void handle_command(const char *cmd) {
 		telemetry.paraglider_ejected = 0;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Eject paraglider
@@ -216,7 +213,7 @@ void handle_command(const char *cmd) {
 		telemetry.paraglider_ejected = 1;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Glider On
@@ -226,7 +223,7 @@ void handle_command(const char *cmd) {
 		telemetry.paraglider_active = 1;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Glider Off
@@ -236,7 +233,7 @@ void handle_command(const char *cmd) {
 		telemetry.paraglider_active = 0;
 		telemetry.sim_enabled = 0;
 
-		store_flash_data(&telemetry);
+//		store_flash_data(&telemetry);
 	}
 
 	// Reset State
@@ -262,5 +259,7 @@ void handle_command(const char *cmd) {
 		set_cmd_echo("SETN", &telemetry);
 		telemetry.sim_enabled = 0;
 		set_north(&telemetry);
+
+		store_flash_data(&telemetry);
 	}
 }

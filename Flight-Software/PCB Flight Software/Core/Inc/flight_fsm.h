@@ -3,7 +3,7 @@
 #include "telemetry.h"
 
 // Liftoff detection constants
-#define LAUNCH_ACCEL_THRESHOLD 30
+#define LAUNCH_ACCEL_THRESHOLD 40
 #define RAIL_DELAY_TIME 250
 #define LAUNCH_EVAL_PERIOD_TIME 100
 
@@ -13,8 +13,8 @@
 #define MIN_RESET_ALT 25 // m
 #define POWER_RESET_MIN_ALT_CHANGE 10 // m
 
-#define GLIDER_EJECTION_DELAY 1000 // ms
-#define PARAGLIDER_ACTIVE_DELAY 1500 // ms
+#define GLIDER_EJECTION_DELAY 1200 // ms
+#define PARAGLIDER_ACTIVE_DELAY 2000 // ms
 
 void init_fsm(Telemetry_t *telemetry);
 void update_fsm(Telemetry_t *telemetry);
