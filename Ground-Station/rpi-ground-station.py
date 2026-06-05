@@ -79,7 +79,7 @@ class ControlsThread(QtCore.QThread):
         self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
         self.read_initial_time_mode()
-        self.set_state_servo_angle(180)
+        # self.set_state_servo_angle(180)
         self._servo_busy = False # Track if servo is currently performing a calibration sweep to avoid conflicts with state changes
 
     def read_initial_time_mode(self):
@@ -183,10 +183,10 @@ class ControlsThread(QtCore.QThread):
 
     def servo_calibration_sweep(self):
         for angle in range(0, 181, 1):
-            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
+            self.set_state_servo_angle(angle, delay=0.02, pwm_off_hold=False)
         time.sleep(10)
-        for angle in range(181, 0, -30):
-            self.set_state_servo_angle(angle, delay=0.0001, pwm_off_hold=True)
+        for angle in range(180, 0, -30):
+            self.set_state_servo_angle(angle, delay=0.6, pwm_off_hold=True)
             time.sleep(1)
 
     def update_state_servo(self):
