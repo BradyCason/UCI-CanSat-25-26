@@ -186,7 +186,7 @@ class ControlsThread(QtCore.QThread):
             self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
         time.sleep(1.5)
         for angle in range(181, 0, -30):
-            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=True)
+            self.set_state_servo_angle(angle, delay=0.0001, pwm_off_hold=True)
             time.sleep(0.5)
 
     def update_state_servo(self):
