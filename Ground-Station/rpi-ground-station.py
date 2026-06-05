@@ -181,6 +181,15 @@ class ControlsThread(QtCore.QThread):
             # Stop sending signal to reduce jitter
             pwm.ChangeDutyCycle(0)
 
+    def LEDs_calibration_flash(self):
+        for _ in range(3):
+            for p in LED_PINS:
+                GPIO.output(p, GPIO.HIGH)
+            time.sleep(0.2)
+            for p in LED_PINS:
+                GPIO.output(p, GPIO.LOW)
+            time.sleep(0.2)
+
     def servo_calibration_sweep(self):
         for angle in range(181, 0, -1):
             self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
