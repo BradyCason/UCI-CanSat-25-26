@@ -17,6 +17,8 @@ import time
 import subprocess
 import signal, sys
 
+from mini_map_test import MapWidget
+
 # top figure
 reset_button_pin = 14
 cal_alt_button_pin = 15
@@ -417,11 +419,28 @@ class GroundStationWindow(QtWidgets.QMainWindow):
         # Apply 90 degree rotation to the entire UI
         self.rotate_ui(90)
 
-        # self.showFullScreen()
+        self.showFullScreen()
 
         self.setup_UI()
 
         self.init_graphs()
+
+        self.init_minimap()
+
+    def init_minimap(self):
+        '''
+        Initialize and display the minimap widget 
+        '''
+
+        image_path = os.path.join(os.path.dirname(__file__), "gui", "launch_site.png")
+        self.map_widget = MapWidget(image_path, self)
+        # self.map_widget.set_rotation(270) # Rotate the map 90 degrees to match the UI rotation
+
+        if hasattr(self, 'launch_site_container'):
+            self.launch_site_container.layout().addWidget(self.map_widget)
+        else:
+            self.map_widget.move(50, 50)  # Place it somewhere in the window if container not found
+            self.map_widget.show()
 
     
     def keyPressEvent(self, event):
