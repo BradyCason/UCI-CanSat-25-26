@@ -101,7 +101,7 @@ void update_fsm(Telemetry_t *telemetry){
 	if (strcmp(telemetry->state, "LAUNCH_PAD") == 0){
 		if (telemetry->baro_vz > 15){
 			strcpy(telemetry->state, "ASCENT");
-//			store_flash_data(telemetry);
+			store_flash_data(telemetry);
 		}
 		else if (launch_accel_detected_time == -1){
 			// Acceleration not detected yet
@@ -119,7 +119,7 @@ void update_fsm(Telemetry_t *telemetry){
 				// Enough time passed without negative acceleration. Launch detected
 				strcpy(telemetry->state, "ASCENT");
 				launch_accel_detected_time = -1;
-//				store_flash_data(telemetry);
+				store_flash_data(telemetry);
 			}
 			else if (telemetry->accel_r < 9.81){
 				// Negative acceleration detected. Reset system.
@@ -138,7 +138,7 @@ void update_fsm(Telemetry_t *telemetry){
 	else if (strcmp(telemetry->state, "APOGEE") == 0){
 		if (telemetry->sent_apogee == 1){
 			strcpy(telemetry->state, "DESCENT");
-//			store_flash_data(telemetry);
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "DESCENT") == 0){
@@ -149,7 +149,7 @@ void update_fsm(Telemetry_t *telemetry){
 			telemetry->container_released = 1;
 			probe_release_time = HAL_GetTick();
 			telemetry->waiting_for_eject = 1;
-//			store_flash_data(telemetry);
+			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){

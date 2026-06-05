@@ -39,7 +39,7 @@ void send_packet(UART_HandleTypeDef *huart, Telemetry_t *telemetry){
 	telemetry->packet_count += 1;
 
 	snprintf(data, sizeof(data),
-		"%s,%02d:%02d:%02d,%d,%c,%s,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%02d:%02d:%02d,%.6f,%.6f,%.6f,%u,%s,%.1f,%.1f,%s,%s,%s,%s,%.1f,%.1f,%.1f",
+		"%s,%02d:%02d:%02d,%d,%c,%s,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%02d:%02d:%02d,%.1f,%.6f,%.6f,%u,%s,%.1f,%.1f,%s,%s,%s,%s,%.1f,%.1f,%.1f",
 		 TEAM_ID, telemetry->mission_time_hr, telemetry->mission_time_min, telemetry->mission_time_sec, telemetry->packet_count,
 		 telemetry->mode, telemetry->state, telemetry->alt_fused, telemetry->temperature, telemetry->pressure, 4.0,
 		 telemetry->current, telemetry->gyro_r, telemetry->gyro_p, telemetry->gyro_y, telemetry->accel_r, telemetry->accel_p, telemetry->accel_y,
@@ -105,4 +105,11 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size){
 	}
 
 	HAL_UARTEx_ReceiveToIdle_IT(huart, rx_data, RX_BFR_SIZE);
+}
+
+extern Telemetry_t telemetry;
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+    HAL_UART_AbortReceive(huart);
+    HAL_UARTEx_ReceiveToIdle_IT(huart, rx_data, RX_BFR_SIZE);
 }

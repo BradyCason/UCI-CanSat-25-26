@@ -115,6 +115,7 @@ payload_released = False
 paraglider_active = False
 container_released = False
 paraglider_ejected = False
+just_sent_cxon = False
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -298,6 +299,8 @@ class GroundStationWindow(QtWidgets.QMainWindow):
             write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
             self.telemetry_toggle_button.setText("Telemetry Toggle: On")
             self.make_button_green(self.telemetry_toggle_button)
+            global just_sent_cxon
+            just_sent_cxon = True
         else:
             write_xbee("CMD,"+ TEAM_ID + ",CX,OFF")
             self.telemetry_toggle_button.setText("Telemetry Toggle: Off")
@@ -611,13 +614,18 @@ def parse_xbee(data):
         sim = False
 
     # Update lost_packet_count
+    global just_sent_cxon
     cur_mission_sec = int(telemetry["MISSION_TIME"][-2:])
-    if (prev_mission_sec != -1):
-        missed_packets = cur_mission_sec - prev_mission_sec - 1
-        if (missed_packets < 0):
-            missed_packets += 60
-        lost_packet_count += missed_packets
-    prev_mission_sec = cur_mission_sec
+    if just_sent_cxon:
+        just_sent_cxon = False
+        prev_mission_sec = cur_mission_sec
+    else:
+        if (prev_mission_sec != -1):
+            missed_packets = cur_mission_sec - prev_mission_sec - 1
+            if (missed_packets < 0):
+                missed_packets += 60
+            lost_packet_count += missed_packets
+        prev_mission_sec = cur_mission_sec
 
     # Add data to csv file
     if MAKE_CSV_FILE:

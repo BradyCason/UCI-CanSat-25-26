@@ -313,6 +313,8 @@ class ControlsThread(QtCore.QThread):
                         if cur == GPIO.HIGH:
                             telemetry_on = True
                             write_xbee("CMD,"+ TEAM_ID + ",CX,ON")
+                            global just_sent_cxon
+                            just_sent_cxon = True
                         else:
                             telemetry_on = False
                             write_xbee("CMD,"+ TEAM_ID + ",CX,OFF")
@@ -419,6 +421,7 @@ container_released = False
 paraglider_ejected = False
 state = "LAUNCH_PAD"
 cur_servo_state = None
+just_sent_cxon = False
 
 class GroundStationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -842,13 +845,18 @@ def parse_xbee(data):
         sim = False
 
     # Update lost_packet_count
+    global just_sent_cxon
     cur_mission_sec = int(telemetry["MISSION_TIME"][-2:])
-    if (prev_mission_sec != -1):
-        missed_packets = cur_mission_sec - prev_mission_sec - 1
-        if (missed_packets < 0):
-            missed_packets += 60
-        lost_packet_count += missed_packets
-    prev_mission_sec = cur_mission_sec
+    if just_sent_cxon:
+        just_sent_cxon = False
+        prev_mission_sec = cur_mission_sec
+    else:
+        if (prev_mission_sec != -1):
+            missed_packets = cur_mission_sec - prev_mission_sec - 1
+            if (missed_packets < 0):
+                missed_packets += 60
+            lost_packet_count += missed_packets
+        prev_mission_sec = cur_mission_sec
 
     # Add data to csv file
     if MAKE_CSV_FILE:

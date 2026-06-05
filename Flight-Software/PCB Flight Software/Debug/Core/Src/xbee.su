@@ -2,3 +2,4 @@
 ../Core/Src/xbee.c:26:9:calculate_checksum	24	static
 ../Core/Src/xbee.c:34:6:send_packet	1448	static
 ../Core/Src/xbee.c:80:6:HAL_UARTEx_RxEventCallback	24	static
+../Core/Src/xbee.c:111:6:HAL_UART_ErrorCallback	16	static
