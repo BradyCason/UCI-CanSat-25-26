@@ -64,6 +64,7 @@ class MapWidget(QLabel):
         painter.setClipRect(0, 0, self.width(), self.height())  # Clip to label bounds
 
         if self.rotation != 0:
+            painter.save()
             # Rotate the image around its center
             transform = painter.transform()
             center_x = self.width() / 2
