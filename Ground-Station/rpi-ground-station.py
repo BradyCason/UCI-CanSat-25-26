@@ -182,10 +182,10 @@ class ControlsThread(QtCore.QThread):
             pwm.ChangeDutyCycle(0)
 
     def servo_calibration_sweep(self):
-        for angle in range(0, 181, 0):
+        for angle in range(181, 0, -1):
             self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
         time.sleep(1.5)
-        for angle in range(180, 0, 30):
+        for angle in range(0, 181, 30):
             self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=True)
             time.sleep(0.5)
 
