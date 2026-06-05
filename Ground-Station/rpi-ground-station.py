@@ -168,23 +168,24 @@ class ControlsThread(QtCore.QThread):
         else:
             GPIO.output(sim_activated_led_pin, GPIO.LOW)
 
-    def set_state_servo_angle(self, angle):
+    def set_state_servo_angle(self, angle, delay = 0.6, pwm_off_hold = True):
         """
         Set servo angle from 0 to 180 degrees
         """
         global pwm
         duty = 2.5 + (angle / 180.0) * 10.0
         pwm.ChangeDutyCycle(duty)
-        time.sleep(0.6)
+        time.sleep(delay)
 
-        # Stop sending signal to reduce jitter
-        pwm.ChangeDutyCycle(0)
+        if pwm_off_hold:
+            # Stop sending signal to reduce jitter
+            pwm.ChangeDutyCycle(0)
 
     def servo_calibration_sweep(self):
-        for angle in range(0, 180, 2):
-            self.set_state_servo_angle(angle)
+        for angle in range(0, 180, 1):
+            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
         for angle in range(180, 0, 30):
-            self.set_state_servo_angle(angle)
+            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
 
     def update_state_servo(self):
         if self._servo_busy:
