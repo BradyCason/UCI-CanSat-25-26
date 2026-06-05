@@ -185,10 +185,10 @@ class ControlsThread(QtCore.QThread):
         for _ in range(3):
             for p in LED_PINS:
                 GPIO.output(p, GPIO.HIGH)
-            time.sleep(0.2)
+            time.sleep(0.5)
             for p in LED_PINS:
                 GPIO.output(p, GPIO.LOW)
-            time.sleep(0.2)
+            time.sleep(0.5)
 
     def servo_calibration_sweep(self):
         for angle in range(181, 0, -1):
@@ -236,9 +236,14 @@ class ControlsThread(QtCore.QThread):
 
         print("\n Servo Calibration Sweep")
         self._servo_busy = True
+        stop_event = threading.Event()
+        led_thread = threading.Thread(target=self.LEDs_calibration_flash, args=(stop_event,), daemon=True)
+        led_thread.start()
+
         self.servo_calibration_sweep()
+
+        stop_event.set() # Stop LED flashing
         self._servo_busy = False
-        self.LEDs_calibration_flash()
         print("Calibration Complete, returning to Launch Pad position")
 
         while self._running:
