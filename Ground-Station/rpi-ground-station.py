@@ -235,17 +235,18 @@ class ControlsThread(QtCore.QThread):
 
     def run(self):
 
-        print("\n Servo Calibration Sweep")
-        self._servo_busy = True
-        stop_event = threading.Event()
-        led_thread = threading.Thread(target=self.LEDs_calibration_flash, args=(stop_event,), daemon=True)
-        led_thread.start()
+        if (not telemetry):
+            print("\n Servo Calibration Sweep")
+            self._servo_busy = True
+            stop_event = threading.Event()
+            led_thread = threading.Thread(target=self.LEDs_calibration_flash, args=(stop_event,), daemon=True)
+            led_thread.start()
 
-        self.servo_calibration_sweep()
+            self.servo_calibration_sweep()
 
-        stop_event.set() # Stop LED flashing
-        self._servo_busy = False
-        print("Calibration Complete, returning to Launch Pad position")
+            stop_event.set() # Stop LED flashing
+            self._servo_busy = False
+            print("Calibration Complete, returning to Launch Pad position")
 
         while self._running:
             # Handle button presses
@@ -377,6 +378,9 @@ TELEMETRY_FIELDS = ["TEAM_ID", "MISSION_TIME", "PACKET_COUNT", "MODE", "STATE", 
 current_time = time.time()
 local_time = time.localtime(current_time)
 readable_time = time.strftime("telemetry_%Y-%m-%d_%H-%M-%S", local_time)
+
+# CSV file path - will be set in main()
+csv_file_path = None
 
 sim = False
 sim_enable = False
@@ -808,7 +812,7 @@ def parse_xbee(data):
     '''
     Parse the data from an incoming Xbee packet
     '''
-    global telemetry, packet_count, lost_packet_count, prev_mission_sec, w, controls #, last_recieved_packet
+    global telemetry, packet_count, lost_packet_count, prev_mission_sec, w, controls, csv_file_path #, last_recieved_packet
 
     # Validate frame has correct number of fields (only check field count, allow empty values)
     if len(data) != len(TELEMETRY_FIELDS):
@@ -877,9 +881,8 @@ def parse_xbee(data):
         prev_mission_sec = cur_mission_sec
 
     # Add data to csv file
-    if MAKE_CSV_FILE:
-        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time +'.csv')
-        with open(file, 'a', newline='') as f_object:
+    if MAKE_CSV_FILE and csv_file_path:
+        with open(csv_file_path, 'a', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(list(telemetry.values()) + [data[-1]])
 
@@ -1006,12 +1009,15 @@ def send_simp_data():
 
 
 def main():
+    global csv_file_path
     connect_Serial()
 
     # Create new csv file with header
     if MAKE_CSV_FILE:
-        file = os.path.join(os.path.dirname(__file__), "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
-        with open(file, 'w', newline='') as f_object:
+        flight_csv_dir = os.path.join(os.path.dirname(__file__), "flight-csv")
+        os.makedirs(flight_csv_dir, exist_ok=True)
+        csv_file_path = os.path.join(flight_csv_dir, "Flight_" + TEAM_ID + "_" + readable_time + '.csv')
+        with open(csv_file_path, 'w', newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(TELEMETRY_FIELDS + ["CAM_DIRECTION"])
 
