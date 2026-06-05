@@ -80,6 +80,7 @@ class ControlsThread(QtCore.QThread):
         self.graph_proc = None  # Track graph process for toggle functionality
         self.read_initial_time_mode()
         self.set_state_servo_angle(180)
+        self._servo_busy = False # Track if servo is currently performing a calibration sweep to avoid conflicts with state changes
 
     def read_initial_time_mode(self):
         if GPIO.input(set_time_switch_pin) == GPIO.HIGH:
@@ -179,7 +180,16 @@ class ControlsThread(QtCore.QThread):
         # Stop sending signal to reduce jitter
         pwm.ChangeDutyCycle(0)
 
+    def servo_calibration_sweep(self):
+        for angle in range(0, 180, 2):
+            self.set_state_servo_angle(angle)
+        for angle in range(180, 0, 30):
+            self.set_state_servo_angle(angle)
+
     def update_state_servo(self):
+        if self._servo_busy:
+            return
+        
         global state, cur_servo_state
 
         # If already correct, return
@@ -206,12 +216,15 @@ class ControlsThread(QtCore.QThread):
 
     def stop(self):
         self._running = False
+    
 
     def run(self):
 
-        # print("\n Servo Calibration Sweep")
-        # self.set_state_servo_angle(180)
-        # print("Calibration Complete, starting in Launch Pad position")
+        print("\n Servo Calibration Sweep")
+        self._servo_busy = True
+        self.servo_calibration_sweep()
+        self._servo_busy = False
+        print("Calibration Complete, returning to Launch Pad position")
 
         while self._running:
             # Handle button presses
