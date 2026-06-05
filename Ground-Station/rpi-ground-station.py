@@ -434,7 +434,7 @@ class GroundStationWindow(QtWidgets.QMainWindow):
 
         image_path = os.path.join(os.path.dirname(__file__), "gui", "launch_site.png")
         self.map_widget = MapWidget(image_path, self)
-        self.map_widget.set_rotation(90) # Rotate the map 90 degrees to match the UI rotation
+        self.map_widget.set_rotation(-90) # Rotate the map 90 degrees to match the UI rotation
 
         if hasattr(self, 'launch_site_container'):
             self.launch_site_container.layout().addWidget(self.map_widget)
