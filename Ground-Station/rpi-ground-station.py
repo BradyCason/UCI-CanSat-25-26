@@ -79,7 +79,7 @@ class ControlsThread(QtCore.QThread):
         self.prev_switch_state = {p: GPIO.input(p) for p in SWITCH_PINS}
         self.graph_proc = None  # Track graph process for toggle functionality
         self.read_initial_time_mode()
-        self.set_state_servo_angle(180)
+        # self.set_state_servo_angle(180)
         self._servo_busy = False # Track if servo is currently performing a calibration sweep to avoid conflicts with state changes
 
     def read_initial_time_mode(self):
@@ -181,13 +181,26 @@ class ControlsThread(QtCore.QThread):
             # Stop sending signal to reduce jitter
             pwm.ChangeDutyCycle(0)
 
+    def LEDs_calibration_flash(self, stop_event):
+        while not stop_event.is_set():
+            for _ in range(3):
+                for p in LED_PINS:
+                    GPIO.output(p, GPIO.HIGH)
+                time.sleep(0.8)
+                for p in LED_PINS:
+                    GPIO.output(p, GPIO.LOW)
+                time.sleep(0.8)
+
     def servo_calibration_sweep(self):
-        for angle in range(0, 181, 0):
+        for angle in range(181, 0, -1):
             self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
-        time.sleep(1.5)
-        for angle in range(180, 0, 30):
-            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=True)
-            time.sleep(0.5)
+        time.sleep(1)
+        for angle in range(0, 181, 30):
+            self.set_state_servo_angle(angle, delay=0.6, pwm_off_hold=False)
+            time.sleep(0.32)
+
+        global pwm
+        pwm.ChangeDutyCycle(0)
 
     def update_state_servo(self):
         if self._servo_busy:
@@ -203,7 +216,6 @@ class ControlsThread(QtCore.QThread):
         # Set servo angle
         if state == "LAUNCH_PAD":
             self.set_state_servo_angle(180)
-
         elif state == "ASCENT":
             self.set_state_servo_angle(150)
         elif state == "APOGEE":
@@ -225,7 +237,13 @@ class ControlsThread(QtCore.QThread):
 
         print("\n Servo Calibration Sweep")
         self._servo_busy = True
+        stop_event = threading.Event()
+        led_thread = threading.Thread(target=self.LEDs_calibration_flash, args=(stop_event,), daemon=True)
+        led_thread.start()
+
         self.servo_calibration_sweep()
+
+        stop_event.set() # Stop LED flashing
         self._servo_busy = False
         print("Calibration Complete, returning to Launch Pad position")
 
