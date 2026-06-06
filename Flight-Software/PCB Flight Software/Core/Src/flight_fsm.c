@@ -149,7 +149,7 @@ void update_fsm(Telemetry_t *telemetry){
 			telemetry->container_released = 1;
 			probe_release_time = HAL_GetTick();
 			telemetry->waiting_for_eject = 1;
-			store_flash_data(telemetry);
+//			store_flash_data(telemetry);
 		}
 	}
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){

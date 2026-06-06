@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00023fc4  00000000  00000000  000365cf  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0001e308  00000000  00000000  0005a593  2**0
+ 17 .debug_line   0001e306  00000000  00000000  0005a593  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000c9532  00000000  00000000  0007889b  2**0
+ 18 .debug_str    000c9532  00000000  00000000  00078899  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00141dcd  2**0
+ 19 .comment      00000043  00000000  00000000  00141dcb  2**0
                   CONTENTS, READONLY
  20 .debug_frame  000075b0  00000000  00000000  00141e10  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -5356,7 +5356,7 @@ void update_fsm(Telemetry_t *telemetry){
  8003306:	f7fc ff83 	bl	8000210 <strcmp>
  800330a:	4603      	mov	r3, r0
  800330c:	2b00      	cmp	r3, #0
- 800330e:	d139      	bne.n	8003384 <update_fsm+0x274>
+ 800330e:	d136      	bne.n	800337e <update_fsm+0x26e>
 		if (telemetry->alt_fused <= CONTAINER_RELEASE_ALT_PERCENTAGE * telemetry->max_altitude){
  8003310:	687b      	ldr	r3, [r7, #4]
  8003312:	69db      	ldr	r3, [r3, #28]
@@ -5408,39 +5408,38 @@ void update_fsm(Telemetry_t *telemetry){
  8003374:	687b      	ldr	r3, [r7, #4]
  8003376:	2201      	movs	r2, #1
  8003378:	f883 20a1 	strb.w	r2, [r3, #161]	@ 0xa1
-			store_flash_data(telemetry);
- 800337c:	6878      	ldr	r0, [r7, #4]
- 800337e:	f7ff fc79 	bl	8002c74 <store_flash_data>
 }
- 8003382:	e086      	b.n	8003492 <update_fsm+0x382>
+ 800337c:	e089      	b.n	8003492 <update_fsm+0x382>
 	else if (strcmp(telemetry->state, "PROBE_RELEASE") == 0){
- 8003384:	687b      	ldr	r3, [r7, #4]
- 8003386:	3307      	adds	r3, #7
- 8003388:	491e      	ldr	r1, [pc, #120]	@ (8003404 <update_fsm+0x2f4>)
- 800338a:	4618      	mov	r0, r3
- 800338c:	f7fc ff40 	bl	8000210 <strcmp>
- 8003390:	4603      	mov	r3, r0
- 8003392:	2b00      	cmp	r3, #0
- 8003394:	d153      	bne.n	800343e <update_fsm+0x32e>
+ 800337e:	687b      	ldr	r3, [r7, #4]
+ 8003380:	3307      	adds	r3, #7
+ 8003382:	4920      	ldr	r1, [pc, #128]	@ (8003404 <update_fsm+0x2f4>)
+ 8003384:	4618      	mov	r0, r3
+ 8003386:	f7fc ff43 	bl	8000210 <strcmp>
+ 800338a:	4603      	mov	r3, r0
+ 800338c:	2b00      	cmp	r3, #0
+ 800338e:	d156      	bne.n	800343e <update_fsm+0x32e>
 		if (telemetry->alt_fused <= PAYLOAD_RELEASE_ALT || (telemetry->baro_vz > LANDED_VELO_THRESHOLD && HAL_GetTick() - probe_release_time > 1500)){
- 8003396:	687b      	ldr	r3, [r7, #4]
- 8003398:	edd3 7a07 	vldr	s15, [r3, #28]
- 800339c:	eeb1 7a08 	vmov.f32	s14, #24	@ 0x40c00000  6.0
- 80033a0:	eef4 7ac7 	vcmpe.f32	s15, s14
- 80033a4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 80033a8:	d938      	bls.n	800341c <update_fsm+0x30c>
- 80033aa:	687b      	ldr	r3, [r7, #4]
- 80033ac:	f8d3 30dc 	ldr.w	r3, [r3, #220]	@ 0xdc
- 80033b0:	4618      	mov	r0, r3
- 80033b2:	f7fd f8f9 	bl	80005a8 <__aeabi_f2d>
- 80033b6:	a308      	add	r3, pc, #32	@ (adr r3, 80033d8 <update_fsm+0x2c8>)
- 80033b8:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80033bc:	f7fd fbdc 	bl	8000b78 <__aeabi_dcmpgt>
- 80033c0:	4603      	mov	r3, r0
- 80033c2:	2b00      	cmp	r3, #0
- 80033c4:	d120      	bne.n	8003408 <update_fsm+0x2f8>
+ 8003390:	687b      	ldr	r3, [r7, #4]
+ 8003392:	edd3 7a07 	vldr	s15, [r3, #28]
+ 8003396:	eeb1 7a08 	vmov.f32	s14, #24	@ 0x40c00000  6.0
+ 800339a:	eef4 7ac7 	vcmpe.f32	s15, s14
+ 800339e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80033a2:	d93b      	bls.n	800341c <update_fsm+0x30c>
+ 80033a4:	687b      	ldr	r3, [r7, #4]
+ 80033a6:	f8d3 30dc 	ldr.w	r3, [r3, #220]	@ 0xdc
+ 80033aa:	4618      	mov	r0, r3
+ 80033ac:	f7fd f8fc 	bl	80005a8 <__aeabi_f2d>
+ 80033b0:	a309      	add	r3, pc, #36	@ (adr r3, 80033d8 <update_fsm+0x2c8>)
+ 80033b2:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 80033b6:	f7fd fbdf 	bl	8000b78 <__aeabi_dcmpgt>
+ 80033ba:	4603      	mov	r3, r0
+ 80033bc:	2b00      	cmp	r3, #0
+ 80033be:	d123      	bne.n	8003408 <update_fsm+0x2f8>
 }
- 80033c6:	e064      	b.n	8003492 <update_fsm+0x382>
+ 80033c0:	e067      	b.n	8003492 <update_fsm+0x382>
+ 80033c2:	bf00      	nop
+ 80033c4:	f3af 8000 	nop.w
  80033c8:	51eb851f 	.word	0x51eb851f
  80033cc:	40239eb8 	.word	0x40239eb8
  80033d0:	9999999a 	.word	0x9999999a
