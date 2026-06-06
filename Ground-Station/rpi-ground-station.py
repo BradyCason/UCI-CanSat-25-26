@@ -192,8 +192,8 @@ class ControlsThread(QtCore.QThread):
                 time.sleep(0.8)
 
     def servo_calibration_sweep(self):
-        for angle in range(181, 0, -1):
-            self.set_state_servo_angle(angle, delay=0.01, pwm_off_hold=False)
+        for angle in range(181, 0, -2):
+            self.set_state_servo_angle(angle, delay=0.02, pwm_off_hold=False)
         time.sleep(1)
         for angle in range(0, 181, 30):
             self.set_state_servo_angle(angle, delay=0.6, pwm_off_hold=False)
